@@ -68,7 +68,7 @@ export default function HomePage() {
 
       <div className="min-h-screen flex flex-col w-full relative z-10">
         {/* Header with centered search bar */}
-        <header className="pt-safe sticky top-0 z-50 w-full">
+        <header className="sticky top-0 z-50 pt-safe bg-transparent">
           <div className="max-w-screen-sm mx-auto w-full px-3 pt-4">
             {/* Mini Search Bar Component - centered on desktop, full-width on mobile */}
             <MiniSearchBar
