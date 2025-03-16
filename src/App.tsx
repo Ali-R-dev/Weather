@@ -20,9 +20,27 @@ function App() {
   return (
     <ThemeProvider>
       <WeatherProvider>
-        <div className="min-h-screen flex flex-col weather-app relative overflow-hidden">
-          <HomePage />
-          <footer className="text-center p-4 text-white">
+        {/* 
+          The overall container fills the full viewport height.
+          The content area scrolls if needed,
+          while the fixed footer remains visible at the bottom.
+        */}
+        <div className="flex flex-col h-screen weather-app relative">
+          <div className="flex-grow overflow-y-auto">
+            <HomePage />
+          </div>
+          <footer className="fixed bottom-0 left-0 w-full py-2 px-4 bg-black/20 backdrop-blur-md text-white text-xs flex items-center justify-between">
+            <span>
+              Weather data by{" "}
+              <a
+                href="https://open-meteo.com/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="underline"
+              >
+                Open Meteo
+              </a>
+            </span>
             <button
               onClick={() => setPrivacyModalVisible(true)}
               className="underline focus:outline-none"
