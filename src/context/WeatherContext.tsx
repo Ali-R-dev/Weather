@@ -22,6 +22,7 @@ interface WeatherContextType {
   fetchWeather: (latitude: number, longitude: number) => Promise<void>;
   setLocation: (location: LocationInfo) => void;
   currentLocation: LocationInfo | null;
+  lastUpdated: Date | null;
 }
 
 const WeatherContext = createContext<WeatherContextType | undefined>(undefined);
@@ -33,6 +34,7 @@ export function WeatherProvider({ children }: { children: ReactNode }) {
   const [currentLocation, setCurrentLocation] = useState<LocationInfo | null>(
     null
   );
+  const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
   const fetchWeather = useCallback(
     async (latitude: number, longitude: number) => {
@@ -42,6 +44,7 @@ export function WeatherProvider({ children }: { children: ReactNode }) {
         const data = await fetchWeatherData({ latitude, longitude });
         setWeatherData(data);
         setCurrentLocation({ latitude, longitude });
+        setLastUpdated(new Date());
       } catch (err) {
         setError(
           err instanceof Error ? err.message : "Failed to fetch weather data"
@@ -70,6 +73,7 @@ export function WeatherProvider({ children }: { children: ReactNode }) {
         fetchWeather,
         setLocation,
         currentLocation,
+        lastUpdated,
       }}
     >
       {children}

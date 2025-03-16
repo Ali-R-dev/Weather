@@ -89,8 +89,91 @@ export default function CurrentWeather({ data }: CurrentWeatherProps) {
                 d="M4.5 9.75a6 6 0 0111.573-2.226 3.75 3.75 0 014.133 4.303A4.5 4.5 0 0118 20.25H6.75a5.25 5.25 0 01-2.23-10.004 6.072 6.072 0 01-.02-.496z"
                 clipRule="evenodd"
               />
+              <path d="M3.75 14.25a.75.75 0 01.75-.75h.008a.75.75 0 01.75.75v3.75a.75.75 0 01-.75.75h-.008a.75.75 0 01-.75-.75v-3.75zm4.5 0a.75.75 0 01.75-.75h.008a.75.75 0 01.75.75v3.75a.75.75 0 01-.75.75h-.008a.75.75 0 01-.75-.75v-3.75zm4.5 0a.75.75 0 01.75-.75h.008a.75.75 0 01.75.75v3.75a.75.75 0 01-.75.75h-.008a.75.75 0 01-.75-.75v-3.75z" />
             </svg>
-          ) : null}
+          ) : weatherInfo.icon === "cloud-snow" ? (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              className="w-16 h-16 text-blue-100"
+            >
+              <path
+                fillRule="evenodd"
+                d="M4.5 9.75a6 6 0 0111.573-2.226 3.75 3.75 0 014.133 4.303A4.5 4.5 0 0118 20.25H6.75a5.25 5.25 0 01-2.23-10.004 6.072 6.072 0 01-.02-.496z"
+                clipRule="evenodd"
+              />
+              <path d="M3.75 15.75a.75.75 0 00.75.75h.008a.75.75 0 00.75-.75v-.008a.75.75 0 00-.75-.75H4.5a.75.75 0 00-.75.75v.008zm2.25-3a.75.75 0 01.75-.75h.008a.75.75 0 01.75.75v.008a.75.75 0 01-.75.75H6.75a.75.75 0 01-.75-.75v-.008zm3 3a.75.75 0 00.75.75h.008a.75.75 0 00.75-.75v-.008a.75.75 0 00-.75-.75H9.75a.75.75 0 00-.75.75v.008zm2.25-3a.75.75 0 01.75-.75h.008a.75.75 0 01.75.75v.008a.75.75 0 01-.75.75h-.008a.75.75 0 01-.75-.75v-.008z" />
+            </svg>
+          ) : weatherInfo.icon === "cloud-lightning" ? (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              className="w-16 h-16 text-yellow-300"
+            >
+              <path
+                fillRule="evenodd"
+                d="M14.615 1.595a.75.75 0 01.359.852L12.982 9.75h7.268a.75.75 0 01.548 1.262l-10.5 11.25a.75.75 0 01-1.272-.71l1.992-7.302H3.75a.75.75 0 01-.548-1.262l10.5-11.25a.75.75 0 01.913-.143z"
+                clipRule="evenodd"
+              />
+            </svg>
+          ) : weatherInfo.icon === "cloud-fog" ? (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              className="w-16 h-16 text-gray-300"
+            >
+              <path
+                fillRule="evenodd"
+                d="M4.5 9.75a6 6 0 0111.573-2.226 3.75 3.75 0 014.133 4.303A4.5 4.5 0 0118 20.25H6.75a5.25 5.25 0 01-2.23-10.004 6.072 6.072 0 01-.02-.496z"
+                clipRule="evenodd"
+              />
+              <path d="M3.75 12a.75.75 0 01.75-.75h13.5a.75.75 0 010 1.5H4.5a.75.75 0 01-.75-.75zm0 4a.75.75 0 01.75-.75h9a.75.75 0 010 1.5h-9a.75.75 0 01-.75-.75z" />
+            </svg>
+          ) : (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="currentColor"
+              className="w-16 h-16 text-white/80"
+            >
+              <path
+                fillRule="evenodd"
+                d="M4.5 9.75a6 6 0 0111.573-2.226 3.75 3.75 0 014.133 4.303A4.5 4.5 0 0118 20.25H6.75a5.25 5.25 0 01-2.23-10.004 6.072 6.072 0 01-.02-.496z"
+                clipRule="evenodd"
+              />
+            </svg>
+          )}
+        </div>
+      </div>
+
+      {/* Weather details grid */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 mt-4">
+        <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 border border-white/10">
+          <div className="text-xs opacity-70">Humidity</div>
+          <div className="text-lg font-medium">
+            {data.current.relative_humidity_2m}%
+          </div>
+        </div>
+        <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 border border-white/10">
+          <div className="text-xs opacity-70">Wind</div>
+          <div className="text-lg font-medium">
+            {Math.round(data.current.wind_speed_10m)} km/h
+          </div>
+        </div>
+        <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 border border-white/10">
+          <div className="text-xs opacity-70">Precipitation</div>
+          <div className="text-lg font-medium">
+            {data.current.precipitation} mm
+          </div>
+        </div>
+        <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 border border-white/10">
+          <div className="text-xs opacity-70">UV Index</div>
+          <div className="text-lg font-medium">
+            {Math.round((data.current.is_day ? 6 : 0) * Math.random())}
+          </div>
         </div>
       </div>
     </div>

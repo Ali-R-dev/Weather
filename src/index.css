@@ -203,3 +203,275 @@ body {
 .tab-inactive {
   color: white;
 }
+
+/* Add these keyframes to the end of your existing CSS */
+
+@keyframes rainfall {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.7;
+  }
+  90% {
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(calc(100vh + 20%));
+    opacity: 0;
+  }
+}
+
+@keyframes snowfall {
+  0% {
+    transform: translateY(-10%) rotate(0deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 0.8;
+  }
+  80% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(calc(100vh + 10%)) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+@keyframes driftacross {
+  0% {
+    transform: translateX(-100%);
+    opacity: 0.2;
+  }
+  10% {
+    opacity: 0.3;
+  }
+  90% {
+    opacity: 0.3;
+  }
+  100% {
+    transform: translateX(100vw);
+    opacity: 0.2;
+  }
+}
+
+@keyframes lightning {
+  0%, 100% {
+    opacity: 0;
+  }
+  1%, 2% {
+    opacity: 1;
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* Add these at the end of your existing CSS */
+
+/* Weather animation particles */
+.raindrop {
+  position: absolute;
+  width: 2px;
+  background: linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,0.25) 100%);
+  border-radius: 5px;
+}
+
+.snowflake {
+  position: absolute;
+  border-radius: 50%;
+  background: white;
+  box-shadow: 0 0 5px rgba(255, 255, 255, 0.7);
+}
+
+.cloud {
+  position: absolute;
+  border-radius: 50%;
+  opacity: 0.4;
+  filter: blur(40px);
+}
+
+.lightning {
+  position: absolute;
+  inset: 0;
+}
+
+/* Weather Container Backgrounds */
+.sunny::after {
+  content: '';
+  position: absolute;
+  top: 10%;
+  right: 15%; 
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(circle, rgba(255,230,128,0.7) 0%, rgba(255,215,0,0) 70%);
+  border-radius: 50%;
+  filter: blur(30px);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.night-clear::after {
+  content: '';
+  position: absolute;
+  top: 10%;
+  right: 15%;
+  width: 100px;
+  height: 100px;
+  background: radial-gradient(circle, rgba(255,255,255,0.5) 0%, rgba(255,255,255,0) 70%);
+  border-radius: 50%;
+  filter: blur(10px);
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* Animations for weather effects */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-20px); }
+  100% { transform: translateY(0px); }
+}
+
+/* Mobile optimizations */
+@media (max-width: 640px) {
+  .weather-card-hourly {
+    height: auto;
+    max-height: 180px;
+  }
+}
+
+/* Additional weather animations */
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 0.9;
+  }
+}
+
+@keyframes sunray {
+  0% {
+    height: 20px;
+    opacity: 0.7;
+  }
+  100% {
+    height: 30px;
+    opacity: 1;
+  }
+}
+
+@keyframes twinkle {
+  0%, 100% {
+    opacity: 0.2;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+}
+
+@keyframes float {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(-30px);
+  }
+  100% {
+    transform: translateX(30px);
+  }
+}
+
+@keyframes fogMove {
+  0% {
+    transform: translateX(-5%) translateY(0);
+  }
+  50% {
+    transform: translateX(5%) translateY(-5px);
+  }
+  100% {
+    transform: translateX(-2%) translateY(5px);
+  }
+}
+
+@keyframes fogPatch {
+  0% {
+    transform: translateX(-100px) translateY(0);
+  }
+  100% {
+    transform: translateX(100px) translateY(-10px);
+  }
+}
+
+@keyframes lightningBolt {
+  0%, 85%, 100% {
+    opacity: 0;
+  }
+  90%, 92% {
+    opacity: 1;
+  }
+}
+
+/* Enhance existing animations */
+@keyframes rainfall {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  5% {
+    opacity: 0.7;
+  }
+  95% {
+    opacity: 0.7;
+  }
+  100% {
+    transform: translateY(calc(100vh + 20%));
+    opacity: 0;
+  }
+}
+
+@keyframes snowfall {
+  0% {
+    transform: translateY(-10%) rotate(0deg) translateX(0);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  80% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(calc(100vh + 10%)) rotate(360deg) translateX(20px);
+    opacity: 0;
+  }
+}
+
+@keyframes lightning {
+  0%, 100% {
+    opacity: 0;
+  }
+  48%, 52% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}

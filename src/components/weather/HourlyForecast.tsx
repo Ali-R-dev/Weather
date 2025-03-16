@@ -28,10 +28,10 @@ export default function HourlyForecast({ hourlyData }: HourlyForecastProps) {
   };
 
   return (
-    <div className="weather-card weather-card-hourly flex flex-col h-full">
+    <div className="weather-card weather-card-light h-full">
       <div
         className="flex overflow-x-auto py-2 snap-x snap-mandatory pb-4 scrollbar-thin 
-                    scrollbar-thumb-white/20 scrollbar-track-transparent space-x-2"
+                    scrollbar-thumb-white/20 scrollbar-track-transparent space-x-2 h-full"
       >
         {next24Hours.time.map((time, index) => {
           const weatherInfo = getWeatherInfo(next24Hours.weather_code[index]);
@@ -40,10 +40,10 @@ export default function HourlyForecast({ hourlyData }: HourlyForecastProps) {
           return (
             <div
               key={time}
-              className="flex flex-col items-center min-w-[72px] flex-shrink-0 snap-center 
+              className="flex flex-col items-center min-w-[72px] flex-shrink-0 snap-start 
                        backdrop-blur-sm p-3 rounded-2xl bg-white/10 border border-white/10"
             >
-              <div className="font-medium text-sm">
+              <div className="font-medium text-sm text-white">
                 {index === 0 ? "Now" : formatHour(time)}
               </div>
               <div className="my-2">
@@ -125,7 +125,7 @@ export default function HourlyForecast({ hourlyData }: HourlyForecastProps) {
                   </svg>
                 )}
               </div>
-              <div className="font-semibold text-base">
+              <div className="font-semibold text-base text-white">
                 {Math.round(next24Hours.temperature_2m[index])}°
               </div>
               {hasPrecip && (
