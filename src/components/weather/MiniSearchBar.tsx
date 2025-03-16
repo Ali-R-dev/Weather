@@ -111,6 +111,11 @@ export default function MiniSearchBar({
                 },
                 (error) => {
                   console.error("Geolocation error:", error);
+                  if (error.code === error.PERMISSION_DENIED) {
+                    alert(
+                      "Location access denied. Please enable location permissions in your browser settings."
+                    );
+                  }
                 }
               );
             }}

@@ -4,9 +4,10 @@ import {
   useState,
   ReactNode,
   useCallback,
+  useEffect,
 } from "react";
 import { WeatherData } from "../types/weather.types";
-// import { fetchWeatherData } from "../services/weatherService";
+import useSavedLocations from "../hooks/useSavedLocations"; // import saved locations hook
 
 interface LocationInfo {
   latitude: number;
@@ -37,6 +38,8 @@ export function WeatherProvider({ children }: { children: ReactNode }) {
     null
   );
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
+
+  const { defaultLocation, savedLocations } = useSavedLocations();
 
   const fetchWeather = useCallback(
     async (latitude: number, longitude: number) => {
@@ -103,6 +106,32 @@ export function WeatherProvider({ children }: { children: ReactNode }) {
     },
     [fetchWeather]
   );
+
+  // Fallback logic: if no currentLocation is set,
+  // then try defaultLocation, then any saved location, else use IP geolocation.
+  useEffect(() => {
+    if (!currentLocation) {
+      if (defaultLocation) {
+        setLocation(defaultLocation);
+      } else if (savedLocations.length > 0) {
+        setLocation(savedLocations[0]);
+      } else {
+        // Fallback to user's IP geolocation
+        fetch("https://ipapi.co/json/")
+          .then((res) => res.json())
+          .then((ipData) => {
+            setLocation({
+              latitude: ipData.latitude,
+              longitude: ipData.longitude,
+              name: ipData.city,
+              country: ipData.country_name,
+              admin1: ipData.region,
+            });
+          })
+          .catch((err) => console.error("IP geolocation error:", err));
+      }
+    }
+  }, [currentLocation, defaultLocation, savedLocations, setLocation]);
 
   return (
     <WeatherContext.Provider
