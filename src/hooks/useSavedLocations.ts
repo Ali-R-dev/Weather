@@ -6,6 +6,7 @@ export interface SavedLocation {
   latitude: number;
   longitude: number;
   country: string;
+  admin1?: string; // Added province/state
   isDefault?: boolean;
 }
 

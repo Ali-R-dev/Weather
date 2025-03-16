@@ -73,9 +73,41 @@ export default function MiniSearchBar({
           <button
             onClick={() => {
               navigator.geolocation.getCurrentPosition(
-                (position) => {
-                  // Set current location and close search
-                  onSelect();
+                async (position) => {
+                  try {
+                    // Reverse geocode to get the location name
+                    const response = await fetch(
+                      `https://geocoding-api.open-meteo.com/v1/reverse?latitude=${position.coords.latitude}&longitude=${position.coords.longitude}&format=json`
+                    );
+                    const data = await response.json();
+
+                    if (data && data.features && data.features.length > 0) {
+                      const locationInfo = data.features[0].properties;
+                      // Set location with the actual city name
+                      setLocation({
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                        name: locationInfo.name,
+                        country: locationInfo.country,
+                        admin1: locationInfo.admin1,
+                      });
+                    } else {
+                      // Fallback if reverse geocoding fails
+                      setLocation({
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                      });
+                    }
+                    // Close search
+                    onSelect();
+                  } catch (error) {
+                    console.error("Reverse geocoding error:", error);
+                    setLocation({
+                      latitude: position.coords.latitude,
+                      longitude: position.coords.longitude,
+                    });
+                    onSelect();
+                  }
                 },
                 (error) => {
                   console.error("Geolocation error:", error);

@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { getWeatherInfo } from "../../utils/weatherCodeMap";
 import { WeatherData } from "../../types/weather.types";
 import { formatDate } from "../../utils/dateUtils";
@@ -21,26 +21,64 @@ const getUVIndexLabel = (uvIndex: number): string => {
 export default function CurrentWeather({ data }: CurrentWeatherProps) {
   const { currentLocation } = useWeather();
   const { applyTheme } = useTheme();
+  const [currentTime, setCurrentTime] = useState(new Date());
   const weatherInfo = getWeatherInfo(data.current.weather_code);
-  // const isNight = data.current.is_day !== 1;
 
   // Apply theme based on current weather and time of day
   useEffect(() => {
     applyTheme(data.current.weather_code, data.current.is_day === 1);
   }, [data.current.weather_code, data.current.is_day, applyTheme]);
 
+  // Update time every minute
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTime(new Date());
+    }, 60000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  // Format the current time for the location timezone
+  const formatLocalTime = () => {
+    try {
+      if (!data.timezone) return "";
+
+      return new Date().toLocaleTimeString("en-US", {
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true,
+        timeZone: data.timezone,
+      });
+    } catch (error) {
+      console.error("Error formatting time:", error);
+      return "";
+    }
+  };
+
   return (
     <div className="text-white">
-      {/* Location name & date */}
+      {/* Location name, region, country & current time */}
       <div className="mb-6">
-        <h1 className="text-4xl sm:text-5xl font-bold tracking-tight">
-          {currentLocation?.name || "Current Location"}
-        </h1>
+        <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between">
+          <h1 className="text-4xl sm:text-5xl font-bold tracking-tight">
+            {currentLocation?.name || data.location?.name || "Weather"}
+          </h1>
+          <div className="text-2xl font-light mt-1 sm:mt-0">
+            {formatLocalTime()}
+          </div>
+        </div>
+
         <div className="opacity-80 text-sm sm:text-base mt-1 flex items-center flex-wrap">
-          {currentLocation?.country && (
-            <span className="font-medium mr-2">{currentLocation.country}</span>
+          {currentLocation?.admin1 && (
+            <span className="font-medium">{currentLocation.admin1}</span>
           )}
-          <span>{formatDate(new Date().toISOString())}</span>
+          {currentLocation?.admin1 && currentLocation?.country && (
+            <span className="mx-1">•</span>
+          )}
+          {currentLocation?.country && <span>{currentLocation.country}</span>}
+          {!currentLocation?.country &&
+            !currentLocation?.admin1 &&
+            data.location?.region && <span>{data.location.region}</span>}
         </div>
       </div>
 

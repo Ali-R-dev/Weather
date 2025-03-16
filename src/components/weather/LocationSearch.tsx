@@ -84,6 +84,8 @@ export default function LocationSearch({
       longitude: location.longitude,
       name: location.name,
       country: location.country,
+      admin1: location.admin1,
+      admin2: location.admin2,
     });
 
     // Save to localStorage
@@ -93,6 +95,7 @@ export default function LocationSearch({
       latitude: location.latitude,
       longitude: location.longitude,
       country: location.country,
+      admin1: location.admin1,
     };
 
     saveLocation(savedLocation);

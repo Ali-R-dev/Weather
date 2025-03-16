@@ -28,11 +28,13 @@ export interface HourlyWeather {
 }
 
 export interface WeatherData {
-  latitude: number;
-  longitude: number;
-  elevation: number;
-  timezone: string;
   current: CurrentWeather;
   hourly: HourlyWeather;
   daily: DailyWeather;
+  location?: {
+    name: string;
+    region: string;
+    country: string;
+  };
+  timezone: string;
 }
