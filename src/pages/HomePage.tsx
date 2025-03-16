@@ -8,6 +8,7 @@ import HourlyForecast from "../components/weather/HourlyForecast";
 import ForecastDay from "../components/weather/ForecastDay";
 import LocationSearch from "../components/weather/LocationSearch";
 import { timeAgo } from "../utils/dateUtils";
+import RainEffect3D from "../components/effects/RainEffect3D";
 
 export default function HomePage() {
   const { loading, error, weatherData, setLocation, lastUpdated } =
@@ -57,47 +58,22 @@ export default function HomePage() {
     const weatherCode = weatherData.current.weather_code;
     const isDay = weatherData.current.is_day === 1;
 
-    // Rain animation
+    // Rain animation with 3D depth and splashes
     if (
       [51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82].includes(weatherCode)
     ) {
-      const raindrops = [];
       const intensity = [51, 56, 61, 80].includes(weatherCode)
-        ? 50
+        ? "light"
         : [53, 57, 63, 66, 81].includes(weatherCode)
-        ? 80
-        : 120;
-
-      for (let i = 0; i < intensity; i++) {
-        const duration = 0.7 + Math.random() * 0.3;
-        const delay = Math.random() * 5;
-        const leftPos = Math.random() * 100;
-        const height = Math.random() * 10 + 15;
-
-        raindrops.push(
-          <div
-            key={`rain-${i}`}
-            className="raindrop"
-            style={{
-              left: `${leftPos}%`,
-              height: `${height}px`,
-              animationDuration: `${duration}s`,
-              animationDelay: `${delay}s`,
-              opacity: 0.5 + Math.random() * 0.5,
-              animation: `rainfall ${duration}s linear ${delay}s infinite`,
-            }}
-          />
-        );
-      }
+        ? "medium"
+        : "heavy";
 
       return (
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {raindrops}
-        </div>
+        <RainEffect3D intensity={intensity as "light" | "medium" | "heavy"} />
       );
     }
 
-    // Snow animation
+    // Snow animation with 3D layers and realistic motion
     if ([71, 73, 75, 77, 85, 86].includes(weatherCode)) {
       const snowflakes = [];
       const intensity = [71, 85].includes(weatherCode)
@@ -106,68 +82,104 @@ export default function HomePage() {
         ? 70
         : 100;
 
-      for (let i = 0; i < intensity; i++) {
-        const size = Math.random() * 6 + 2;
-        const duration = 6 + Math.random() * 6;
-        const delay = Math.random() * 5;
-        const leftPos = Math.random() * 100;
+      for (let layer = 1; layer <= 3; layer++) {
+        const layerIntensity = Math.floor(intensity / (4 - layer));
+        const scale = 0.7 + layer * 0.2;
 
-        snowflakes.push(
-          <div
-            key={`snow-${i}`}
-            className="snowflake"
-            style={{
-              left: `${leftPos}%`,
-              width: `${size}px`,
-              height: `${size}px`,
-              animationDuration: `${duration}s`,
-              animationDelay: `${delay}s`,
-              animation: `snowfall ${duration}s ease-in-out ${delay}s infinite`,
-            }}
-          />
-        );
+        for (let i = 0; i < layerIntensity; i++) {
+          const size = (Math.random() * 6 + 2) * scale;
+          const duration = (6 + Math.random() * 6) / scale; // Larger flakes fall faster
+          const delay = Math.random() * 5;
+          const leftPos = Math.random() * 100;
+          const blurAmount =
+            layer === 1 ? "1px" : layer === 2 ? "0.5px" : "0px";
+
+          // Calculate a unique oscillation pattern for natural movement
+          const oscillationX = Math.random() * 50 + 20; // Horizontal drift amount
+          const oscillationPeriods = Math.floor(Math.random() * 3) + 2; // 2-4 wobbles during fall
+
+          snowflakes.push(
+            <div
+              key={`snow-${layer}-${i}`}
+              style={
+                {
+                  position: "absolute",
+                  left: `${leftPos}%`,
+                  top: "-10px",
+                  width: `${size}px`,
+                  height: `${size}px`,
+                  background: "white",
+                  borderRadius: "50%",
+                  filter: `blur(${blurAmount})`,
+                  boxShadow: "0 0 5px rgba(255, 255, 255, 0.8)",
+                  animation: `snowfall${layer} ${duration}s ease-in-out ${delay}s infinite`,
+                  opacity: layer === 1 ? 0.4 : layer === 2 ? 0.6 : 0.8,
+                  zIndex: layer,
+                  "--oscillation-x": `${oscillationX}px`,
+                  "--oscillation-periods": oscillationPeriods,
+                } as React.CSSProperties
+              }
+            />
+          );
+        }
       }
 
       return (
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute inset-0 overflow-hidden pointer-events-none perspective-1000">
           {snowflakes}
         </div>
       );
     }
 
-    // Cloud animation for cloudy weather
+    // Cloud animation with 3D layers
     if ([2, 3].includes(weatherCode)) {
       const clouds = [];
-      const count = weatherCode === 2 ? 5 : 8;
+      const count = weatherCode === 2 ? 7 : 10;
+      const layers = [
+        { depth: 10, opacity: 0.2, scale: 0.7 },
+        { depth: 30, opacity: 0.4, scale: 1 },
+        { depth: 60, opacity: 0.6, scale: 1.3 },
+      ];
 
-      for (let i = 0; i < count; i++) {
-        const size = Math.random() * 300 + 200;
-        const duration = 60 + Math.random() * 60;
-        const delay = Math.random() * 30;
-        const topPos = Math.random() * 60;
+      // Create clouds across different depth layers
+      for (let layer = 0; layer < layers.length; layer++) {
+        const { depth, opacity, scale } = layers[layer];
+        const layerClouds = Math.ceil(count / layers.length);
 
-        clouds.push(
-          <div
-            key={`cloud-${i}`}
-            className="cloud"
-            style={{
-              top: `${topPos}%`,
-              left: `-50%`,
-              width: `${size}px`,
-              height: `${size * 0.6}px`,
-              background: isDay
-                ? "rgba(255, 255, 255, 0.4)"
-                : "rgba(255, 255, 255, 0.15)",
-              animationDuration: `${duration}s`,
-              animationDelay: `${delay}s`,
-              animation: `driftacross ${duration}s linear ${delay}s infinite`,
-            }}
-          />
-        );
+        for (let i = 0; i < layerClouds; i++) {
+          const size = (Math.random() * 300 + 200) * scale;
+          const duration = 60 + Math.random() * 60;
+          const delay = Math.random() * 30;
+          const topPos = Math.random() * 60;
+
+          clouds.push(
+            <div
+              key={`cloud-${layer}-${i}`}
+              className="cloud"
+              style={
+                {
+                  top: `${topPos}%`,
+                  left: `-50%`,
+                  width: `${size}px`,
+                  height: `${size * 0.6}px`,
+                  background: isDay
+                    ? `rgba(255, 255, 255, ${opacity})`
+                    : `rgba(255, 255, 255, ${opacity * 0.5})`,
+                  animationDuration: `${duration}s`,
+                  animationDelay: `${delay}s`,
+                  animation: `driftacross3D ${duration}s linear ${delay}s infinite`,
+                  filter: `blur(${30 / scale}px)`,
+                  "--cloud-depth": `${depth}px`,
+                  "--cloud-opacity": opacity,
+                } as React.CSSProperties
+              }
+            />
+          );
+        }
       }
 
       return (
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute inset-0 overflow-hidden pointer-events-none preserve-3d">
           {clouds}
         </div>
       );
@@ -211,58 +223,92 @@ export default function HomePage() {
       );
     }
 
-    // Lightning animation for thunderstorms
+    // Lightning animation with thunder glow
     if ([95, 96, 99].includes(weatherCode)) {
-      const lightning = [];
+      const lightningBolts = [];
+      const thunderGlows = [];
 
-      for (let i = 0; i < 3; i++) {
-        const delay = i * 4 + Math.random() * 8;
+      // Create 3-5 lightning bolts with varying delays
+      for (let i = 0; i < 5; i++) {
+        const delay = i * 3 + Math.random() * 4;
+        const brightness = 0.7 + Math.random() * 0.3;
+        const duration = 8 + Math.random() * 4;
 
-        lightning.push(
+        // Lightning flash (full screen)
+        lightningBolts.push(
           <div
             key={`lightning-${i}`}
             style={{
               position: "absolute",
               inset: 0,
               background: "rgba(255, 255, 255, 0.8)",
-              animation: `lightningBolt 10s ease-out ${delay}s infinite`,
+              animation: `lightning3D ${duration}s ease-out ${delay}s infinite`,
+            }}
+          />
+        );
+
+        // Thunder cloud glow
+        thunderGlows.push(
+          <div
+            key={`thunder-${i}`}
+            style={{
+              position: "absolute",
+              top: "20%",
+              left: `${30 + Math.random() * 40}%`,
+              width: "10px",
+              height: "10px",
+              borderRadius: "50%",
+              filter: "blur(50px)",
+              animation: `thunderGlow ${duration}s ease-out ${delay}s infinite`,
             }}
           />
         );
       }
 
-      // Add rain for thunderstorms too
+      // Add rain for thunderstorms
       const raindrops = [];
-      for (let i = 0; i < 100; i++) {
-        const duration = 0.7 + Math.random() * 0.3;
-        const delay = Math.random() * 5;
-        const leftPos = Math.random() * 100;
-        const height = Math.random() * 10 + 15;
+      for (let layer = 1; layer <= 3; layer++) {
+        for (let i = 0; i < (layer === 3 ? 60 : layer === 2 ? 40 : 20); i++) {
+          const duration = (0.7 + Math.random() * 0.3) / (layer * 0.5);
+          const delay = Math.random() * 5;
+          const leftPos = Math.random() * 100;
+          const height = (Math.random() * 10 + 15) * layer;
+          const angle = -15 - Math.random() * 10; // Stronger wind
 
-        raindrops.push(
-          <div
-            key={`rain-${i}`}
-            className="raindrop"
-            style={{
-              left: `${leftPos}%`,
-              height: `${height}px`,
-              animationDuration: `${duration}s`,
-              animationDelay: `${delay}s`,
-              animation: `rainfall ${duration}s linear ${delay}s infinite`,
-            }}
-          />
-        );
+          raindrops.push(
+            <div
+              key={`rain-${layer}-${i}`}
+              style={{
+                position: "absolute",
+                left: `${leftPos}%`,
+                top: "-20px",
+                height: `${height}px`,
+                width: `${2 * layer}px`,
+                background: `linear-gradient(180deg, 
+                             rgba(255,255,255,0) 0%, 
+                             rgba(255,255,255,${0.3 + layer * 0.2}) 40%, 
+                             rgba(255,255,255,${0.4 + layer * 0.3}) 100%)`,
+                borderRadius: "100% / 5%",
+                transform: `rotate(${angle}deg) translateZ(${layer * 20}px)`,
+                animation: `rainfall${layer} ${duration}s linear ${delay}s infinite`,
+                opacity: layer === 1 ? 0.3 : layer === 2 ? 0.6 : 0.9,
+                zIndex: layer,
+              }}
+            />
+          );
+        }
       }
 
       return (
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {lightning}
+          {thunderGlows}
+          {lightningBolts}
           {raindrops}
         </div>
       );
     }
 
-    // Sun rays animation for clear skies
+    // Sun rays animation for clear skies with lens flare
     if ([0, 1].includes(weatherCode) && isDay) {
       const sunPosition = {
         top: "10%",
@@ -273,6 +319,7 @@ export default function HomePage() {
       for (let i = 0; i < 12; i++) {
         const angle = (i * 30) % 360;
         const length = 40 + Math.random() * 20;
+        const delay = i * 0.25;
 
         rays.push(
           <div
@@ -286,9 +333,33 @@ export default function HomePage() {
               background: "rgba(255, 235, 150, 0.7)",
               borderRadius: "2px",
               transformOrigin: "0 50%",
-              transform: `rotate(${angle}deg)`,
-              animation: "sunray 3s ease-in-out infinite alternate",
-              animationDelay: `${i * 0.25}s`,
+              transform: `rotate(${angle}deg) translateZ(10px)`,
+              animation: `sunray3D 3s ease-in-out ${delay}s infinite alternate`,
+              boxShadow: "0 0 10px rgba(255, 235, 150, 0.4)",
+            }}
+          />
+        );
+      }
+
+      // Add lens flares
+      const flares = [];
+      for (let i = 0; i < 6; i++) {
+        const size = 30 + i * 10;
+        const opacity = 0.7 - i * 0.1;
+        const offsetX = -50 + i * 20;
+        const offsetY = 30 - i * 10;
+
+        flares.push(
+          <div
+            key={`flare-${i}`}
+            className="lens-flare"
+            style={{
+              width: `${size}px`,
+              height: `${size}px`,
+              left: `calc(50% + ${offsetX}px)`,
+              top: `calc(50% + ${offsetY}px)`,
+              opacity: opacity,
+              transform: `translateZ(${i * 5}px)`,
             }}
           />
         );
@@ -297,11 +368,22 @@ export default function HomePage() {
       return (
         <div
           className="absolute overflow-hidden pointer-events-none"
-          style={sunPosition}
+          style={{
+            ...sunPosition,
+            perspective: "1000px",
+            transformStyle: "preserve-3d",
+          }}
         >
           <div className="relative w-40 h-40">
-            <div className="absolute inset-0 rounded-full bg-yellow-300 animate-pulse"></div>
+            <div
+              className="absolute inset-0 rounded-full bg-yellow-300"
+              style={{
+                boxShadow: "0 0 50px 20px rgba(255, 213, 0, 0.8)",
+                animation: "pulse 3s infinite alternate",
+              }}
+            />
             {rays}
+            {flares}
           </div>
         </div>
       );
