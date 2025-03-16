@@ -131,32 +131,35 @@ export default function HomePage() {
 
             {/* Forecast section */}
             <div className="mt-auto p-4 pt-2">
-              {/* Tabs for forecast type */}
-              <div className="flex rounded-full backdrop-blur-md bg-black/20 p-1 mb-3">
-                <button
-                  onClick={() => setActiveTab("hourly")}
-                  className={`flex-1 text-center py-2 rounded-full transition ${
-                    activeTab === "hourly"
-                      ? "bg-white/20 text-white font-medium"
-                      : "text-white/70"
-                  }`}
-                >
-                  Hourly
-                </button>
-                <button
-                  onClick={() => setActiveTab("daily")}
-                  className={`flex-1 text-center py-2 rounded-full transition ${
-                    activeTab === "daily"
-                      ? "bg-white/20 text-white font-medium"
-                      : "text-white/70"
-                  }`}
-                >
-                  Daily
-                </button>
+              {/* Forecast tabs - Modern, minimal design */}
+              <div className="mb-3 flex items-center justify-between">
+                <h2 className="text-xl font-semibold text-white">Forecast</h2>
+                <div className="flex rounded-lg overflow-hidden bg-black/20 backdrop-blur-md p-1 border border-white/10">
+                  <button
+                    onClick={() => setActiveTab("hourly")}
+                    className={`px-4 py-1.5 text-sm transition-all ${
+                      activeTab === "hourly"
+                        ? "bg-white/20 text-white font-medium rounded-md shadow-sm"
+                        : "text-white/70 hover:text-white"
+                    }`}
+                  >
+                    Hourly
+                  </button>
+                  <button
+                    onClick={() => setActiveTab("daily")}
+                    className={`px-4 py-1.5 text-sm transition-all ${
+                      activeTab === "daily"
+                        ? "bg-white/20 text-white font-medium rounded-md shadow-sm"
+                        : "text-white/70 hover:text-white"
+                    }`}
+                  >
+                    Daily
+                  </button>
+                </div>
               </div>
 
-              {/* Forecast content - fixed height container */}
-              <div className="bg-black/20 backdrop-blur-md rounded-3xl overflow-hidden border border-white/10 h-60">
+              {/* Forecast content container - modernized */}
+              <div className="rounded-3xl overflow-hidden border border-white/10 h-auto bg-gradient-to-br from-black/20 to-black/30 backdrop-blur-md">
                 <div className="p-4 h-full">
                   {activeTab === "hourly" ? (
                     <HourlyForecast hourlyData={weatherData.hourly} />

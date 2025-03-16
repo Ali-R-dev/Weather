@@ -449,3 +449,17 @@ body {
     line-height: 1.5rem;
   }
 }
+
+/* Add this to the bottom of your CSS file */
+
+/* Hide scrollbar for cleaner UI */
+.hide-scrollbar {
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE/Edge */
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none; /* Chrome, Safari, Opera */
+}
