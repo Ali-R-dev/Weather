@@ -1,0 +1,35 @@
+@import "tailwindcss";
+
+/* Weather app theme with colors for different weather conditions */
+@theme {
+  /* Base colors */
+  --color-primary: #0ea5e9;
+  --color-secondary: #6366f1;
+  
+  /* Weather condition colors */
+  --color-sunny: #fbbf24;
+  --color-cloudy: #9ca3af;
+  --color-rainy: #3b82f6;
+  --color-snowy: #e5e7eb;
+  --color-stormy: #4b5563;
+  --color-foggy: #d1d5db;
+  
+  /* UI colors */
+  --color-background: #f8fafc;
+  --color-card: #ffffff;
+  --color-text: #1e293b;
+  --color-text-light: #64748b;
+  
+  /* Dark mode colors */
+  --color-background-dark: #0f172a;
+  --color-card-dark: #1e293b;
+  --color-text-dark: #f1f5f9;
+  --color-text-light-dark: #94a3b8;
+  
+  /* Typography */
+  --font-sans: 'Inter', system-ui, sans-serif;
+  
+  /* Spacing & sizing */
+  --radius-card: 1rem;
+  --shadow-card: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+}
