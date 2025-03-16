@@ -33,3 +33,173 @@
   --radius-card: 1rem;
   --shadow-card: 0 10px 15px -3px rgb(0 0 0 / 0.1);
 }
+
+/* Base styles */
+body {
+  margin: 0;
+  padding: 0;
+  transition: background-color 0.5s ease;
+}
+
+.weather-app {
+  min-height: 100vh;
+  width: 100%;
+  transition: all 0.5s ease;
+  position: relative;
+}
+
+/* Weather-specific backgrounds */
+.sunny {
+  background: linear-gradient(180deg, #2196f3 0%, #42a5f5 100%);
+  color: white;
+}
+
+.night-clear {
+  background: linear-gradient(180deg, #1a237e 0%, #3949ab 100%);
+  color: white;
+}
+
+.cloudy {
+  background: linear-gradient(180deg, #78909c 0%, #90a4ae 100%);
+  color: white;
+}
+
+.night-cloudy {
+  background: linear-gradient(180deg, #263238 0%, #37474f 100%);
+  color: white;
+}
+
+.rainy {
+  background: linear-gradient(180deg, #546e7a 0%, #607d8b 100%);
+  color: white;
+}
+
+.night-rainy {
+  background: linear-gradient(180deg, #1a237e 0%, #283593 100%);
+  color: white;
+}
+
+.snowy {
+  background: linear-gradient(180deg, #b0bec5 0%, #cfd8dc 100%);
+  color: #37474f;
+}
+
+.night-snowy {
+  background: linear-gradient(180deg, #37474f 0%, #455a64 100%);
+  color: white;
+}
+
+.stormy {
+  background: linear-gradient(180deg, #37474f 0%, #455a64 100%);
+  color: white;
+}
+
+.night-stormy {
+  background: linear-gradient(180deg, #1c1c1c 0%, #263238 100%);
+  color: white;
+}
+
+.foggy {
+  background: linear-gradient(180deg, #b0bec5 0%, #cfd8dc 100%);
+  color: #37474f;
+}
+
+.night-foggy {
+  background: linear-gradient(180deg, #37474f 0%, #455a64 100%);
+  color: white;
+}
+
+/* Weather animations */
+.rainy::before,
+.night-rainy::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%23ffffff44' d='M8 0a.5.5 0 0 1 .5.5v.25l.096.022a8 8 0 0 1 0 15.456L8.5 15.25v.25a.5.5 0 0 1-1 0v-.25l-.096-.022a8 8 0 0 1 0-15.456L7.5.75v-.25A.5.5 0 0 1 8 0zm-1 13a1 1 0 1 0 2 0 1 1 0 0 0-2 0z'/%3E%3C/svg%3E");
+  background-size: 10px;
+  opacity: 0.3;
+  pointer-events: none;
+  animation: rain 10s linear infinite;
+}
+
+.snowy::before,
+.night-snowy::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath fill='%23ffffff77' d='M8 16a.5.5 0 0 1-.5-.5v-1.293l-.646.647a.5.5 0 0 1-.707-.708L7.5 12.793V8.866l-3.4 1.963-.496 1.85a.5.5 0 1 1-.966-.26l.237-.882-1.12.646a.5.5 0 0 1-.5-.866l1.12-.646-.884-.237a.5.5 0 1 1 .26-.966l1.848.495L7 8 3.6 6.037l-1.85.495a.5.5 0 0 1-.258-.966l.883-.237-1.12-.646a.5.5 0 1 1 .5-.866l1.12.646-.237-.883a.5.5 0 1 1 .966-.258l.495 1.849L7.5 7.134V3.207L6.147 1.854a.5.5 0 1 1 .707-.708l.646.647V.5a.5.5 0 1 1 1 0v1.293l.647-.647a.5.5 0 1 1 .707.708L8.5 3.207v3.927l3.4-1.963.496-1.85a.5.5 0 1 1 .966.26l-.236.882 1.12-.646a.5.5 0 0 1 .5.866l-1.12.646.883.237a.5.5 0 1 1-.26.966l-1.848-.495L9 8l3.4 1.963 1.849-.495a.5.5 0 0 1 .259.966l-.883.237 1.12.646a.5.5 0 0 1-.5.866l-1.12-.646.236.883a.5.5 0 1 1-.966.258l-.495-1.849-3.4-1.963v3.927l1.353 1.353a.5.5 0 0 1-.707.708l-.647-.647V15.5a.5.5 0 0 1-.5.5z'/%3E%3C/svg%3E");
+  background-size: 15px;
+  opacity: 0.4;
+  pointer-events: none;
+  animation: snow 15s linear infinite;
+}
+
+@keyframes rain {
+  0% {
+    background-position: 0% 0%;
+  }
+  100% {
+    background-position: 20% 100%;
+  }
+}
+
+@keyframes snow {
+  0% {
+    background-position: 0% -10%;
+  }
+  100% {
+    background-position: 10% 100%;
+  }
+}
+
+/* Card styles */
+.weather-card {
+  backdrop-filter: blur(8px);
+  border-radius: 16px;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.weather-card-light {
+  background: rgba(255, 255, 255, 0.2);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.weather-card-dark {
+  background: rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Tab styling */
+.forecast-tabs {
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(8px);
+  border-radius: 12px;
+  padding: 4px;
+}
+
+.tab-button {
+  padding: 8px 16px;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  font-weight: 500;
+  text-align: center;
+}
+
+.tab-active {
+  background: rgba(255, 255, 255, 0.9);
+  color: #333;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.tab-inactive {
+  color: white;
+}

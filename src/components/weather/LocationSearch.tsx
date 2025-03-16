@@ -7,9 +7,15 @@ import { useWeather } from "../../context/WeatherContext";
 import useSavedLocations, {
   SavedLocation,
 } from "../../hooks/useSavedLocations";
-import { useTheme } from "../../context/ThemeContext";
+import LoadingSpinner from "../common/LoadingSpinner";
 
-export default function LocationSearch() {
+interface LocationSearchProps {
+  onLocationSelect?: () => void;
+}
+
+export default function LocationSearch({
+  onLocationSelect,
+}: LocationSearchProps) {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<GeocodingResult[]>([]);
   const [isSearching, setIsSearching] = useState(false);
@@ -22,10 +28,8 @@ export default function LocationSearch() {
     setAsDefault,
     removeLocation,
   } = useSavedLocations();
-  const { currentTheme } = useTheme();
   const searchTimeout = useRef<number | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const isDarkTheme = currentTheme.includes("night");
 
   // Handle search input
   useEffect(() => {
@@ -91,6 +95,10 @@ export default function LocationSearch() {
     saveLocation(savedLocation);
     setQuery("");
     setIsDropdownOpen(false);
+
+    if (onLocationSelect) {
+      onLocationSelect();
+    }
   };
 
   // Set location as default
@@ -114,102 +122,69 @@ export default function LocationSearch() {
       country: location.country,
     });
     setIsDropdownOpen(false);
+
+    if (onLocationSelect) {
+      onLocationSelect();
+    }
   };
 
   return (
-    <div className="relative w-full mx-auto" ref={dropdownRef}>
+    <div className="relative w-full" ref={dropdownRef}>
       <div className="relative">
         <input
           type="text"
-          placeholder="Search location..."
+          placeholder="Search for a location..."
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           onFocus={() => setIsDropdownOpen(true)}
-          className={`w-full px-3 py-2 text-sm border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-primary transition-colors duration-300 ${
-            isDarkTheme
-              ? "bg-slate-700 border-slate-600 text-white placeholder-gray-400"
-              : "bg-white border-gray-300 text-gray-800"
-          }`}
+          className="w-full px-4 py-3 rounded-xl bg-white/10 backdrop-blur-lg border border-white/20 text-white placeholder-white/60 shadow-lg focus:outline-none focus:ring-2 focus:ring-white/30"
+          autoComplete="off"
         />
         {isSearching && (
-          <div className="absolute right-2 top-2">
-            <div className="animate-spin h-4 w-4 border-2 border-primary border-t-transparent rounded-full"></div>
+          <div className="absolute right-3 top-3">
+            <LoadingSpinner size="small" />
           </div>
         )}
       </div>
 
       {isDropdownOpen && (
-        <div
-          className={`absolute z-20 mt-1 w-full rounded-md shadow-lg max-h-[50vh] overflow-auto transition-colors duration-300 ${
-            isDarkTheme
-              ? "bg-slate-800 border border-slate-700"
-              : "bg-white border border-gray-100"
-          }`}
-        >
+        <div className="absolute z-30 mt-2 w-full rounded-xl shadow-lg max-h-[70vh] overflow-auto backdrop-blur-lg bg-black/40 border border-white/20">
           {/* Saved locations section */}
           {savedLocations.length > 0 && (
-            <div
-              className={
-                isDarkTheme
-                  ? "border-b border-slate-700"
-                  : "border-b border-gray-100"
-              }
-            >
-              <div
-                className={`px-4 py-2 text-sm ${
-                  isDarkTheme ? "text-gray-400" : "text-text-light"
-                }`}
-              >
+            <div className="border-b border-white/10">
+              <div className="px-4 py-2 text-sm text-white/70">
                 Saved locations
               </div>
               {savedLocations.map((location) => (
                 <div
                   key={location.id}
-                  className={`px-4 py-2 cursor-pointer flex justify-between items-center ${
-                    isDarkTheme ? "hover:bg-slate-700" : "hover:bg-gray-100"
-                  }`}
+                  className="px-4 py-3 cursor-pointer flex justify-between items-center hover:bg-white/10"
                   onClick={() => handleSelectSavedLocation(location)}
                 >
                   <div>
-                    <div
-                      className={`font-medium ${
-                        isDarkTheme ? "text-white" : "text-gray-800"
-                      }`}
-                    >
+                    <div className="font-medium text-white">
                       {location.name}
                     </div>
-                    <div
-                      className={`text-sm ${
-                        isDarkTheme ? "text-gray-400" : "text-text-light"
-                      }`}
-                    >
+                    <div className="text-sm text-white/70">
                       {location.country}
                     </div>
                   </div>
                   <div className="flex items-center gap-2">
                     {location.id === defaultLocation?.id ? (
-                      <div className="text-xs bg-primary text-white px-2 py-1 rounded-full">
+                      <div className="text-xs bg-white/20 text-white px-2 py-1 rounded-full">
                         Default
                       </div>
                     ) : (
                       <button
                         onClick={(e) => handleSetAsDefault(e, location.id)}
-                        className={`text-xs px-2 py-1 rounded ${
-                          isDarkTheme
-                            ? "bg-slate-600 text-slate-200 hover:bg-slate-500"
-                            : "bg-gray-200 text-gray-700 hover:bg-gray-300"
-                        }`}
+                        className="text-xs px-2 py-1 rounded-full bg-white/10 text-white/90 hover:bg-white/20"
                       >
                         Set Default
                       </button>
                     )}
                     <button
                       onClick={(e) => handleRemoveLocation(e, location.id)}
-                      className={`ml-2 p-1 rounded-full ${
-                        isDarkTheme
-                          ? "text-slate-400 hover:text-red-300 hover:bg-slate-600"
-                          : "text-gray-500 hover:text-red-500 hover:bg-gray-100"
-                      }`}
+                      className="p-1 rounded-full text-white/70 hover:text-white hover:bg-white/10"
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -233,56 +208,23 @@ export default function LocationSearch() {
           {/* Search results section */}
           {results.length > 0 && (
             <div>
-              <div
-                className={`px-4 py-2 text-sm ${
-                  isDarkTheme ? "text-gray-400" : "text-text-light"
-                }`}
-              >
+              <div className="px-4 py-2 text-sm text-white/70">
                 Search results
               </div>
               {results.map((location) => (
                 <div
                   key={location.id}
-                  className={`px-4 py-2 cursor-pointer flex items-center justify-between ${
-                    isDarkTheme ? "hover:bg-slate-700" : "hover:bg-gray-100"
-                  }`}
+                  className="px-4 py-3 cursor-pointer flex items-center justify-between hover:bg-white/10"
                   onClick={() => handleSelectLocation(location)}
                 >
                   <div>
-                    <div
-                      className={`font-medium ${
-                        isDarkTheme ? "text-white" : "text-gray-800"
-                      }`}
-                    >
+                    <div className="font-medium text-white">
                       {location.name}
                     </div>
-                    <div
-                      className={`text-sm ${
-                        isDarkTheme ? "text-gray-400" : "text-text-light"
-                      }`}
-                    >
+                    <div className="text-sm text-white/70">
                       {location.country}
                       {location.admin1 ? `, ${location.admin1}` : ""}
                     </div>
-                  </div>
-                  <div>
-                    <button
-                      className={`p-1 rounded-full ${
-                        isDarkTheme
-                          ? "bg-slate-700 text-slate-300"
-                          : "bg-gray-100 text-gray-600"
-                      }`}
-                      title="Add to saved locations"
-                    >
-                      <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 20 20"
-                        fill="currentColor"
-                        className="w-4 h-4"
-                      >
-                        <path d="M10.75 4.75a.75.75 0 00-1.5 0v4.5h-4.5a.75.75 0 000 1.5h4.5v4.5a.75.75 0 001.5 0v-4.5h4.5a.75.75 0 000-1.5h-4.5v-4.5z" />
-                      </svg>
-                    </button>
                   </div>
                 </div>
               ))}
@@ -291,31 +233,19 @@ export default function LocationSearch() {
 
           {/* Empty states */}
           {query.trim().length > 1 && results.length === 0 && !isSearching && (
-            <div
-              className={`px-4 py-6 text-center ${
-                isDarkTheme ? "text-gray-400" : "text-text-light"
-              }`}
-            >
+            <div className="px-4 py-6 text-center text-white/70">
               No locations found for "{query}"
             </div>
           )}
 
           {query.trim().length <= 1 && savedLocations.length === 0 && (
-            <div
-              className={`px-4 py-6 text-center ${
-                isDarkTheme ? "text-gray-400" : "text-text-light"
-              }`}
-            >
+            <div className="px-4 py-6 text-center text-white/70">
               Search for a location above or use your current location
             </div>
           )}
 
           {/* Current location button */}
-          <div
-            className={`px-4 py-3 border-t ${
-              isDarkTheme ? "border-slate-700" : "border-gray-100"
-            }`}
-          >
+          <div className="px-4 py-3 border-t border-white/10">
             <button
               onClick={() => {
                 navigator.geolocation.getCurrentPosition(
@@ -325,6 +255,9 @@ export default function LocationSearch() {
                       longitude: position.coords.longitude,
                     });
                     setIsDropdownOpen(false);
+                    if (onLocationSelect) {
+                      onLocationSelect();
+                    }
                   },
                   (error) => {
                     console.error("Geolocation error:", error);
@@ -334,11 +267,7 @@ export default function LocationSearch() {
                   }
                 );
               }}
-              className={`w-full py-2 rounded-md flex items-center justify-center ${
-                isDarkTheme
-                  ? "bg-slate-700 text-white hover:bg-slate-600"
-                  : "bg-gray-100 text-gray-800 hover:bg-gray-200"
-              }`}
+              className="w-full py-3 rounded-lg flex items-center justify-center bg-white/10 text-white hover:bg-white/20"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
