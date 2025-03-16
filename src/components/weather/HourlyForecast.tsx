@@ -29,13 +29,15 @@ export default function HourlyForecast({ hourlyData }: HourlyForecastProps) {
 
   return (
     <div className="h-full flex flex-col">
-      <h3 className="text-lg font-semibold mb-2">Hourly Forecast</h3>
+      <h3 className="text-base sm:text-lg font-semibold mb-2">
+        Hourly Forecast
+      </h3>
       <div
         className={`flex-1 rounded-lg shadow overflow-hidden ${
           isDarkTheme ? "bg-slate-800 text-white" : "bg-white text-gray-800"
         } transition-colors duration-300`}
       >
-        {/* Scroll container with snap scroll for touch interfaces */}
+        {/* Horizontal scroll container with snap scroll */}
         <div className="flex overflow-x-auto p-2 space-x-1 snap-x snap-mandatory h-full items-center scrollbar-thin scrollbar-thumb-rounded scrollbar-thumb-primary scrollbar-track-transparent">
           {next24Hours.time.map((time, index) => {
             const weatherInfo = getWeatherInfo(next24Hours.weather_code[index]);
@@ -43,7 +45,7 @@ export default function HourlyForecast({ hourlyData }: HourlyForecastProps) {
             return (
               <div
                 key={time}
-                className="flex flex-col items-center min-w-[62px] sm:min-w-[72px] p-2 rounded-lg snap-center hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
+                className="flex flex-col items-center min-w-[60px] sm:min-w-[72px] p-2 rounded-lg snap-center hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
               >
                 <div className="text-xs font-medium">
                   {index === 0 ? "Now" : formatHour(time)}
@@ -54,7 +56,7 @@ export default function HourlyForecast({ hourlyData }: HourlyForecastProps) {
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
                       fill="currentColor"
-                      className="w-8 h-8 text-amber-500"
+                      className="w-7 h-7 text-amber-500"
                     >
                       <path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06l-1.591 1.59a.75.75 0 001.06 1.061l1.591-1.59zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.697 7.757a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 00-1.061 1.06l1.59 1.591z" />
                     </svg>
@@ -63,7 +65,7 @@ export default function HourlyForecast({ hourlyData }: HourlyForecastProps) {
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
                       fill="currentColor"
-                      className="w-8 h-8 text-gray-500"
+                      className="w-7 h-7 text-gray-500"
                     >
                       <path
                         fillRule="evenodd"
@@ -76,7 +78,7 @@ export default function HourlyForecast({ hourlyData }: HourlyForecastProps) {
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
                       fill="currentColor"
-                      className="w-8 h-8 text-blue-500"
+                      className="w-7 h-7 text-blue-500"
                     >
                       <path
                         fillRule="evenodd"
@@ -90,7 +92,7 @@ export default function HourlyForecast({ hourlyData }: HourlyForecastProps) {
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
                       fill="currentColor"
-                      className="w-8 h-8 text-blue-100"
+                      className="w-7 h-7 text-blue-100"
                     >
                       <path
                         fillRule="evenodd"
@@ -99,25 +101,12 @@ export default function HourlyForecast({ hourlyData }: HourlyForecastProps) {
                       />
                       <path d="M3.75 15.75a.75.75 0 00.75.75h.008a.75.75 0 00.75-.75v-.008a.75.75 0 00-.75-.75H4.5a.75.75 0 00-.75.75v.008zm2.25-3a.75.75 0 01.75-.75h.008a.75.75 0 01.75.75v.008a.75.75 0 01-.75.75H6.75a.75.75 0 01-.75-.75v-.008zm3 3a.75.75 0 00.75.75h.008a.75.75 0 00.75-.75v-.008a.75.75 0 00-.75-.75H9.75a.75.75 0 00-.75.75v.008z" />
                     </svg>
-                  ) : weatherInfo.icon === "cloud-lightning" ? (
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      viewBox="0 0 24 24"
-                      fill="currentColor"
-                      className="w-8 h-8 text-yellow-400"
-                    >
-                      <path
-                        fillRule="evenodd"
-                        d="M14.615 1.595a.75.75 0 01.359.852L12.982 9.75h7.268a.75.75 0 01.548 1.262l-10.5 11.25a.75.75 0 01-1.272-.71l1.992-7.302H3.75a.75.75 0 01-.548-1.262l10.5-11.25a.75.75 0 01.913-.143z"
-                        clipRule="evenodd"
-                      />
-                    </svg>
                   ) : (
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       viewBox="0 0 24 24"
                       fill="currentColor"
-                      className="w-8 h-8 text-gray-400"
+                      className="w-7 h-7 text-gray-400"
                     >
                       <path
                         fillRule="evenodd"
@@ -127,7 +116,7 @@ export default function HourlyForecast({ hourlyData }: HourlyForecastProps) {
                     </svg>
                   )}
                 </div>
-                <div className="font-semibold">
+                <div className="font-semibold text-sm sm:text-base">
                   {Math.round(next24Hours.temperature_2m[index])}°
                 </div>
                 {next24Hours.precipitation_probability[index] > 0 && (

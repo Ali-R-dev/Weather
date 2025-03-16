@@ -6,9 +6,9 @@ function App() {
   return (
     <ThemeProvider>
       <WeatherProvider>
-        <div className="min-h-[100dvh] flex flex-col bg-background text-text transition-colors duration-300">
+        <div className="min-h-screen flex flex-col bg-background text-text transition-colors duration-300">
           <header className="sticky top-0 z-20 bg-gradient-to-r from-primary to-secondary text-white shadow-md transition-colors duration-300">
-            <div className="container mx-auto px-4 py-3 flex items-center justify-between">
+            <div className="container max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
               <div className="flex items-center">
                 <svg
                   className="w-6 h-6 mr-2"
@@ -29,11 +29,11 @@ function App() {
             </div>
           </header>
 
-          <main className="flex-1 overflow-x-hidden">
+          <main className="flex-grow overflow-hidden">
             <HomePage />
           </main>
 
-          <footer className="sticky bottom-0 z-10 bg-slate-800 bg-opacity-90 backdrop-blur-sm text-white py-2 text-center text-xs border-t border-slate-700 transition-colors duration-300">
+          <footer className="sticky bottom-0 z-20 bg-slate-800 bg-opacity-90 backdrop-blur-sm text-white py-2 text-center text-xs border-t border-slate-700 transition-colors duration-300">
             <p>Data by Open-Meteo API • © 2025 Weather App</p>
           </footer>
         </div>

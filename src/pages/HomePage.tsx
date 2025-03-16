@@ -15,7 +15,7 @@ export default function HomePage() {
   const geoLocationUsed = useRef(false);
   const [activeTab, setActiveTab] = useState<"hourly" | "daily">("hourly");
 
-  // Keep existing location loading logic
+  // Location loading logic
   useEffect(() => {
     // Skip this effect if we've already loaded weather data
     if (initialLoadCompleted.current) {
@@ -50,15 +50,15 @@ export default function HomePage() {
   }, [defaultLocation, location, loading, setLocation, weatherData]);
 
   return (
-    <div className="container mx-auto p-2 sm:p-4 max-h-[calc(100dvh-85px)] flex flex-col">
+    <div className="container max-w-7xl mx-auto p-2 sm:p-4">
       {/* Search component - fixed at top */}
-      <div className="mb-2 sm:mb-3 mx-auto w-full max-w-md">
+      <div className="mb-2 sm:mb-3 w-full max-w-lg mx-auto">
         <LocationSearch />
       </div>
 
       {/* Loading and error states */}
       {(geoLoading || loading) && !weatherData && (
-        <div className="flex-1 flex justify-center items-center">
+        <div className="flex justify-center items-center py-12">
           <div className="flex flex-col items-center">
             <div className="animate-spin h-10 w-10 border-4 border-primary border-t-transparent rounded-full mb-4"></div>
             <div className="text-lg">Loading weather data...</div>
@@ -67,7 +67,7 @@ export default function HomePage() {
       )}
 
       {(geoError && !weatherData && !defaultLocation) || error ? (
-        <div className="flex-1 flex justify-center items-center">
+        <div className="flex justify-center items-center py-12">
           <div className="bg-red-50 border border-red-200 text-red-700 p-4 rounded-lg max-w-md">
             <p className="font-medium">
               {error ? "Error loading data" : "Location access denied"}
@@ -81,48 +81,89 @@ export default function HomePage() {
 
       {/* Weather Data Layout */}
       {weatherData && (
-        <div className="flex-1 flex flex-col h-full max-h-full overflow-hidden">
-          {/* Adaptive layout - column on mobile, grid on larger screens */}
-          <div className="grid grid-cols-1 lg:grid-cols-12 gap-2 sm:gap-3 h-full">
-            {/* Current Weather - Takes 1/3 height on mobile, 1/2 width on desktop */}
-            <div className="lg:col-span-5 h-[35vh] lg:h-full">
+        <div className="weather-container">
+          {/* Desktop layout with side-by-side components */}
+          <div className="hidden lg:grid lg:grid-cols-12 lg:gap-4 lg:h-[calc(100vh-150px)]">
+            {/* Current Weather - Left Side */}
+            <div className="lg:col-span-5 xl:col-span-4">
               <CurrentWeather data={weatherData} />
             </div>
 
-            {/* Forecasts Container - 2/3 height on mobile, 1/2 width on desktop */}
-            <div className="lg:col-span-7 flex flex-col h-[calc(65vh-85px)] lg:h-full">
+            {/* Forecast - Right Side */}
+            <div className="lg:col-span-7 xl:col-span-8 flex flex-col">
               {/* Tab Navigation */}
-              <div className="flex mb-2 bg-gray-100 dark:bg-slate-700 rounded-lg p-1 max-w-xs mx-auto lg:mx-0">
+              <div className="flex mb-2 bg-gray-100 dark:bg-slate-700 rounded-lg p-1 max-w-xs">
                 <button
-                  className={`flex-1 py-1 text-sm font-medium rounded-md transition ${
+                  className={`flex-1 py-2 text-sm font-medium rounded-md transition ${
                     activeTab === "hourly"
                       ? "bg-white dark:bg-slate-600 shadow text-primary"
                       : "text-gray-600 dark:text-gray-300 hover:text-primary"
                   }`}
                   onClick={() => setActiveTab("hourly")}
                 >
-                  24-Hour
+                  24-Hour Forecast
                 </button>
                 <button
-                  className={`flex-1 py-1 text-sm font-medium rounded-md transition ${
+                  className={`flex-1 py-2 text-sm font-medium rounded-md transition ${
                     activeTab === "daily"
                       ? "bg-white dark:bg-slate-600 shadow text-primary"
                       : "text-gray-600 dark:text-gray-300 hover:text-primary"
                   }`}
                   onClick={() => setActiveTab("daily")}
                 >
-                  7-Day
+                  7-Day Forecast
                 </button>
               </div>
 
-              {/* Forecast Content - Fills remaining space */}
-              <div className="flex-1 min-h-0">
+              {/* Forecast Content */}
+              <div className="flex-1">
                 {activeTab === "hourly" ? (
                   <HourlyForecast hourlyData={weatherData.hourly} />
                 ) : (
                   <ForecastDay dailyData={weatherData.daily} />
                 )}
               </div>
+            </div>
+          </div>
+
+          {/* Mobile layout with stacked components */}
+          <div className="lg:hidden space-y-3">
+            {/* Current Weather - Top */}
+            <div className="h-auto max-h-[45vh]">
+              <CurrentWeather data={weatherData} />
+            </div>
+
+            {/* Tab Navigation */}
+            <div className="flex bg-gray-100 dark:bg-slate-700 rounded-lg p-1 max-w-xs mx-auto">
+              <button
+                className={`flex-1 py-1.5 text-sm font-medium rounded-md transition ${
+                  activeTab === "hourly"
+                    ? "bg-white dark:bg-slate-600 shadow text-primary"
+                    : "text-gray-600 dark:text-gray-300 hover:text-primary"
+                }`}
+                onClick={() => setActiveTab("hourly")}
+              >
+                24-Hour
+              </button>
+              <button
+                className={`flex-1 py-1.5 text-sm font-medium rounded-md transition ${
+                  activeTab === "daily"
+                    ? "bg-white dark:bg-slate-600 shadow text-primary"
+                    : "text-gray-600 dark:text-gray-300 hover:text-primary"
+                }`}
+                onClick={() => setActiveTab("daily")}
+              >
+                7-Day
+              </button>
+            </div>
+
+            {/* Forecast Content - Bottom */}
+            <div className="h-auto max-h-[40vh]">
+              {activeTab === "hourly" ? (
+                <HourlyForecast hourlyData={weatherData.hourly} />
+              ) : (
+                <ForecastDay dailyData={weatherData.daily} />
+              )}
             </div>
           </div>
         </div>
