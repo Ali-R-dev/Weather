@@ -1,14 +1,14 @@
 import { getWeatherInfo } from "../../utils/weatherCodeMap";
 import { HourlyWeather } from "../../types/weather.types";
-import { useTheme } from "../../context/ThemeContext";
+// import { useTheme } from "../../context/ThemeContext";
 
 interface HourlyForecastProps {
   hourlyData: HourlyWeather;
 }
 
 export default function HourlyForecast({ hourlyData }: HourlyForecastProps) {
-  const { currentTheme } = useTheme();
-  const isDarkTheme = currentTheme.includes("night");
+  // const { currentTheme } = useTheme();s
+  // const isDarkTheme = currentTheme.includes("night");
 
   // Format time to show only hour
   const formatHour = (timeStr: string): string => {

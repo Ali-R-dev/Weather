@@ -9,11 +9,20 @@ interface CurrentWeatherProps {
   data: WeatherData;
 }
 
+// Helper function to get UV index label
+const getUVIndexLabel = (uvIndex: number): string => {
+  if (uvIndex <= 2) return "(Low)";
+  if (uvIndex <= 5) return "(Moderate)";
+  if (uvIndex <= 7) return "(High)";
+  if (uvIndex <= 10) return "(Very High)";
+  return "(Extreme)";
+};
+
 export default function CurrentWeather({ data }: CurrentWeatherProps) {
   const { currentLocation } = useWeather();
   const { applyTheme } = useTheme();
   const weatherInfo = getWeatherInfo(data.current.weather_code);
-  const isNight = data.current.is_day !== 1;
+  // const isNight = data.current.is_day !== 1;
 
   // Apply theme based on current weather and time of day
   useEffect(() => {
@@ -172,7 +181,16 @@ export default function CurrentWeather({ data }: CurrentWeatherProps) {
         <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 border border-white/10">
           <div className="text-xs opacity-70">UV Index</div>
           <div className="text-lg font-medium">
-            {Math.round((data.current.is_day ? 6 : 0) * Math.random())}
+            {typeof data.current.uv_index === "number" ? (
+              <>
+                {Math.round(data.current.uv_index)}
+                <span className="text-xs ml-1">
+                  {getUVIndexLabel(data.current.uv_index)}
+                </span>
+              </>
+            ) : (
+              "N/A"
+            )}
           </div>
         </div>
       </div>

@@ -9,12 +9,15 @@ import useSavedLocations, {
 } from "../../hooks/useSavedLocations";
 import LoadingSpinner from "../common/LoadingSpinner";
 
+// Add a compact prop to the interface
 interface LocationSearchProps {
   onLocationSelect?: () => void;
+  compact?: boolean; // New prop for compact mode
 }
 
 export default function LocationSearch({
   onLocationSelect,
+  compact = false, // Default to false for backward compatibility
 }: LocationSearchProps) {
   const [query, setQuery] = useState("");
   const [results, setResults] = useState<GeocodingResult[]>([]);
@@ -130,25 +133,80 @@ export default function LocationSearch({
 
   return (
     <div className="relative w-full" ref={dropdownRef}>
-      <div className="relative">
-        <input
-          type="text"
-          placeholder="Search for a location..."
-          value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          onFocus={() => setIsDropdownOpen(true)}
-          className="w-full px-4 py-3 rounded-xl bg-white/10 backdrop-blur-lg border border-white/20 text-white placeholder-white/60 shadow-lg focus:outline-none focus:ring-2 focus:ring-white/30"
-          autoComplete="off"
-        />
-        {isSearching && (
-          <div className="absolute right-3 top-3">
-            <LoadingSpinner size="small" />
-          </div>
-        )}
-      </div>
+      {/* Only show the search input in full mode, not compact mode */}
+      {!compact && (
+        <div className="relative">
+          <input
+            type="text"
+            placeholder="Search for a location..."
+            value={query}
+            onChange={(e) => setQuery(e.target.value)}
+            onFocus={() => setIsDropdownOpen(true)}
+            className="w-full px-4 py-3 rounded-xl bg-white/10 backdrop-blur-lg border border-white/20 text-white placeholder-white/60 shadow-lg focus:outline-none focus:ring-2 focus:ring-white/30"
+            autoComplete="off"
+          />
+          {isSearching && (
+            <div className="absolute right-3 top-3">
+              <LoadingSpinner size="small" />
+            </div>
+          )}
+        </div>
+      )}
 
-      {isDropdownOpen && (
-        <div className="absolute z-30 mt-2 w-full rounded-xl shadow-lg max-h-[70vh] overflow-auto backdrop-blur-lg bg-black/40 border border-white/20">
+      {/* Search Results Container */}
+      {(isDropdownOpen || compact) && (
+        <div
+          className={`${
+            compact ? "rounded-2xl" : "absolute z-30 mt-2"
+          } w-full shadow-xl max-h-[70vh] overflow-auto backdrop-blur-lg bg-black/50 border border-white/20`}
+        >
+          {/* Close button for compact mode */}
+          {compact && (
+            <div className="sticky top-0 z-10 px-4 py-3 flex items-center justify-between bg-black/50 backdrop-blur-md border-b border-white/10">
+              <div className="text-white font-medium">Search Locations</div>
+              <button
+                onClick={() => {
+                  if (onLocationSelect) onLocationSelect();
+                }}
+                className="p-1.5 rounded-full hover:bg-white/20"
+              >
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={2}
+                  stroke="currentColor"
+                  className="w-5 h-5 text-white/90"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M6 18L18 6M6 6l12 12"
+                  />
+                </svg>
+              </button>
+            </div>
+          )}
+
+          {compact && (
+            <div className="relative px-4 py-3">
+              <input
+                type="text"
+                placeholder="Search for a location..."
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                className="w-full px-4 py-3 rounded-xl bg-white/10 backdrop-blur-lg border border-white/20 text-white placeholder-white/60 shadow-md focus:outline-none focus:ring-2 focus:ring-white/30"
+                autoComplete="off"
+                autoFocus
+              />
+              {isSearching && (
+                <div className="absolute right-7 top-6">
+                  <LoadingSpinner size="small" />
+                </div>
+              )}
+            </div>
+          )}
+
           {/* Saved locations section */}
           {savedLocations.length > 0 && (
             <div className="border-b border-white/10">

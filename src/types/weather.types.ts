@@ -7,6 +7,7 @@ export interface CurrentWeather {
   wind_speed_10m: number;
   wind_direction_10m: number;
   is_day: number;
+  uv_index: number; // Make sure this is here and not optional
 }
 
 export interface DailyWeather {

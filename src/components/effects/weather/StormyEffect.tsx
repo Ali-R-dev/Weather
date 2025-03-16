@@ -21,7 +21,7 @@ const StormyEffect = ({ isDay }: StormyEffectProps) => {
 
       // Remove the flash after animation completes
       setTimeout(() => {
-        if (flash.parentNode === containerRef.current) {
+        if (flash.parentNode === containerRef.current && containerRef.current) {
           containerRef.current.removeChild(flash);
         }
       }, 250);

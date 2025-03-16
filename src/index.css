@@ -420,3 +420,32 @@ body {
 }
 
 /* Keep necessary basic animations like fadeIn, etc. */
+
+/* Add this to your existing CSS animations */
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.2s ease-out forwards;
+}
+
+/* Media query adjustments for responsiveness */
+@media (min-width: 768px) {
+  .md\:pt-24 {
+    padding-top: 6rem;
+  }
+  
+  .md\:text-base {
+    font-size: 1rem;
+    line-height: 1.5rem;
+  }
+}

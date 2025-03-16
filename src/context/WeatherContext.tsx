@@ -6,7 +6,7 @@ import {
   useCallback,
 } from "react";
 import { WeatherData } from "../types/weather.types";
-import { fetchWeatherData } from "../services/weatherService";
+// import { fetchWeatherData } from "../services/weatherService";
 
 interface LocationInfo {
   latitude: number;
@@ -41,7 +41,10 @@ export function WeatherProvider({ children }: { children: ReactNode }) {
       setLoading(true);
       setError(null);
       try {
-        const data = await fetchWeatherData({ latitude, longitude });
+        const response = await fetch(
+          `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,wind_direction_10m,is_day,uv_index&hourly=temperature_2m,precipitation_probability,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max,wind_speed_10m_max&timezone=auto`
+        );
+        const data = await response.json();
         setWeatherData(data);
         setCurrentLocation({ latitude, longitude });
         setLastUpdated(new Date());

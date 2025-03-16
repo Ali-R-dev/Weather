@@ -2,11 +2,11 @@ import { useEffect, useRef, useState } from "react";
 import { useWeather } from "../context/WeatherContext";
 import useGeolocation from "../hooks/useGeolocation";
 import useSavedLocations from "../hooks/useSavedLocations";
-import { useTheme } from "../context/ThemeContext";
 import CurrentWeather from "../components/weather/CurrentWeather";
 import HourlyForecast from "../components/weather/HourlyForecast";
 import ForecastDay from "../components/weather/ForecastDay";
 import LocationSearch from "../components/weather/LocationSearch";
+import MiniSearchBar from "../components/weather/MiniSearchBar";
 import { timeAgo } from "../utils/dateUtils";
 import BackgroundEffect from "../components/effects/BackgroundEffect";
 
@@ -15,11 +15,10 @@ export default function HomePage() {
     useWeather();
   const { location, loading: geoLoading, error: geoError } = useGeolocation();
   const { defaultLocation } = useSavedLocations();
-  const { currentTheme } = useTheme();
   const initialLoadCompleted = useRef(false);
   const geoLocationUsed = useRef(false);
   const [activeTab, setActiveTab] = useState<"hourly" | "daily">("hourly");
-  const [showSearch, setShowSearch] = useState(false);
+  const [showSearchResults, setShowSearchResults] = useState(false);
 
   // Location loading logic
   useEffect(() => {
@@ -59,75 +58,42 @@ export default function HomePage() {
   };
 
   return (
-    <>
-      {/* Dynamic weather effects in background */}
+    <div className="weather-app">
       {weatherData && (
         <BackgroundEffect
           weatherCode={weatherData.current.weather_code}
           isDay={weatherData.current.is_day === 1}
-          intensity={getRainIntensity(weatherData.current.weather_code)}
         />
       )}
 
-      {/* Main content container */}
       <div className="min-h-screen flex flex-col w-full relative z-10">
-        {/* Header with location search toggle */}
+        {/* Header with centered search bar */}
         <header className="pt-safe sticky top-0 z-50 w-full">
-          <div className="flex justify-between items-center p-4">
-            <button
-              onClick={() => setShowSearch(!showSearch)}
-              className="bg-black/20 backdrop-blur-md rounded-full p-3 shadow-lg text-white"
-              aria-label="Toggle location search"
-            >
-              {showSearch ? (
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2}
-                  stroke="currentColor"
-                  className="w-6 h-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M6 18L18 6M6 6l12 12"
-                  />
-                </svg>
-              ) : (
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  strokeWidth={2}
-                  stroke="currentColor"
-                  className="w-6 h-6"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M15 10.5a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M19.5 10.5c0 7.142-7.5 11.25-7.5 11.25S4.5 17.642 4.5 10.5a7.5 7.5 0 1115 0z"
-                  />
-                </svg>
-              )}
-            </button>
+          <div className="max-w-screen-sm mx-auto w-full px-3 pt-4">
+            {/* Mini Search Bar Component - centered on desktop, full-width on mobile */}
+            <MiniSearchBar
+              onFocus={() => setShowSearchResults(true)}
+              onSelect={() => setShowSearchResults(false)}
+              isActive={showSearchResults}
+            />
 
-            {weatherData && lastUpdated && (
-              <div className="text-sm text-white/70">
+            {/* Last updated status below search */}
+            {!showSearchResults && weatherData && (
+              <div className="text-xs opacity-60 text-center mt-2">
                 Last updated: {timeAgo(lastUpdated)}
               </div>
             )}
           </div>
 
-          {/* Search overlay */}
-          {showSearch && (
-            <div className="absolute left-0 right-0 px-4 pb-4 animate-fade-in">
-              <LocationSearch onLocationSelect={() => setShowSearch(false)} />
+          {/* Search results overlay */}
+          {showSearchResults && (
+            <div className="fixed inset-0 bg-gradient-to-b from-black/90 to-black/70 backdrop-blur-sm pt-20 px-3 pb-3 animate-fade-in max-h-screen overflow-auto md:pt-24">
+              <div className="max-w-lg mx-auto">
+                <LocationSearch
+                  compact={true}
+                  onLocationSelect={() => setShowSearchResults(false)}
+                />
+              </div>
             </div>
           )}
         </header>
@@ -203,6 +169,6 @@ export default function HomePage() {
           </div>
         )}
       </div>
-    </>
+    </div>
   );
 }
