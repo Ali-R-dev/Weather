@@ -50,14 +50,315 @@ export default function HomePage() {
     }
   }, [defaultLocation, location, loading, setLocation, weatherData]);
 
-  // Get weather-appropriate background elements
+  // Get weather-appropriate background elements with animations
   const getWeatherEffects = () => {
-    // ... existing effects code (unchanged) ...
-    switch (currentTheme) {
-      // All your existing cases remain unchanged
-      default:
-        return null;
+    if (!weatherData) return null;
+
+    const weatherCode = weatherData.current.weather_code;
+    const isDay = weatherData.current.is_day === 1;
+
+    // Rain animation
+    if (
+      [51, 53, 55, 56, 57, 61, 63, 65, 66, 67, 80, 81, 82].includes(weatherCode)
+    ) {
+      const raindrops = [];
+      const intensity = [51, 56, 61, 80].includes(weatherCode)
+        ? 50
+        : [53, 57, 63, 66, 81].includes(weatherCode)
+        ? 80
+        : 120;
+
+      for (let i = 0; i < intensity; i++) {
+        const duration = 0.7 + Math.random() * 0.3;
+        const delay = Math.random() * 5;
+        const leftPos = Math.random() * 100;
+        const height = Math.random() * 10 + 15;
+
+        raindrops.push(
+          <div
+            key={`rain-${i}`}
+            className="raindrop"
+            style={{
+              left: `${leftPos}%`,
+              height: `${height}px`,
+              animationDuration: `${duration}s`,
+              animationDelay: `${delay}s`,
+              opacity: 0.5 + Math.random() * 0.5,
+              animation: `rainfall ${duration}s linear ${delay}s infinite`,
+            }}
+          />
+        );
+      }
+
+      return (
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {raindrops}
+        </div>
+      );
     }
+
+    // Snow animation
+    if ([71, 73, 75, 77, 85, 86].includes(weatherCode)) {
+      const snowflakes = [];
+      const intensity = [71, 85].includes(weatherCode)
+        ? 40
+        : [73].includes(weatherCode)
+        ? 70
+        : 100;
+
+      for (let i = 0; i < intensity; i++) {
+        const size = Math.random() * 6 + 2;
+        const duration = 6 + Math.random() * 6;
+        const delay = Math.random() * 5;
+        const leftPos = Math.random() * 100;
+
+        snowflakes.push(
+          <div
+            key={`snow-${i}`}
+            className="snowflake"
+            style={{
+              left: `${leftPos}%`,
+              width: `${size}px`,
+              height: `${size}px`,
+              animationDuration: `${duration}s`,
+              animationDelay: `${delay}s`,
+              animation: `snowfall ${duration}s ease-in-out ${delay}s infinite`,
+            }}
+          />
+        );
+      }
+
+      return (
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {snowflakes}
+        </div>
+      );
+    }
+
+    // Cloud animation for cloudy weather
+    if ([2, 3].includes(weatherCode)) {
+      const clouds = [];
+      const count = weatherCode === 2 ? 5 : 8;
+
+      for (let i = 0; i < count; i++) {
+        const size = Math.random() * 300 + 200;
+        const duration = 60 + Math.random() * 60;
+        const delay = Math.random() * 30;
+        const topPos = Math.random() * 60;
+
+        clouds.push(
+          <div
+            key={`cloud-${i}`}
+            className="cloud"
+            style={{
+              top: `${topPos}%`,
+              left: `-50%`,
+              width: `${size}px`,
+              height: `${size * 0.6}px`,
+              background: isDay
+                ? "rgba(255, 255, 255, 0.4)"
+                : "rgba(255, 255, 255, 0.15)",
+              animationDuration: `${duration}s`,
+              animationDelay: `${delay}s`,
+              animation: `driftacross ${duration}s linear ${delay}s infinite`,
+            }}
+          />
+        );
+      }
+
+      return (
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {clouds}
+        </div>
+      );
+    }
+
+    // Fog animation
+    if ([45, 48].includes(weatherCode)) {
+      const fogPatches = [];
+
+      for (let i = 0; i < 8; i++) {
+        const size = Math.random() * 400 + 200;
+        const duration = 30 + Math.random() * 20;
+        const delay = Math.random() * 10;
+        const topPos = Math.random() * 70;
+        const leftPos = Math.random() * 100;
+
+        fogPatches.push(
+          <div
+            key={`fog-${i}`}
+            style={{
+              position: "absolute",
+              top: `${topPos}%`,
+              left: `${leftPos}%`,
+              width: `${size}px`,
+              height: `${size * 0.8}px`,
+              background: isDay
+                ? "rgba(255, 255, 255, 0.3)"
+                : "rgba(255, 255, 255, 0.1)",
+              borderRadius: "50%",
+              filter: "blur(50px)",
+              animation: `fogMove ${duration}s ease-in-out ${delay}s infinite alternate`,
+            }}
+          />
+        );
+      }
+
+      return (
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {fogPatches}
+        </div>
+      );
+    }
+
+    // Lightning animation for thunderstorms
+    if ([95, 96, 99].includes(weatherCode)) {
+      const lightning = [];
+
+      for (let i = 0; i < 3; i++) {
+        const delay = i * 4 + Math.random() * 8;
+
+        lightning.push(
+          <div
+            key={`lightning-${i}`}
+            style={{
+              position: "absolute",
+              inset: 0,
+              background: "rgba(255, 255, 255, 0.8)",
+              animation: `lightningBolt 10s ease-out ${delay}s infinite`,
+            }}
+          />
+        );
+      }
+
+      // Add rain for thunderstorms too
+      const raindrops = [];
+      for (let i = 0; i < 100; i++) {
+        const duration = 0.7 + Math.random() * 0.3;
+        const delay = Math.random() * 5;
+        const leftPos = Math.random() * 100;
+        const height = Math.random() * 10 + 15;
+
+        raindrops.push(
+          <div
+            key={`rain-${i}`}
+            className="raindrop"
+            style={{
+              left: `${leftPos}%`,
+              height: `${height}px`,
+              animationDuration: `${duration}s`,
+              animationDelay: `${delay}s`,
+              animation: `rainfall ${duration}s linear ${delay}s infinite`,
+            }}
+          />
+        );
+      }
+
+      return (
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {lightning}
+          {raindrops}
+        </div>
+      );
+    }
+
+    // Sun rays animation for clear skies
+    if ([0, 1].includes(weatherCode) && isDay) {
+      const sunPosition = {
+        top: "10%",
+        right: "15%",
+      };
+
+      const rays = [];
+      for (let i = 0; i < 12; i++) {
+        const angle = (i * 30) % 360;
+        const length = 40 + Math.random() * 20;
+
+        rays.push(
+          <div
+            key={`ray-${i}`}
+            style={{
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              width: `${length}px`,
+              height: "4px",
+              background: "rgba(255, 235, 150, 0.7)",
+              borderRadius: "2px",
+              transformOrigin: "0 50%",
+              transform: `rotate(${angle}deg)`,
+              animation: "sunray 3s ease-in-out infinite alternate",
+              animationDelay: `${i * 0.25}s`,
+            }}
+          />
+        );
+      }
+
+      return (
+        <div
+          className="absolute overflow-hidden pointer-events-none"
+          style={sunPosition}
+        >
+          <div className="relative w-40 h-40">
+            <div className="absolute inset-0 rounded-full bg-yellow-300 animate-pulse"></div>
+            {rays}
+          </div>
+        </div>
+      );
+    }
+
+    // Night sky with stars
+    if ([0, 1].includes(weatherCode) && !isDay) {
+      const stars = [];
+
+      for (let i = 0; i < 100; i++) {
+        const size = Math.random() * 3 + 1;
+        const topPos = Math.random() * 70;
+        const leftPos = Math.random() * 100;
+        const delay = Math.random() * 5;
+
+        stars.push(
+          <div
+            key={`star-${i}`}
+            style={{
+              position: "absolute",
+              top: `${topPos}%`,
+              left: `${leftPos}%`,
+              width: `${size}px`,
+              height: `${size}px`,
+              background: "rgba(255, 255, 255, 0.8)",
+              borderRadius: "50%",
+              animation: `twinkle 4s ease-in-out ${delay}s infinite`,
+            }}
+          />
+        );
+      }
+
+      // Add a moon
+      const moon = (
+        <div
+          style={{
+            position: "absolute",
+            top: "15%",
+            right: "15%",
+            width: "80px",
+            height: "80px",
+            background: "rgba(255, 255, 255, 0.9)",
+            borderRadius: "50%",
+            boxShadow: "0 0 20px 5px rgba(255, 255, 255, 0.4)",
+          }}
+        />
+      );
+
+      return (
+        <div className="absolute inset-0 overflow-hidden pointer-events-none">
+          {moon}
+          {stars}
+        </div>
+      );
+    }
+
+    return null;
   };
 
   return (
