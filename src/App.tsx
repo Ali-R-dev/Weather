@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { WeatherProvider } from "./context/WeatherContext";
 import { ThemeProvider } from "./context/ThemeContext";
-import HomePage from "./pages/HomePage";
+import PremiumHomePage from "./pages/PremiumHomePage"; // Update import
 import PrivacyPolicyModal from "./components/PrivacyPolicyModal";
 import WeatherLoadingScreen from "./components/common/WeatherLoadingScreen";
-import { useWeather } from "./context/WeatherContext"; // Import useWeather
+import { useWeather } from "./context/WeatherContext";
 
 function App() {
   const [privacyModalVisible, setPrivacyModalVisible] = useState(false);
@@ -21,7 +21,7 @@ function App() {
 
     const timer = setTimeout(() => {
       setInitialLoading(false);
-    }, 2000); // Show loading screen for at least 2 seconds
+    }, 2000);
 
     return () => clearTimeout(timer);
   }, []);
@@ -39,46 +39,22 @@ function App() {
   );
 }
 
-// Separate component to use the WeatherContext
 function AppContent({
   initialLoading,
   privacyModalVisible,
   setPrivacyModalVisible,
-}: {
-  initialLoading: boolean;
-  privacyModalVisible: boolean;
-  setPrivacyModalVisible: (visible: boolean) => void;
 }) {
-  const { loading, weatherData } = useWeather(); // Import useWeather at the top
+  const { loading, weatherData } = useWeather();
 
   return (
     <>
       <WeatherLoadingScreen
         isLoading={initialLoading || (loading && !weatherData)}
       />
-      <div className="flex flex-col h-screen weather-app relative">
+      <div className="flex flex-col h-screen relative">
         <div className="flex-grow overflow-y-auto">
-          <HomePage />
+          <PremiumHomePage /> {/* Use premium page here */}
         </div>
-        <footer className="fixed bottom-0 left-0 w-full py-2 px-4 bg-black/20 backdrop-blur-md text-white text-xs flex items-center justify-between">
-          <span>
-            Weather data by{" "}
-            <a
-              href="https://open-meteo.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline"
-            >
-              Open Meteo
-            </a>
-          </span>
-          <button
-            onClick={() => setPrivacyModalVisible(true)}
-            className="underline focus:outline-none"
-          >
-            Privacy Policy
-          </button>
-        </footer>
         <PrivacyPolicyModal
           visible={privacyModalVisible}
           onClose={() => setPrivacyModalVisible(false)}
