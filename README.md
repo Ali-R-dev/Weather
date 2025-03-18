@@ -1,54 +1,93 @@
-# React + TypeScript + Vite
+<div align="center">
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+# ☁️ Weather App ☀️
 
-Currently, two official plugins are available:
+**Elegantly experience weather through your screen.**
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+A sophisticated, responsive application delivering real-time meteorological data with stunning visual atmospheres.
 
-## Expanding the ESLint configuration
+[![Live Demo](https://img.shields.io/badge/LIVE-DEMO-brightgreen?style=for-the-badge&logo=vercel)](https://weather.araza.me)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+![Weather App Banner](https://weather.araza.me/banner.png)
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+</div>
+
+## ✨ Experience
+
+Weather App transforms mundane forecasts into immersive experiences that capture nature's essence:
+
+- **Adaptive Theming** — Interface automatically transforms with weather conditions and day/night cycle
+- **Dynamic Weather Effects** — Raindrops cascade down your screen, snowflakes drift gently, fog rolls in with haunting beauty
+- **Accessible Interface** — Essential weather information at a glance, detailed data in an organized layout
+
+## 🌡️ Features
+
+- **Live Weather Effects** — Rain, snow, lightning, fog, and sunshine visual simulations
+- **Current Conditions** — Temperature, humidity, wind speed, precipitation, and UV index with health guidance
+- **Forecast Options** — Toggle between hourly and 7-day weather forecasts
+- **Smart Location** — Automatic geolocation with manual location search capabilities
+- **Responsive Design** — Optimized experience from mobile devices to desktop screens
+
+## 📱 Visual Gallery
+
+<div align="center">
+  <img src="https://weather.araza.me/screenshot-sunny.png" width="49%" alt="Sun-drenched interface" />
+  <img src="https://weather.araza.me/screenshot-rainy.png" width="49%" alt="Rain-soaked experience" />
+  <img src="https://weather.araza.me/screenshot-snowy.png" width="49%" alt="Snow-covered display" />
+  <img src="https://weather.araza.me/screenshot-night.png" width="49%" alt="Moonlit perspective" />
+</div>
+
+## 🛠️ Crafted With
+
+- **Framework** — React with TypeScript for type-safe development
+- **Styling** — TailwindCSS for utility-first responsive design
+- **Animation** — CSS animations for weather effects
+- **Data Source** — Open Meteo API for reliable global weather data
+
+## ⚡ Quick Start
+
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/weather-app.git
+
+# Enter the project directory
+cd weather-app
+
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 🧠 Architecture
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
 ```
+/src
+├── /components        # UI components
+│   ├── /effects       # Weather visual effects
+│   └── /weather       # Weather information displays
+├── /context           # React context for state management
+├── /pages             # Page components
+├── /types             # TypeScript interfaces
+└── /utils             # Helper functions
+```
+
+## 🔮 Planned Features
+
+- Multiple saved locations
+- Weather alerts for severe conditions
+- Historical weather data views
+- Dark/light theme preferences
+
+## 👤 Creator
+
+[Your Name](https://github.com/yourusername) — Web developer & weather enthusiast
+
+<div align="center">
+
+---
+
+Powered by [Open Meteo](https://open-meteo.com/) • Released under MIT License
+
+</div>
