@@ -50,13 +50,6 @@ export default function HomePage() {
     }
   }, [defaultLocation, location, loading, setLocation, weatherData]);
 
-  // Helper function to get rain intensity
-  // const getRainIntensity = (code: number): "light" | "medium" | "heavy" => {
-  //   if ([51, 56, 61, 80].includes(code)) return "light";
-  //   if ([53, 57, 63, 66, 81].includes(code)) return "medium";
-  //   return "heavy";
-  // };
-
   return (
     <div className="weather-app">
       {weatherData && (

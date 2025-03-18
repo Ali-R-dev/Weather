@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { getWeatherInfo } from "../../utils/weatherCodeMap";
 import { WeatherData } from "../../types/weather.types";
-import { formatDate } from "../../utils/dateUtils";
+// import { formatDate } from "../../utils/dateUtils";
 import { useWeather } from "../../context/WeatherContext";
 import { useTheme } from "../../context/ThemeContext";
 
@@ -21,7 +21,7 @@ const getUVIndexLabel = (uvIndex: number): string => {
 export default function CurrentWeather({ data }: CurrentWeatherProps) {
   const { currentLocation } = useWeather();
   const { applyTheme } = useTheme();
-  const [currentTime, setCurrentTime] = useState(new Date());
+  const [, setCurrentTime] = useState(new Date());
   const weatherInfo = getWeatherInfo(data.current.weather_code);
 
   // Apply theme based on current weather and time of day

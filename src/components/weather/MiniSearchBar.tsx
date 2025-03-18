@@ -13,7 +13,8 @@ export default function MiniSearchBar({
   isActive,
 }: MiniSearchBarProps) {
   const [query, setQuery] = useState("");
-  const { weatherData } = useWeather();
+  // Update this line to include setLocation
+  const { weatherData, setLocation } = useWeather();
 
   // Use current location name as placeholder
   const locationName = weatherData?.location?.name || "Search location...";

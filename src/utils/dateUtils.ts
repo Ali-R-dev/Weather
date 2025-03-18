@@ -21,7 +21,8 @@ export function formatTime(dateString: string): string {
  * @param date The date to calculate time ago from
  * @returns A formatted string like "2 minutes ago" or "just now"
  */
-export function timeAgo(date: Date): string {
+export function timeAgo(date: Date | null): string {
+  if (!date) return "Loading...";
   const seconds = Math.floor((new Date().getTime() - date.getTime()) / 1000);
 
   // Less than a minute

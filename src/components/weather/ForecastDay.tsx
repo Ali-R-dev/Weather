@@ -1,14 +1,14 @@
 import { getWeatherInfo } from "../../utils/weatherCodeMap";
 import { DailyWeather } from "../../types/weather.types";
-import { useTheme } from "../../context/ThemeContext";
+// import { useTheme } from "../../context/ThemeContext";
 
 interface ForecastDayProps {
   dailyData: DailyWeather;
 }
 
 export default function ForecastDay({ dailyData }: ForecastDayProps) {
-  const { currentTheme } = useTheme();
-  const isDarkTheme = currentTheme.includes("night");
+  // const { currentTheme } = useTheme();
+  // const isDarkTheme = currentTheme.includes("night");
 
   // Function to format date to display weekday
   const formatDay = (dateStr: string): string => {
