@@ -12,26 +12,29 @@ interface CloudProps {
   speed: number;
   delay: number;
   opacity: number;
+  scale: number;
 }
 
 const CloudyEffect = ({ isDay }: CloudyEffectProps) => {
   const [clouds, setClouds] = useState<CloudProps[]>([]);
 
   useEffect(() => {
-    // Generate random clouds
-    const cloudCount = 7;
+    // Generate random clouds with better distribution
+    const cloudCount = 8;
     const newClouds: CloudProps[] = [];
 
     for (let i = 0; i < cloudCount; i++) {
+      // Distribute clouds across the full viewport
       newClouds.push({
         size: Math.random() * 20 + 80, // 80-100% size
-        top: Math.random() * 70,
-        left: Math.random() * 50 - 10,
-        speed: Math.random() * 5 + 8, // 8-13s (faster)
-        delay: Math.random() * 5,
+        top: Math.random() * 60, // Place in top 60% of screen
+        left: Math.random() * 120 - 20, // Start some clouds off-screen or mid-screen
+        speed: Math.random() * 40 + 60, // 60-100s (slower, more natural)
+        delay: -Math.random() * 60, // Some clouds already in motion
         opacity: isDay
-          ? Math.random() * 0.3 + 0.6 // 0.6-0.9 for day
-          : Math.random() * 0.2 + 0.35, // 0.35-0.55 for night (more visible)
+          ? Math.random() * 0.2 + 0.7 // 0.7-0.9 for day (more visible)
+          : Math.random() * 0.2 + 0.4, // 0.4-0.6 for night (more visible)
+        scale: Math.random() * 0.6 + 0.7, // 0.7-1.3 varied sizes
       });
     }
 
@@ -50,14 +53,21 @@ const CloudyEffect = ({ isDay }: CloudyEffectProps) => {
             opacity: cloud.opacity,
             animationDuration: `${cloud.speed}s`,
             animationDelay: `${cloud.delay}s`,
-            transform: `scale(${cloud.size / 100})`,
+            transform: `scale(${cloud.scale})`,
           }}
         >
-          <div className="cloud-part part1"></div>
-          <div className="cloud-part part2"></div>
-          <div className="cloud-part part3"></div>
-          <div className="cloud-part part4"></div>
-          <div className="cloud-part part5"></div>
+          <svg
+            className="cloud-svg"
+            xmlns="http://www.w3.org/2000/svg"
+            viewBox="0 0 200 120"
+          >
+            <path
+              className={
+                isDay ? "cloud-path day-cloud" : "cloud-path night-cloud"
+              }
+              d="M150,90H60c-16.6,0-30-13.4-30-30s13.4-30,30-30c2.6,0,5.1,0.3,7.5,1C74.2,18.6,86.9,10,100,10c16.9,0,31,12.5,33.7,28.7c1.4-0.4,2.9-0.7,4.3-0.7c8.8,0,16,7.2,16,16s-7.2,16-16,16c-4.4,0-8.4-1.8-11.3-4.7C160.5,75.6,156.1,90,150,90z"
+            />
+          </svg>
         </div>
       ))}
     </div>
