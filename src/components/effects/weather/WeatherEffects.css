@@ -417,10 +417,10 @@
 
 @keyframes cloud-drift {
   0% {
-    transform: translateX(-100%);
+    transform: translateX(-20%) translateY(0);
   }
   100% {
-    transform: translateX(100vw);
+    transform: translateX(120vw) translateY(10px);
   }
 }
 

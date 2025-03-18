@@ -463,3 +463,307 @@ body {
 .hide-scrollbar::-webkit-scrollbar {
   display: none; /* Chrome, Safari, Opera */
 }
+
+/* Add to the end of your index.css file */
+
+/* Remove the existing weather loading screen CSS and replace with this */
+
+.weather-loading-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(165deg, #1e40af, #0ea5e9, #7dd3fc);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+  transition: opacity 0.6s ease-out;
+  overflow: hidden;
+}
+
+.weather-loading-container.fade-out {
+  opacity: 0;
+}
+
+/* Ambient background animations */
+.ambient-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  opacity: 0.7;
+}
+
+.cloud {
+  position: absolute;
+  background-color: white;
+  border-radius: 40px;
+  opacity: 0.8;
+  filter: blur(3px);
+}
+
+.cloud::before,
+.cloud::after {
+  content: '';
+  position: absolute;
+  background-color: inherit;
+  border-radius: 50%;
+}
+
+.cloud-1 {
+  width: 180px;
+  height: 60px;
+  top: 15%;
+  left: -100px;
+  animation: cloud-drift 25s linear infinite;
+}
+
+.cloud-1::before {
+  width: 80px;
+  height: 80px;
+  top: -40px;
+  left: 25px;
+}
+
+.cloud-1::after {
+  width: 60px;
+  height: 60px;
+  top: -30px;
+  right: 40px;
+}
+
+.cloud-2 {
+  width: 140px;
+  height: 50px;
+  top: 40%;
+  left: -80px;
+  opacity: 0.6;
+  animation: cloud-drift 20s linear infinite 5s;
+}
+
+.cloud-2::before {
+  width: 70px;
+  height: 70px;
+  top: -35px;
+  left: 20px;
+}
+
+.cloud-2::after {
+  width: 50px;
+  height: 50px;
+  top: -25px;
+  right: 30px;
+}
+
+.cloud-3 {
+  width: 160px;
+  height: 55px;
+  top: 65%;
+  left: -90px;
+  opacity: 0.7;
+  animation: cloud-drift 30s linear infinite 10s;
+}
+
+.cloud-3::before {
+  width: 75px;
+  height: 75px;
+  top: -38px;
+  left: 22px;
+}
+
+.cloud-3::after {
+  width: 55px;
+  height: 55px;
+  top: -28px;
+  right: 35px;
+}
+
+.rain-container {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  opacity: 0.5;
+}
+
+.raindrop {
+  position: absolute;
+  width: 2px;
+  height: 20px;
+  background: linear-gradient(to bottom, rgba(255,255,255,0), rgba(255,255,255,0.8));
+  border-radius: 0 0 2px 2px;
+  animation: rain-fall linear infinite;
+  top: -20px;
+}
+
+/* Main content */
+.loading-content {
+  position: relative;
+  z-index: 10;
+  text-align: center;
+  max-width: 320px;
+  padding: 40px;
+  border-radius: 20px;
+  background: rgba(255, 255, 255, 0.15);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.app-logo {
+  margin-bottom: 30px;
+}
+
+.logo-icon {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  margin: 0 auto 15px;
+}
+
+.sun-circle {
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  width: 70px;
+  height: 70px;
+  background: #FFD700;
+  border-radius: 50%;
+  box-shadow: 0 0 30px rgba(255, 215, 0, 0.6);
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.cloud-shape {
+  position: absolute;
+  bottom: 18px;
+  right: 8px;
+  width: 60px;
+  height: 25px;
+  background: white;
+  border-radius: 25px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  animation: float-cloud 3s ease-in-out infinite alternate;
+}
+
+.cloud-shape::before {
+  content: '';
+  position: absolute;
+  top: -12px;
+  left: 10px;
+  width: 30px;
+  height: 30px;
+  background: inherit;
+  border-radius: 50%;
+}
+
+.cloud-shape::after {
+  content: '';
+  position: absolute;
+  top: -20px;
+  right: 15px;
+  width: 25px;
+  height: 25px;
+  background: inherit;
+  border-radius: 50%;
+}
+
+.app-logo h1 {
+  font-size: 24px;
+  color: white;
+  margin: 0;
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.loading-indicator {
+  margin-top: 20px;
+}
+
+.loading-bar {
+  width: 100%;
+  height: 8px;
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 4px;
+  overflow: hidden;
+  margin-bottom: 15px;
+}
+
+.loading-progress {
+  width: 30%;
+  height: 100%;
+  background: white;
+  border-radius: 4px;
+  animation: loading-animation 2s ease-in-out infinite;
+  box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.loading-indicator p {
+  margin: 0;
+  color: white;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+/* Animations */
+@keyframes cloud-drift {
+  0% {
+    transform: translateX(-100px);
+  }
+  100% {
+    transform: translateX(calc(100vw + 200px));
+  }
+}
+
+@keyframes rain-fall {
+  0% {
+    transform: translateY(0) rotate(5deg);
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  90% {
+    opacity: 1;
+  }
+  100% {
+    transform: translateY(120vh) rotate(10deg);
+    opacity: 0;
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 0.95;
+  }
+  50% {
+    transform: scale(1.05);
+    opacity: 1;
+  }
+}
+
+@keyframes float-cloud {
+  0% {
+    transform: translateY(0);
+  }
+  100% {
+    transform: translateY(-5px);
+  }
+}
+
+@keyframes loading-animation {
+  0% {
+    transform: translateX(-100%);
+  }
+  50% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}

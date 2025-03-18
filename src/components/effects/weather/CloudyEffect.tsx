@@ -23,17 +23,17 @@ const CloudyEffect = ({ isDay }: CloudyEffectProps) => {
     const cloudCount = 8;
     const newClouds: CloudProps[] = [];
 
+    // Create clouds distributed across the viewport
     for (let i = 0; i < cloudCount; i++) {
-      // Distribute clouds across the full viewport
       newClouds.push({
         size: Math.random() * 20 + 80, // 80-100% size
-        top: Math.random() * 60, // Place in top 60% of screen
-        left: Math.random() * 120 - 20, // Start some clouds off-screen or mid-screen
+        top: Math.random() * 60, // Only in top 60% of screen
+        left: i * (100 / cloudCount), // Evenly distribute horizontally
         speed: Math.random() * 40 + 60, // 60-100s (slower, more natural)
-        delay: -Math.random() * 60, // Some clouds already in motion
+        delay: -Math.random() * 30, // Some clouds already mid-animation
         opacity: isDay
-          ? Math.random() * 0.2 + 0.7 // 0.7-0.9 for day (more visible)
-          : Math.random() * 0.2 + 0.4, // 0.4-0.6 for night (more visible)
+          ? Math.random() * 0.2 + 0.7 // 0.7-0.9 for day
+          : Math.random() * 0.2 + 0.4, // 0.4-0.6 for night
         scale: Math.random() * 0.6 + 0.7, // 0.7-1.3 varied sizes
       });
     }
@@ -60,6 +60,8 @@ const CloudyEffect = ({ isDay }: CloudyEffectProps) => {
             className="cloud-svg"
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 200 120"
+            width="200"
+            height="120"
           >
             <path
               className={
