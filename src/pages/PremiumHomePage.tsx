@@ -3,12 +3,12 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useWeather } from "../context/WeatherContext";
 import useGeolocation from "../hooks/useGeolocation";
 import useSavedLocations from "../hooks/useSavedLocations";
-import PremiumCurrentWeather from "../components/weather/PremiumCurrentWeather";
-import PremiumHourlyForecast from "../components/weather/PremiumHourlyForecast";
+import PremiumCurrentWeather from "../components/premium/PremiumCurrentWeather";
+import PremiumHourlyForecast from "../components/premium/PremiumHourlyForecast";
 import ForecastDay from "../components/weather/ForecastDay";
 import LocationSearch from "../components/weather/LocationSearch";
 import MiniSearchBar from "../components/weather/MiniSearchBar";
-import PremiumWeatherScene from "../components/effects/PremiumWeatherScene";
+import PremiumWeatherScene from "../components/premium/PremiumWeatherScene";
 import { timeAgo } from "../utils/dateUtils";
 import BackgroundEffect from "../components/effects/BackgroundEffect";
 import "../premium-styles.css";
@@ -119,7 +119,7 @@ const PremiumHomePage: React.FC = () => {
       <div className="min-h-screen flex flex-col w-full relative z-10">
         {/* Header with centered search bar */}
         <header
-          className={`sticky top-0 z-50 pt-safe transition-all duration-300 ${
+          className={`sticky top-0 z-[100] pt-safe transition-all duration-300 ${
             showGlassBackground
               ? "bg-black/30 backdrop-blur-lg shadow-lg"
               : "bg-transparent"
@@ -154,7 +154,7 @@ const PremiumHomePage: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.3 }}
-                className="fixed inset-0 bg-gradient-to-b from-black/90 to-black/70 backdrop-blur-sm pt-20 px-3 pb-3 max-h-screen overflow-auto md:pt-24 z-50"
+                className="fixed inset-0 bg-gradient-to-b from-black/90 to-black/70 backdrop-blur-sm pt-20 px-3 pb-3 max-h-screen overflow-auto md:pt-24 z-[200]"
               >
                 <div className="max-w-lg mx-auto">
                   <LocationSearch
