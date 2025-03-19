@@ -123,7 +123,7 @@ const PremiumHourlyForecast: React.FC<PremiumHourlyForecastProps> = ({
           <svg className="w-full h-full overflow-visible">
             <defs>
               <linearGradient
-                id="tempGradient"
+                id="premium-temp-gradient"
                 x1="0%"
                 y1="0%"
                 x2="0%"
@@ -133,17 +133,19 @@ const PremiumHourlyForecast: React.FC<PremiumHourlyForecastProps> = ({
                 <stop offset="100%" stopColor="rgba(255,255,255,0)" />
               </linearGradient>
             </defs>
+
+            {/* Line path with smoother animation */}
             <motion.path
               initial={{ pathLength: 0, opacity: 0 }}
               animate={{ pathLength: 1, opacity: 1 }}
-              transition={{ duration: 1.5, ease: "easeInOut" }}
+              transition={{ duration: 1, ease: "easeInOut" }}
               d={`M0,${
-                24 - (visibleTemps[0] - minTemp) * (24 / Math.max(5, tempRange))
+                24 - (visibleTemps[0] - minTemp) * (24 / Math.max(3, tempRange))
               } ${visibleTemps
                 .map((temp, i) => {
                   const x = (i / (visibleTemps.length - 1)) * 100;
                   const y =
-                    24 - (temp - minTemp) * (24 / Math.max(5, tempRange));
+                    24 - (temp - minTemp) * (24 / Math.max(3, tempRange));
                   return `L${x},${y}`;
                 })
                 .join(" ")}`}
@@ -152,37 +154,45 @@ const PremiumHourlyForecast: React.FC<PremiumHourlyForecastProps> = ({
               strokeWidth="2"
               strokeLinecap="round"
             />
+
+            {/* Area fill with reduced opacity */}
             <motion.path
               initial={{ opacity: 0 }}
-              animate={{ opacity: 0.3 }}
-              transition={{ duration: 1.5, delay: 0.5 }}
+              animate={{ opacity: 0.2 }} // Reduced opacity
+              transition={{ duration: 0.8, delay: 0.3 }}
               d={`M0,${
-                24 - (visibleTemps[0] - minTemp) * (24 / Math.max(5, tempRange))
+                24 - (visibleTemps[0] - minTemp) * (24 / Math.max(3, tempRange))
               } ${visibleTemps
                 .map((temp, i) => {
                   const x = (i / (visibleTemps.length - 1)) * 100;
                   const y =
-                    24 - (temp - minTemp) * (24 / Math.max(5, tempRange));
+                    24 - (temp - minTemp) * (24 / Math.max(3, tempRange));
                   return `L${x},${y}`;
                 })
                 .join(" ")} L100,24 L0,24 Z`}
-              fill="url(#tempGradient)"
+              fill="url(#premium-temp-gradient)"
             />
 
-            {/* Temperature dots with value tooltip on hover */}
+            {/* Temperature dots with consistent spacing */}
             {visibleTemps.map((temp, i) => {
-              // Only show dots for every 3rd hour to avoid clutter
-              if (i % 3 !== 0 && i !== 0) return null;
+              // Show dots at more logical intervals based on view mode
+              const interval = expandedView ? 6 : 3;
+              if (
+                i % interval !== 0 &&
+                i !== 0 &&
+                i !== visibleTemps.length - 1
+              )
+                return null;
 
               const x = (i / (visibleTemps.length - 1)) * 100;
-              const y = 24 - (temp - minTemp) * (24 / Math.max(5, tempRange));
+              const y = 24 - (temp - minTemp) * (24 / Math.max(3, tempRange));
 
               return (
                 <motion.g
                   key={i}
                   initial={{ opacity: 0, scale: 0 }}
                   animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.8 + i * 0.03, duration: 0.3 }}
+                  transition={{ delay: 0.5 + i * 0.02, duration: 0.2 }}
                   className="group"
                 >
                   <circle cx={`${x}%`} cy={y} r="3" fill="white" />

@@ -18,7 +18,7 @@ const PremiumWeatherScene = () => {
   const cameraRef = useRef(null);
   const rendererRef = useRef(null);
 
-  // Weather elements
+  // Weather elements - limit the number of objects for better performance
   const cloudsRef = useRef([]);
   const raindropsRef = useRef([]);
   const snowflakesRef = useRef([]);
@@ -31,10 +31,12 @@ const PremiumWeatherScene = () => {
   useEffect(() => {
     if (!mountRef.current || !weatherData) return;
 
-    // Initialize scene
+    // Initialize scene with proper background color
     const scene = new THREE.Scene();
+
+    // Use perspective camera with better field of view for weather effects
     const camera = new THREE.PerspectiveCamera(
-      70,
+      75, // Wider field of view to see more effects
       mountRef.current.clientWidth / mountRef.current.clientHeight,
       0.1,
       1000
@@ -43,18 +45,20 @@ const PremiumWeatherScene = () => {
     const renderer = new THREE.WebGLRenderer({
       antialias: true,
       alpha: true,
+      powerPreference: "high-performance", // Optimize for performance
     });
 
     renderer.setSize(
       mountRef.current.clientWidth,
       mountRef.current.clientHeight
     );
-    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2)); // Limit pixel ratio for performance
     renderer.setClearColor(0x000000, 0); // Transparent background
     mountRef.current.appendChild(renderer.domElement);
 
-    // Position camera
-    camera.position.z = 5;
+    // Position camera to better view the effects
+    camera.position.z = 7; // Move camera further back
+    camera.position.y = 1; // Slightly higher position to see rain falling
 
     // Store references
     sceneRef.current = scene;
@@ -64,7 +68,7 @@ const PremiumWeatherScene = () => {
     // Create weather scene based on current weather
     createWeatherScene();
 
-    // Animation loop
+    // Animation loop with performance optimization
     const animate = () => {
       requestIDRef.current = requestAnimationFrame(animate);
       updateWeatherElements();
@@ -88,20 +92,29 @@ const PremiumWeatherScene = () => {
 
     window.addEventListener("resize", handleResize);
 
-    // Cleanup
+    // Thorough cleanup
     return () => {
       if (requestIDRef.current) {
         cancelAnimationFrame(requestIDRef.current);
       }
 
       if (mountRef.current && renderer.domElement) {
-        mountRef.current.removeChild(renderer.domElement);
+        try {
+          mountRef.current.removeChild(renderer.domElement);
+        } catch (e) {
+          console.warn("Error removing renderer:", e);
+        }
       }
 
       window.removeEventListener("resize", handleResize);
 
       // Clean up all geometries and materials
       cleanupScene();
+
+      // Dispose of renderer to prevent memory leaks
+      if (renderer) {
+        renderer.dispose();
+      }
     };
   }, [weatherData]);
 
@@ -184,26 +197,26 @@ const PremiumWeatherScene = () => {
   const updateWeatherElements = () => {
     if (!sceneRef.current) return;
 
-    // Animate clouds
+    // Animate clouds with slow movement
     cloudsRef.current.forEach((cloud) => {
-      cloud.rotation.y += 0.001;
-      cloud.position.x += 0.005;
+      cloud.rotation.y += 0.0005;
+      cloud.position.x += 0.003;
 
       // Reset cloud position if it moves too far
-      if (cloud.position.x > 10) {
-        cloud.position.x = -10;
+      if (cloud.position.x > 15) {
+        cloud.position.x = -15;
       }
     });
 
-    // Animate raindrops
+    // Animate raindrops with faster movement for visibility
     raindropsRef.current.forEach((raindrop) => {
-      raindrop.position.y -= 0.1;
+      raindrop.position.y -= 0.2; // Faster falling rain
 
       // Reset raindrop position if it falls below view
-      if (raindrop.position.y < -5) {
-        raindrop.position.y = 5;
-        raindrop.position.x = Math.random() * 10 - 5;
-        raindrop.position.z = Math.random() * 5 - 2.5;
+      if (raindrop.position.y < -10) {
+        raindrop.position.y = 15;
+        raindrop.position.x = Math.random() * 20 - 10;
+        raindrop.position.z = Math.random() * 10 - 15;
       }
     });
 
@@ -434,31 +447,33 @@ const PremiumWeatherScene = () => {
     cloudsRef.current = clouds;
   };
 
-  // Create rain
+  // Create rain with better visibility
   const createRain = (weatherCode) => {
     if (!sceneRef.current) return;
 
     const raindrops = [];
 
-    // Determine rain intensity based on weather code
+    // Determine rain intensity based on weather code - reduced for performance
     const intensity = [51, 56, 61, 80].includes(weatherCode)
-      ? 50
+      ? 30
       : [53, 57, 63, 66, 81].includes(weatherCode)
-      ? 100
-      : 200;
+      ? 60
+      : 100;
 
     for (let i = 0; i < intensity; i++) {
-      const height = Math.random() * 0.2 + 0.1;
+      const height = Math.random() * 0.3 + 0.2; // Longer raindrops
       const raindropGeometry = new THREE.CylinderGeometry(
-        0.01,
-        0.01,
+        0.02, // Thicker raindrops for visibility
+        0.02,
         height,
-        8
+        6 // Reduced segment count for performance
       );
-      const raindropMaterial = new THREE.MeshStandardMaterial({
-        color: 0xaddeff,
+
+      const raindropMaterial = new THREE.MeshBasicMaterial({
+        // Use basic material instead of standard for performance
+        color: 0x88ccff, // Brighter blue color
         transparent: true,
-        opacity: 0.6,
+        opacity: 0.7, // Higher opacity for visibility
       });
 
       const raindrop = new THREE.Mesh(raindropGeometry, raindropMaterial);
@@ -466,10 +481,10 @@ const PremiumWeatherScene = () => {
       // Tilt the raindrop slightly
       raindrop.rotation.x = Math.PI / 4;
 
-      // Position raindrop
-      raindrop.position.x = Math.random() * 10 - 5;
-      raindrop.position.y = Math.random() * 10 - 5;
-      raindrop.position.z = Math.random() * 5 - 2.5;
+      // Position raindrops in front of camera for better visibility
+      raindrop.position.x = Math.random() * 20 - 10;
+      raindrop.position.y = Math.random() * 15 + 5; // Position higher up
+      raindrop.position.z = Math.random() * 10 - 15; // Position in front of camera
 
       sceneRef.current.add(raindrop);
       raindrops.push(raindrop);
@@ -569,7 +584,7 @@ const PremiumWeatherScene = () => {
   return (
     <div
       ref={mountRef}
-      className="premium-3d-scene opacity-80"
+      className="premium-3d-scene opacity-90" // Increased opacity for visibility
       style={{ pointerEvents: "none" }}
     />
   );
