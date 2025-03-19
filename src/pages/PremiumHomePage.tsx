@@ -105,16 +105,17 @@ const PremiumHomePage: React.FC = () => {
       exit="exit"
       variants={pageVariants}
     >
-      {/* Modern 3D weather scene */}
+      {/* Choose ONE of these two options: */}
+      {/* Option 1: Just use the 3D scene */}
       {weatherData && <PremiumWeatherScene />}
 
-      {/* Traditional weather effects as fallback/enhancement */}
-      {weatherData && (
+      {/* Option 2: Or just use the BackgroundEffect (comment out the PremiumWeatherScene above) */}
+      {/* {weatherData && (
         <BackgroundEffect
           weatherCode={weatherData.current.weather_code}
           isDay={weatherData.current.is_day === 1}
         />
-      )}
+      )} */}
 
       <div className="min-h-screen flex flex-col w-full relative z-10">
         {/* Header with centered search bar */}
