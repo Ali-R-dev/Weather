@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { motion } from "framer-motion";
 import { useWeather } from "../../context/WeatherContext";
 
 interface MiniSearchBarProps {
@@ -13,14 +14,31 @@ export default function MiniSearchBar({
   isActive,
 }: MiniSearchBarProps) {
   const [query, setQuery] = useState("");
-  // Update this line to include setLocation
   const { weatherData, setLocation } = useWeather();
 
   // Use current location name as placeholder
   const locationName = weatherData?.location?.name || "Search location...";
 
+  // Animation variants
+  const searchBarVariants = {
+    inactive: {
+      boxShadow: "0 1px 3px rgba(0,0,0,0.1)",
+      scale: 1,
+    },
+    active: {
+      boxShadow: "0 4px 20px rgba(0,0,0,0.2)",
+      scale: 1.02,
+    },
+  };
+
   return (
-    <div className="relative w-full max-w-md mx-auto">
+    <motion.div
+      className="relative w-full max-w-md mx-auto"
+      initial="inactive"
+      animate={isActive ? "active" : "inactive"}
+      variants={searchBarVariants}
+      transition={{ duration: 0.3 }}
+    >
       <div
         className={`flex items-center bg-white/20 backdrop-blur-md rounded-full pl-3 pr-2 py-2 border border-white/20 transition-all ${
           isActive ? "shadow-lg ring-2 ring-white/30" : ""
@@ -48,10 +66,13 @@ export default function MiniSearchBar({
           onFocus={onFocus}
         />
 
-        {isActive && (
-          <button
+        {isActive ? (
+          <motion.button
             onClick={onSelect}
             className="ml-1 p-1.5 rounded-full hover:bg-white/20 transition-colors"
+            initial={{ opacity: 0, rotate: -90 }}
+            animate={{ opacity: 1, rotate: 0 }}
+            transition={{ duration: 0.2 }}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -67,11 +88,9 @@ export default function MiniSearchBar({
                 d="M6 18L18 6M6 6l12 12"
               />
             </svg>
-          </button>
-        )}
-
-        {!isActive && (
-          <button
+          </motion.button>
+        ) : (
+          <motion.button
             onClick={() => {
               navigator.geolocation.getCurrentPosition(
                 async (position) => {
@@ -122,6 +141,10 @@ export default function MiniSearchBar({
             }}
             className="ml-1 p-1.5 rounded-full hover:bg-white/20 transition-colors"
             title="Use current location"
+            initial={{ scale: 0.9 }}
+            animate={{ scale: 1 }}
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -135,9 +158,9 @@ export default function MiniSearchBar({
                 clipRule="evenodd"
               />
             </svg>
-          </button>
+          </motion.button>
         )}
       </div>
-    </div>
+    </motion.div>
   );
 }

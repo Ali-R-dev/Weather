@@ -8,6 +8,7 @@ export interface CurrentWeather {
   wind_direction_10m: number;
   is_day: number;
   uv_index: number; // Make sure this is here and not optional
+  pressure?: number; // Add this optional property
 }
 
 export interface DailyWeather {
@@ -18,6 +19,8 @@ export interface DailyWeather {
   precipitation_sum: number[];
   precipitation_probability_max: number[];
   wind_speed_10m_max: number[];
+  sunrise?: string[]; // Add this optional property
+  sunset?: string[]; // Add this optional property
 }
 
 export interface HourlyWeather {

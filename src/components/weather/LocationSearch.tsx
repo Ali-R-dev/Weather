@@ -33,6 +33,7 @@ export default function LocationSearch({
   } = useSavedLocations();
   const searchTimeout = useRef<number | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
 
   // Handle search input
   useEffect(() => {
@@ -59,6 +60,13 @@ export default function LocationSearch({
       }
     };
   }, [query]);
+
+  // Focus input when in compact mode
+  useEffect(() => {
+    if (compact && searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, [compact]);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -135,7 +143,11 @@ export default function LocationSearch({
   };
 
   return (
-    <div className="relative w-full" ref={dropdownRef}>
+    <div
+      className="relative w-full"
+      ref={dropdownRef}
+      style={{ zIndex: compact ? 9999 : 30 }}
+    >
       {/* Only show the search input in full mode, not compact mode */}
       {!compact && (
         <div className="relative">
@@ -160,12 +172,13 @@ export default function LocationSearch({
       {(isDropdownOpen || compact) && (
         <div
           className={`${
-            compact ? "rounded-2xl" : "absolute z-30 mt-2"
+            compact ? "rounded-2xl" : "absolute z-[100] mt-2"
           } w-full shadow-xl max-h-[70vh] overflow-auto backdrop-blur-lg bg-black/50 border border-white/20`}
+          style={{ zIndex: 9999 }}
         >
           {/* Close button for compact mode */}
           {compact && (
-            <div className="sticky top-0 z-10 px-4 py-3 flex items-center justify-between bg-black/50 backdrop-blur-md border-b border-white/10">
+            <div className="sticky top-0 z-[101] px-4 py-3 flex items-center justify-between bg-black/60 backdrop-blur-xl border-b border-white/10">
               <div className="text-white font-medium">Search Locations</div>
               <button
                 onClick={() => {
@@ -194,6 +207,7 @@ export default function LocationSearch({
           {compact && (
             <div className="relative px-4 py-3">
               <input
+                ref={searchInputRef}
                 type="text"
                 placeholder="Search for a location..."
                 value={query}

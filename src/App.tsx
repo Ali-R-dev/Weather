@@ -4,24 +4,34 @@ import { ThemeProvider } from "./context/ThemeContext";
 import HomePage from "./pages/HomePage";
 import PrivacyPolicyModal from "./components/PrivacyPolicyModal";
 import WeatherLoadingScreen from "./components/common/WeatherLoadingScreen";
-import { useWeather } from "./context/WeatherContext"; // Import useWeather
+import "./premium-styles.css";
+
+interface AppContentProps {
+  initialLoading: boolean;
+  privacyModalVisible: boolean;
+  setPrivacyModalVisible: (visible: boolean) => void;
+}
 
 function App() {
   const [privacyModalVisible, setPrivacyModalVisible] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
 
   useEffect(() => {
+    // Update theme-color meta tag
     const metaThemeColor = document.querySelector('meta[name="theme-color"]');
-    if (!metaThemeColor) {
+    if (metaThemeColor) {
+      metaThemeColor.setAttribute("content", "#0ea5e9");
+    } else {
       const meta = document.createElement("meta");
       meta.name = "theme-color";
       meta.content = "#0ea5e9";
       document.head.appendChild(meta);
     }
 
+    // Simulate initial loading
     const timer = setTimeout(() => {
       setInitialLoading(false);
-    }, 2000); // Show loading screen for at least 2 seconds
+    }, 2000);
 
     return () => clearTimeout(timer);
   }, []);
@@ -39,46 +49,18 @@ function App() {
   );
 }
 
-// Separate component to use the WeatherContext
 function AppContent({
   initialLoading,
   privacyModalVisible,
   setPrivacyModalVisible,
-}: {
-  initialLoading: boolean;
-  privacyModalVisible: boolean;
-  setPrivacyModalVisible: (visible: boolean) => void;
-}) {
-  const { loading, weatherData } = useWeather(); // Import useWeather at the top
-
+}: AppContentProps) {
   return (
     <>
-      <WeatherLoadingScreen
-        isLoading={initialLoading || (loading && !weatherData)}
-      />
-      <div className="flex flex-col h-screen weather-app relative">
-        <div className="flex-grow overflow-y-auto">
+      <WeatherLoadingScreen isLoading={initialLoading} />
+      <div className="flex flex-col min-h-screen relative">
+        <main className="flex-grow overflow-y-auto">
           <HomePage />
-        </div>
-        <footer className="fixed bottom-0 left-0 w-full py-2 px-4 bg-black/20 backdrop-blur-md text-white text-xs flex items-center justify-between">
-          <span>
-            Weather data by{" "}
-            <a
-              href="https://open-meteo.com/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="underline"
-            >
-              Open Meteo
-            </a>
-          </span>
-          <button
-            onClick={() => setPrivacyModalVisible(true)}
-            className="underline focus:outline-none"
-          >
-            Privacy Policy
-          </button>
-        </footer>
+        </main>
         <PrivacyPolicyModal
           visible={privacyModalVisible}
           onClose={() => setPrivacyModalVisible(false)}
