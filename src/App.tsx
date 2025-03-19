@@ -2,13 +2,14 @@ import { useEffect, useState } from "react";
 import { WeatherProvider } from "./context/WeatherContext";
 import { ThemeProvider } from "./context/ThemeContext";
 import PremiumHomePage from "./pages/PremiumHomePage";
+import HomePage from "./pages/HomePage";
 import PrivacyPolicyModal from "./components/PrivacyPolicyModal";
 import WeatherLoadingScreen from "./components/common/WeatherLoadingScreen";
-import { useWeather } from "./context/WeatherContext";
 
 // Add proper TypeScript interface for AppContent props
 interface AppContentProps {
   initialLoading: boolean;
+  isPremium: boolean;
   privacyModalVisible: boolean;
   setPrivacyModalVisible: (visible: boolean) => void;
 }
@@ -16,6 +17,8 @@ interface AppContentProps {
 function App() {
   const [privacyModalVisible, setPrivacyModalVisible] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
+  // Set to true to enable the premium version
+  const [isPremium, setIsPremium] = useState(true);
 
   useEffect(() => {
     // Update theme-color meta tag
@@ -42,6 +45,7 @@ function App() {
       <WeatherProvider>
         <AppContent
           initialLoading={initialLoading}
+          isPremium={isPremium}
           privacyModalVisible={privacyModalVisible}
           setPrivacyModalVisible={setPrivacyModalVisible}
         />
@@ -52,20 +56,29 @@ function App() {
 
 function AppContent({
   initialLoading,
+  isPremium,
   privacyModalVisible,
   setPrivacyModalVisible,
 }: AppContentProps) {
-  // Use the hook inside the functional component
-  const { loading, weatherData } = useWeather();
+  // Using the context inside the AppContent component
+  const [loading, setLoading] = useState(true);
+  const [weatherData, setWeatherData] = useState(null);
+
+  // Effect to simulate loading state for demonstration purposes
+  useEffect(() => {
+    // This would typically be replaced with actual data loading
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, []);
 
   return (
     <>
-      <WeatherLoadingScreen
-        isLoading={initialLoading || (loading && !weatherData)}
-      />
+      <WeatherLoadingScreen isLoading={initialLoading || loading} />
       <div className="flex flex-col min-h-screen relative">
         <main className="flex-grow overflow-y-auto">
-          <PremiumHomePage />
+          {isPremium ? <PremiumHomePage /> : <HomePage />}
         </main>
         <PrivacyPolicyModal
           visible={privacyModalVisible}

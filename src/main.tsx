@@ -1,7 +1,7 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
-import "./premium-styles.css"; // Ensure premium styles are imported
+import "./premium-styles.css"; // Premium styles are imported
 import App from "./App.tsx";
 
 // Make sure the root element exists

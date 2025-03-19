@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { getWeatherInfo } from "../../utils/weatherCodeMap";
 import { HourlyWeather } from "../../types/weather.types";
@@ -11,6 +11,9 @@ const PremiumHourlyForecast: React.FC<PremiumHourlyForecastProps> = ({
   hourlyData,
 }) => {
   const [expandedView, setExpandedView] = useState(false);
+  const [chartData, setChartData] = useState<{ time: string; temp: number }[]>(
+    []
+  );
 
   // Format time to show only hour
   const formatHour = (timeStr: string): string => {
@@ -30,6 +33,22 @@ const PremiumHourlyForecast: React.FC<PremiumHourlyForecastProps> = ({
     const hour = date.getHours();
     return hour >= 6 && hour < 18;
   };
+
+  // Prepare chart data when hourly data changes
+  useEffect(() => {
+    if (hourlyData && hourlyData.time) {
+      const displayHours = expandedView
+        ? hourlyData.time.slice(0, 48) // Show two days if expanded
+        : hourlyData.time.slice(0, 24); // Show one day by default
+
+      const data = displayHours.map((time, index) => ({
+        time,
+        temp: hourlyData.temperature_2m[index],
+      }));
+
+      setChartData(data);
+    }
+  }, [hourlyData, expandedView]);
 
   // Show a variable number of hours based on expandedView state
   const displayHours = expandedView
@@ -317,7 +336,7 @@ const PremiumHourlyForecast: React.FC<PremiumHourlyForecastProps> = ({
                             d="M4.5 9.75a6 6 0 0111.573-2.226 3.75 3.75 0 014.133 4.303A4.5 4.5 0 0118 20.25H6.75a5.25 5.25 0 01-2.23-10.004 6.072 6.072 0 01-.02-.496z"
                             clipRule="evenodd"
                           />
-                          <path d="M3.75 15.75a.75.75 0 00.75.75h.008a.75.75 0 00.75-.75v-.008a.75.75 0 00-.75-.75H4.5a.75.75 0 00-.75.75v.008zm2.25-3a.75.75 0 01.75-.75h.008a.75.75 0 01.75.75v.008a.75.75 0 01-.75.75H6.75a.75.75 0 01-.75-.75v-.008zm3 3a.75.75 0 00.75.75h.008a.75.75 0 00.75-.75v-.008a.75.75 0 00-.75-.75H9.75a.75.75 0 00-.75.75v.008z" />
+                          <path d="M3.75 15.75a.75.75 0 00.75.75h.008a.75.75 0 00.75-.75v-.008a.75.75 0 00-.75-.75H4.5a.75.75 0 00-.75.75v.008zm2.25-3a.75.75 0 01.75-.75h.008a.75.75 0 01.75.75v.008a.75.75 0 01-.75.75H6.75a.75.75 0 01-.75-.75v-.008zm3 3a.75.75 0 00.75.75h.008a.75.75 0 00.75-.75v-.008a.75.75 0 00-.75-.75H9.75a.75.75 0 00-.75.75v.008zm2.25-3a.75.75 0 01.75-.75h.008a.75.75 0 01.75.75v.008a.75.75 0 01-.75.75h-.008a.75.75 0 01-.75-.75v-.008z" />
                         </svg>
                       ) : weatherInfo.icon === "cloud-lightning" ? (
                         <svg

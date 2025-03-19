@@ -176,6 +176,7 @@ const PremiumCurrentWeather: React.FC<PremiumCurrentWeatherProps> = ({
 
         {/* Weather icon with animation */}
         <motion.div
+          key="weather-icon"
           className="text-5xl sm:text-6xl"
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -311,6 +312,7 @@ const PremiumCurrentWeather: React.FC<PremiumCurrentWeatherProps> = ({
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           {/* Humidity */}
           <motion.div
+            key="humidity-card"
             className="bg-white/10 backdrop-blur-lg rounded-2xl p-3 border border-white/20 shadow-lg transition-all hover:bg-white/15"
             whileHover={{ scale: 1.02 }}
           >
@@ -348,6 +350,7 @@ const PremiumCurrentWeather: React.FC<PremiumCurrentWeatherProps> = ({
 
           {/* Wind */}
           <motion.div
+            key="wind-card"
             className="bg-white/10 backdrop-blur-lg rounded-2xl p-3 border border-white/20 shadow-lg transition-all hover:bg-white/15"
             whileHover={{ scale: 1.02 }}
           >
@@ -376,6 +379,7 @@ const PremiumCurrentWeather: React.FC<PremiumCurrentWeatherProps> = ({
 
           {/* Precipitation */}
           <motion.div
+            key="precipitation-card"
             className="bg-white/10 backdrop-blur-lg rounded-2xl p-3 border border-white/20 shadow-lg transition-all hover:bg-white/15"
             whileHover={{ scale: 1.02 }}
           >
@@ -406,6 +410,7 @@ const PremiumCurrentWeather: React.FC<PremiumCurrentWeatherProps> = ({
 
           {/* UV Index */}
           <motion.div
+            key="uv-index-card"
             className="bg-white/10 backdrop-blur-lg rounded-2xl p-3 border border-white/20 shadow-lg transition-all hover:bg-white/15"
             whileHover={{ scale: 1.02 }}
           >

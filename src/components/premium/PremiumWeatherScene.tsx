@@ -569,7 +569,7 @@ const PremiumWeatherScene = () => {
   return (
     <div
       ref={mountRef}
-      className="absolute inset-0 z-0 opacity-80"
+      className="premium-3d-scene opacity-80"
       style={{ pointerEvents: "none" }}
     />
   );

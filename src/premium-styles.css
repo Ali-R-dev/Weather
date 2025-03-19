@@ -50,6 +50,13 @@
     --radius-xl: 1.5rem;
     --radius-2xl: 2rem;
     --radius-full: 9999px;
+
+    /* Z-index hierarchy */
+    --z-background: -10;
+    --z-weather-effects: -5;
+    --z-content: 10;
+    --z-header: 100;
+    --z-search-overlay: 200;
   }
   
   /* Base App Styling */
@@ -73,6 +80,7 @@
     perspective: 1000px;
     transform-style: preserve-3d;
     overflow-x: hidden;
+    isolation: isolate; /* Creates a new stacking context */
   }
   
   /* Premium Glassmorphism */
@@ -745,4 +753,27 @@
   .page-transition-exit-active {
     opacity: 0;
     transition: opacity 300ms;
+  }
+
+  /* Add these utility classes */
+  .premium-3d-scene {
+    z-index: var(--z-background);
+    position: absolute;
+    inset: 0;
+  }
+
+  .weather-content {
+    z-index: var(--z-content);
+    position: relative;
+  }
+
+  .app-header {
+    z-index: var(--z-header);
+    position: sticky;
+    top: 0;
+  }
+
+  .search-overlay {
+    z-index: var(--z-search-overlay);
+    position: fixed;
   }

@@ -118,13 +118,7 @@ const PremiumHomePage: React.FC = () => {
 
       <div className="min-h-screen flex flex-col w-full relative z-10">
         {/* Header with centered search bar */}
-        <header
-          className={`sticky top-0 z-[100] pt-safe transition-all duration-300 ${
-            showGlassBackground
-              ? "bg-black/30 backdrop-blur-lg shadow-lg"
-              : "bg-transparent"
-          }`}
-        >
+        <header className="app-header pt-safe transition-all duration-300 ${...}">
           <div className="max-w-screen-sm mx-auto w-full px-4 py-4">
             {/* Mini Search Bar Component */}
             <MiniSearchBar
@@ -154,7 +148,7 @@ const PremiumHomePage: React.FC = () => {
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -20 }}
                 transition={{ duration: 0.3 }}
-                className="fixed inset-0 bg-gradient-to-b from-black/90 to-black/70 backdrop-blur-sm pt-20 px-3 pb-3 max-h-screen overflow-auto md:pt-24 z-[200]"
+                className="search-overlay bg-gradient-to-b from-black/90 to-black/70 backdrop-blur-sm pt-20 px-3 pb-3 max-h-screen overflow-auto md:pt-24 inset-0"
               >
                 <div className="max-w-lg mx-auto">
                   <LocationSearch
@@ -167,165 +161,170 @@ const PremiumHomePage: React.FC = () => {
           </AnimatePresence>
         </header>
 
-        {/* Loading state with enhanced animation */}
-        {(geoLoading || loading) && !weatherData && (
-          <motion.div
-            className="flex-grow flex flex-col justify-center items-center"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-          >
-            <div className="relative">
-              <div className="animate-spin w-16 h-16 border-4 border-t-transparent border-white rounded-full"></div>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  className="w-8 h-8 text-white/50"
-                >
-                  <path d="M4.5 9.75a6 6 0 0111.573-2.226 3.75 3.75 0 014.133 4.303A4.5 4.5 0 0118 20.25H6.75a5.25 5.25 0 01-2.23-10.004 6.072 6.072 0 01-.02-.496z" />
-                </svg>
-              </div>
-            </div>
-            <p className="mt-6 text-white text-xl font-light">
-              Loading your weather data...
-            </p>
-          </motion.div>
-        )}
-
-        {/* Error states with improved visual design */}
-        {(geoError && !weatherData && !defaultLocation) || error ? (
-          <motion.div
-            className="flex-grow flex flex-col justify-center items-center p-6"
-            variants={contentVariants}
-          >
-            <div className="bg-black/40 backdrop-blur-xl text-white p-8 rounded-2xl max-w-md border border-white/20 shadow-xl">
-              <div className="flex flex-col items-center mb-4">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  fill="currentColor"
-                  className="w-12 h-12 text-red-400 mb-2"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                <p className="font-medium text-xl mb-1">
-                  {error ? "Error loading data" : "Location access denied"}
-                </p>
-              </div>
-              <p className="text-center mb-4">
-                {error ||
-                  "Please search for a location by tapping the location button above."}
-              </p>
-              <div className="flex justify-center">
-                <button
-                  onClick={() => setShowSearchResults(true)}
-                  className="px-4 py-2 bg-white/20 hover:bg-white/30 transition-colors rounded-lg text-white flex items-center"
-                >
+        <main className="weather-content flex-1">
+          {/* Loading state with enhanced animation */}
+          {(geoLoading || loading) && !weatherData && (
+            <motion.div
+              className="flex-grow flex flex-col justify-center items-center"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              <div className="relative">
+                <div className="animate-spin w-16 h-16 border-4 border-t-transparent border-white rounded-full"></div>
+                <div className="absolute inset-0 flex items-center justify-center">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
+                    viewBox="0 0 24 24"
                     fill="currentColor"
-                    className="w-5 h-5 mr-2"
+                    className="w-8 h-8 text-white/50"
+                  >
+                    <path d="M4.5 9.75a6 6 0 0111.573-2.226 3.75 3.75 0 014.133 4.303A4.5 4.5 0 0118 20.25H6.75a5.25 5.25 0 01-2.23-10.004 6.072 6.072 0 01-.02-.496z" />
+                  </svg>
+                </div>
+              </div>
+              <p className="mt-6 text-white text-xl font-light">
+                Loading your weather data...
+              </p>
+            </motion.div>
+          )}
+
+          {/* Error states with improved visual design */}
+          {(geoError && !weatherData && !defaultLocation) || error ? (
+            <motion.div
+              className="flex-grow flex flex-col justify-center items-center p-6"
+              variants={contentVariants}
+            >
+              <div className="bg-black/40 backdrop-blur-xl text-white p-8 rounded-2xl max-w-md border border-white/20 shadow-xl">
+                <div className="flex flex-col items-center mb-4">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    fill="currentColor"
+                    className="w-12 h-12 text-red-400 mb-2"
                   >
                     <path
                       fillRule="evenodd"
-                      d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
+                      d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zM12 8.25a.75.75 0 01.75.75v3.75a.75.75 0 01-1.5 0V9a.75.75 0 01.75-.75zm0 8.25a.75.75 0 100-1.5.75.75 0 000 1.5z"
                       clipRule="evenodd"
                     />
                   </svg>
-                  Search for a location
-                </button>
-              </div>
-            </div>
-          </motion.div>
-        ) : null}
-
-        {/* Weather data content with animations */}
-        {weatherData && (
-          <div className="flex flex-col flex-grow">
-            {/* Current weather - takes about 50% of screen height */}
-            <motion.div
-              className="flex-grow flex flex-col justify-end p-5 pb-0"
-              variants={contentVariants}
-            >
-              <PremiumCurrentWeather data={weatherData} />
-            </motion.div>
-
-            {/* Forecast section */}
-            <motion.div className="mt-auto p-5 pt-2" variants={contentVariants}>
-              {/* Forecast tabs - Modern, glassmorphic design */}
-              <div className="mb-4 flex items-center justify-between">
-                <h2 className="text-xl font-bold text-white tracking-tight">
-                  Forecast
-                </h2>
-                <div className="flex rounded-full overflow-hidden bg-white/10 backdrop-blur-lg p-1 border border-white/20">
+                  <p className="font-medium text-xl mb-1">
+                    {error ? "Error loading data" : "Location access denied"}
+                  </p>
+                </div>
+                <p className="text-center mb-4">
+                  {error ||
+                    "Please search for a location by tapping the location button above."}
+                </p>
+                <div className="flex justify-center">
                   <button
-                    onClick={() => setActiveTab("hourly")}
-                    className={`px-4 py-1.5 text-sm font-medium transition-all rounded-full ${
-                      activeTab === "hourly"
-                        ? "bg-white/20 text-white shadow-sm"
-                        : "text-white/70 hover:text-white"
-                    }`}
+                    onClick={() => setShowSearchResults(true)}
+                    className="px-4 py-2 bg-white/20 hover:bg-white/30 transition-colors rounded-lg text-white flex items-center"
                   >
-                    Hourly
-                  </button>
-                  <button
-                    onClick={() => setActiveTab("daily")}
-                    className={`px-4 py-1.5 text-sm font-medium transition-all rounded-full ${
-                      activeTab === "daily"
-                        ? "bg-white/20 text-white shadow-sm"
-                        : "text-white/70 hover:text-white"
-                    }`}
-                  >
-                    7-Day
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                      className="w-5 h-5 mr-2"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                    Search for a location
                   </button>
                 </div>
               </div>
+            </motion.div>
+          ) : null}
 
-              {/* Forecast content container - premium glassmorphic design */}
+          {/* Weather data content with animations */}
+          {weatherData && (
+            <div className="flex flex-col flex-grow">
+              {/* Current weather - takes about 50% of screen height */}
               <motion.div
-                className="rounded-3xl overflow-hidden border border-white/20 h-auto bg-gradient-to-br from-black/20 to-black/40 backdrop-blur-xl shadow-xl"
-                initial={{ y: 20, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                transition={{ delay: 0.2, duration: 0.6 }}
+                className="flex-grow flex flex-col justify-end p-5 pb-0"
+                variants={contentVariants}
               >
-                <div className="p-4 h-full">
-                  <AnimatePresence mode="wait">
-                    {activeTab === "hourly" ? (
-                      <motion.div
-                        key="hourly"
-                        initial={{ opacity: 0, x: -10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: 10 }}
-                        transition={{ duration: 0.3 }}
-                      >
-                        <PremiumHourlyForecast
-                          hourlyData={weatherData.hourly}
-                        />
-                      </motion.div>
-                    ) : (
-                      <motion.div
-                        key="daily"
-                        initial={{ opacity: 0, x: 10 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        exit={{ opacity: 0, x: -10 }}
-                        transition={{ duration: 0.3 }}
-                      >
-                        <ForecastDay dailyData={weatherData.daily} />
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
+                <PremiumCurrentWeather data={weatherData} />
               </motion.div>
-            </motion.div>
-          </div>
-        )}
+
+              {/* Forecast section */}
+              <motion.div
+                className="mt-auto p-5 pt-2"
+                variants={contentVariants}
+              >
+                {/* Forecast tabs - Modern, glassmorphic design */}
+                <div className="mb-4 flex items-center justify-between">
+                  <h2 className="text-xl font-bold text-white tracking-tight">
+                    Forecast
+                  </h2>
+                  <div className="flex rounded-full overflow-hidden bg-white/10 backdrop-blur-lg p-1 border border-white/20">
+                    <button
+                      onClick={() => setActiveTab("hourly")}
+                      className={`px-4 py-1.5 text-sm font-medium transition-all rounded-full ${
+                        activeTab === "hourly"
+                          ? "bg-white/20 text-white shadow-sm"
+                          : "text-white/70 hover:text-white"
+                      }`}
+                    >
+                      Hourly
+                    </button>
+                    <button
+                      onClick={() => setActiveTab("daily")}
+                      className={`px-4 py-1.5 text-sm font-medium transition-all rounded-full ${
+                        activeTab === "daily"
+                          ? "bg-white/20 text-white shadow-sm"
+                          : "text-white/70 hover:text-white"
+                      }`}
+                    >
+                      7-Day
+                    </button>
+                  </div>
+                </div>
+
+                {/* Forecast content container - premium glassmorphic design */}
+                <motion.div
+                  className="rounded-3xl overflow-hidden border border-white/20 h-auto bg-gradient-to-br from-black/20 to-black/40 backdrop-blur-xl shadow-xl"
+                  initial={{ y: 20, opacity: 0 }}
+                  animate={{ y: 0, opacity: 1 }}
+                  transition={{ delay: 0.2, duration: 0.6 }}
+                >
+                  <div className="p-4 h-full">
+                    <AnimatePresence mode="wait">
+                      {activeTab === "hourly" ? (
+                        <motion.div
+                          key="hourly"
+                          initial={{ opacity: 0, x: -10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: 10 }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          <PremiumHourlyForecast
+                            hourlyData={weatherData.hourly}
+                          />
+                        </motion.div>
+                      ) : (
+                        <motion.div
+                          key="daily"
+                          initial={{ opacity: 0, x: 10 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          exit={{ opacity: 0, x: -10 }}
+                          transition={{ duration: 0.3 }}
+                        >
+                          <ForecastDay dailyData={weatherData.daily} />
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                </motion.div>
+              </motion.div>
+            </div>
+          )}
+        </main>
 
         {/* Enhanced footer */}
         <motion.footer

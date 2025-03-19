@@ -143,17 +143,16 @@ export default function LocationSearch({
   };
 
   return (
-    <div className="relative w-full" ref={dropdownRef} style={{ zIndex: compact ? 9999 : 30 }}>
+    <div
+      className="relative w-full"
+      ref={dropdownRef}
+      style={{ zIndex: compact ? 9999 : 30 }}
+    >
       {/* Only show the search input in full mode, not compact mode */}
       {!compact && (
         <div className="relative">
           <input
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}type="text"
+            type="text"
             placeholder="Search for a location..."
             value={query}
             onChange={(e) => setQuery(e.target.value)}
@@ -360,3 +359,8 @@ export default function LocationSearch({
               Use current location
             </button>
           </div>
+        </div>
+      )}
+    </div>
+  );
+}
