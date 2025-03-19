@@ -158,10 +158,23 @@ const PremiumHourlyForecast: React.FC<PremiumHourlyForecastProps> = ({
               ))}
             </g>
 
-            {/* Past temperatures path */}
+            {/* Complete continuous temperature path with gradient */}
+            <defs>
+              <linearGradient id="line-gradient" x1="0" y1="0" x2="1" y2="0">
+                <stop
+                  offset={`${currentTimeIndex / (visibleTemps.length - 1)}`}
+                  stopColor="rgba(102,255,102,0.9)"
+                />
+                <stop
+                  offset={`${currentTimeIndex / (visibleTemps.length - 1)}`}
+                  stopColor="rgba(255,255,255,0.9)"
+                />
+              </linearGradient>
+            </defs>
+
+            {/* Continuous temperature path - single path with gradient */}
             <motion.path
               d={visibleTemps
-                .slice(0, currentTimeIndex + 1)
                 .map((temp, i) => {
                   const x = (i / (visibleTemps.length - 1)) * 100;
                   const y =
@@ -169,33 +182,12 @@ const PremiumHourlyForecast: React.FC<PremiumHourlyForecastProps> = ({
                   return (i === 0 ? "M" : "L") + `${x} ${y}`;
                 })
                 .join(" ")}
-              stroke="rgba(102,255,102,0.9)" // Green for historical data
+              stroke="url(#line-gradient)"
               strokeWidth="2"
               fill="none"
               initial={{ pathLength: 0 }}
               animate={{ pathLength: 1, opacity: 1 }}
               transition={{ duration: 1, type: "spring" }}
-            />
-
-            {/* Future temperatures path */}
-            <motion.path
-              d={visibleTemps
-                .slice(currentTimeIndex)
-                .map((temp, i) => {
-                  const actualIndex = i + currentTimeIndex;
-                  const x = (actualIndex / (visibleTemps.length - 1)) * 100;
-                  const y =
-                    24 - (temp - minTemp) * (24 / Math.max(3, tempRange));
-                  return (i === 0 ? "M" : "L") + `${x} ${y}`;
-                })
-                .join(" ")}
-              stroke="rgba(255,255,255,0.9)" // White for forecast data (increased opacity)
-              strokeWidth="1.5"
-              strokeDasharray="3,1" // Dashed line for forecast
-              fill="none"
-              initial={{ pathLength: 0 }}
-              animate={{ pathLength: 1, opacity: 1 }}
-              transition={{ duration: 1, delay: 0.4, type: "spring" }}
             />
 
             {/* Past area fill */}
@@ -213,7 +205,7 @@ const PremiumHourlyForecast: React.FC<PremiumHourlyForecastProps> = ({
               } 24 L0 24 Z`}
               fill="url(#past-gradient)"
               initial={{ opacity: 0 }}
-              animate={{ opacity: 0.4 }} // Increased opacity for better visibility
+              animate={{ opacity: 0.4 }}
               transition={{ delay: 0.5 }}
             />
 
@@ -233,7 +225,7 @@ const PremiumHourlyForecast: React.FC<PremiumHourlyForecastProps> = ({
               } 24 Z`}
               fill="url(#future-gradient)"
               initial={{ opacity: 0 }}
-              animate={{ opacity: 0.3 }} // Increased opacity for better visibility
+              animate={{ opacity: 0.3 }}
               transition={{ delay: 0.5 }}
             />
 
@@ -243,8 +235,8 @@ const PremiumHourlyForecast: React.FC<PremiumHourlyForecastProps> = ({
               y1="0"
               x2={`${(currentTimeIndex / (visibleTemps.length - 1)) * 100}%`}
               y2="24"
-              stroke="rgba(255,255,255,0.9)" // Brighter line
-              strokeWidth="1.5" // Thicker line
+              stroke="rgba(255,255,255,0.9)"
+              strokeWidth="1.5"
               initial={{ height: 0 }}
               animate={{ height: 24 }}
               transition={{ delay: 0.8 }}
@@ -258,18 +250,17 @@ const PremiumHourlyForecast: React.FC<PremiumHourlyForecastProps> = ({
                 (visibleTemps[currentTimeIndex] - minTemp) *
                   (24 / Math.max(3, tempRange))
               }
-              r="4" // Larger dot
+              r="4"
               fill="white"
               initial={{ scale: 0 }}
               animate={{ scale: 1 }}
               transition={{ delay: 1, type: "spring" }}
             />
 
-            {/* Gradients */}
+            {/* Gradients for area fills */}
             <defs>
               <linearGradient id="past-gradient" x1="0" x2="0" y1="0" y2="1">
-                <stop offset="0%" stopColor="#66FF66" />{" "}
-                {/* Green for past data */}
+                <stop offset="0%" stopColor="#66FF66" />
                 <stop offset="100%" stopColor="#66FF66" stopOpacity="0.1" />
               </linearGradient>
               <linearGradient id="future-gradient" x1="0" x2="0" y1="0" y2="1">
@@ -278,7 +269,7 @@ const PremiumHourlyForecast: React.FC<PremiumHourlyForecastProps> = ({
               </linearGradient>
             </defs>
 
-            {/* Temperature dots along the entire graph */}
+            {/* Temperature dots along the graph */}
             {visibleTemps.map((temp, i) => {
               if (i % 4 === 0 || i === visibleTemps.length - 1) {
                 const x = (i / (visibleTemps.length - 1)) * 100;
@@ -290,8 +281,8 @@ const PremiumHourlyForecast: React.FC<PremiumHourlyForecastProps> = ({
                     key={`dot-${i}`}
                     cx={`${x}%`}
                     cy={y}
-                    r={isPast ? "2.5" : "2"} // Slightly larger dots for past data
-                    fill={isPast ? "#66FF66" : "white"} // Green dots for past, white for future
+                    r="2.5"
+                    fill={isPast ? "#66FF66" : "white"}
                     initial={{ opacity: 0, scale: 0 }}
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: 0.8 + i * 0.05 }}
@@ -301,7 +292,7 @@ const PremiumHourlyForecast: React.FC<PremiumHourlyForecastProps> = ({
               return null;
             })}
 
-            {/* Temperature labels - added middle point */}
+            {/* Temperature labels */}
             {[
               0,
               Math.floor(visibleTemps.length / 2),
@@ -329,7 +320,7 @@ const PremiumHourlyForecast: React.FC<PremiumHourlyForecastProps> = ({
               </text>
             ))}
 
-            {/* Add more time markers for better context */}
+            {/* Time markers */}
             {[
               0,
               Math.floor(visibleTemps.length / 2),
@@ -353,12 +344,12 @@ const PremiumHourlyForecast: React.FC<PremiumHourlyForecastProps> = ({
               </text>
             ))}
 
-            {/* Add "Now" label */}
+            {/* Now label */}
             <text
               x={`${(currentTimeIndex / (visibleTemps.length - 1)) * 100}%`}
               y="30"
               fontSize="9"
-              fill="rgba(255,255,255,1)" // Brighter text
+              fill="rgba(255,255,255,1)"
               textAnchor="middle"
               fontWeight="bold"
             >
