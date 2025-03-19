@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useWeather } from "../context/WeatherContext";
 import useGeolocation from "../hooks/useGeolocation";
@@ -14,7 +14,7 @@ import BackgroundEffect from "../components/effects/BackgroundEffect";
 export default function HomePage() {
   const { loading, error, weatherData, setLocation, lastUpdated } =
     useWeather();
-  const { location, loading: geoLoading, error: geoError } = useGeolocation();
+  const { location, loading: _geoLoading, error: _geoError } = useGeolocation();
   const { defaultLocation } = useSavedLocations();
   const initialLoadCompleted = useRef(false);
   const geoLocationUsed = useRef(false);
