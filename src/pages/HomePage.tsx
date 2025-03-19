@@ -1,10 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useWeather } from "../context/WeatherContext";
 import useGeolocation from "../hooks/useGeolocation";
 import useSavedLocations from "../hooks/useSavedLocations";
-import CurrentWeather from "../components/weather/CurrentWeather";
-import HourlyForecast from "../components/weather/HourlyForecast";
-import ForecastDay from "../components/weather/ForecastDay";
+import CurrentWeather from "../components/weather/current";
+import HourlyForecast from "../components/weather/hourly";
+import DailyForecast from "../components/weather/daily";
 import LocationSearch from "../components/weather/LocationSearch";
 import MiniSearchBar from "../components/weather/MiniSearchBar";
 import { timeAgo } from "../utils/dateUtils";
@@ -50,8 +51,21 @@ export default function HomePage() {
     }
   }, [defaultLocation, location, loading, setLocation, weatherData]);
 
+  // Animation variants
+  const pageVariants = {
+    initial: { opacity: 0 },
+    enter: { opacity: 1, transition: { duration: 0.3 } },
+    exit: { opacity: 0, transition: { duration: 0.2 } },
+  };
+
   return (
-    <div className="weather-app">
+    <motion.div
+      className="weather-app"
+      initial="initial"
+      animate="enter"
+      exit="exit"
+      variants={pageVariants}
+    >
       {weatherData && (
         <BackgroundEffect
           weatherCode={weatherData.current.weather_code}
@@ -60,111 +74,121 @@ export default function HomePage() {
       )}
 
       <div className="min-h-screen flex flex-col w-full relative z-10">
-        {/* Header with centered search bar */}
-        <header className="sticky top-0 z-50 pt-safe bg-transparent">
-          <div className="max-w-screen-sm mx-auto w-full px-3 pt-4">
-            {/* Mini Search Bar Component - centered on desktop, full-width on mobile */}
+        {/* Header with search */}
+        <header className="app-header pt-safe transition-all duration-300">
+          <div className="max-w-screen-sm mx-auto w-full px-4 py-4">
             <MiniSearchBar
               onFocus={() => setShowSearchResults(true)}
               onSelect={() => setShowSearchResults(false)}
               isActive={showSearchResults}
             />
 
-            {/* Last updated status below search */}
+            {/* Last updated status */}
             {!showSearchResults && weatherData && (
               <div className="text-xs opacity-60 text-center mt-2">
-                Last updated: {timeAgo(lastUpdated)}
+                Last updated: {lastUpdated ? timeAgo(lastUpdated) : "recently"}
               </div>
             )}
           </div>
 
           {/* Search results overlay */}
-          {showSearchResults && (
-            <div className="fixed inset-0 bg-gradient-to-b from-black/90 to-black/70 backdrop-blur-sm pt-20 px-3 pb-3 animate-fade-in max-h-screen overflow-auto md:pt-24">
-              <div className="max-w-lg mx-auto">
-                <LocationSearch
-                  compact={true}
-                  onLocationSelect={() => setShowSearchResults(false)}
-                />
+          <AnimatePresence>
+            {showSearchResults && (
+              <div className="search-overlay bg-gradient-to-b from-black/90 to-black/70 backdrop-blur-sm pt-20 px-3 pb-3 max-h-screen overflow-auto md:pt-24 fixed inset-0">
+                <div className="max-w-lg mx-auto">
+                  <LocationSearch
+                    compact={true}
+                    onLocationSelect={() => setShowSearchResults(false)}
+                  />
+                </div>
+              </div>
+            )}
+          </AnimatePresence>
+        </header>
+
+        <main className="weather-content flex-1">
+          {/* Weather data content */}
+          {weatherData && (
+            <div className="flex flex-col flex-grow">
+              {/* Current weather */}
+              <div className="flex-grow flex flex-col justify-end p-5 pb-0">
+                <CurrentWeather data={weatherData} />
+              </div>
+
+              {/* Forecast section */}
+              <div className="mt-auto p-5 pt-2">
+                {/* Forecast tabs */}
+                <div className="mb-4 flex items-center justify-between">
+                  <h2 className="text-xl font-bold text-white tracking-tight">
+                    Forecast
+                  </h2>
+                  <div className="forecast-tabs">
+                    <button
+                      onClick={() => setActiveTab("hourly")}
+                      className={`tab-button ${
+                        activeTab === "hourly" ? "tab-active" : "tab-inactive"
+                      }`}
+                    >
+                      Hourly
+                    </button>
+                    <button
+                      onClick={() => setActiveTab("daily")}
+                      className={`tab-button ${
+                        activeTab === "daily" ? "tab-active" : "tab-inactive"
+                      }`}
+                    >
+                      7-Day
+                    </button>
+                  </div>
+                </div>
+
+                {/* Forecast content */}
+                <div className="current-weather-card">
+                  <div className="p-4 h-full">
+                    {activeTab === "hourly" ? (
+                      <HourlyForecast hourlyData={weatherData.hourly} />
+                    ) : (
+                      <DailyForecast dailyData={weatherData.daily} />
+                    )}
+                  </div>
+                </div>
               </div>
             </div>
           )}
-        </header>
 
-        {/* Loading states */}
-        {(geoLoading || loading) && !weatherData && (
-          <div className="flex-grow flex flex-col justify-center items-center">
-            <div className="animate-spin w-16 h-16 border-4 border-t-transparent border-white rounded-full"></div>
-            <p className="mt-4 text-white text-xl">Loading weather data...</p>
-          </div>
-        )}
-
-        {/* Error states */}
-        {(geoError && !weatherData && !defaultLocation) || error ? (
-          <div className="flex-grow flex flex-col justify-center items-center p-6">
-            <div className="bg-black/30 backdrop-blur-md text-white p-6 rounded-xl max-w-md border border-white/10">
-              <p className="font-medium text-xl mb-2">
-                {error ? "Error loading data" : "Location access denied"}
-              </p>
-              <p>
-                {error ||
-                  "Please search for a location by tapping the location button above."}
-              </p>
+          {/* Loading state */}
+          {loading && (
+            <div className="flex items-center justify-center h-64">
+              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white"></div>
             </div>
-          </div>
-        ) : null}
+          )}
 
-        {/* Weather data content */}
-        {weatherData && (
-          <div className="flex flex-col flex-grow">
-            {/* Current weather - takes about 50% of screen height */}
-            <div className="flex-grow flex flex-col justify-end p-4 pb-0">
-              <CurrentWeather data={weatherData} />
+          {/* Error state */}
+          {error && (
+            <div className="text-center py-8 text-red-400">
+              <div className="text-3xl mb-2">😕</div>
+              <div>{error}</div>
             </div>
+          )}
+        </main>
 
-            {/* Forecast section */}
-            <div className="mt-auto p-4 pt-2">
-              {/* Forecast tabs - Modern, minimal design */}
-              <div className="mb-3 flex items-center justify-between">
-                <h2 className="text-xl font-semibold text-white">Forecast</h2>
-                <div className="flex rounded-lg overflow-hidden bg-black/20 backdrop-blur-md p-1 border border-white/10">
-                  <button
-                    onClick={() => setActiveTab("hourly")}
-                    className={`px-4 py-1.5 text-sm transition-all ${
-                      activeTab === "hourly"
-                        ? "bg-white/20 text-white font-medium rounded-md shadow-sm"
-                        : "text-white/70 hover:text-white"
-                    }`}
-                  >
-                    Hourly
-                  </button>
-                  <button
-                    onClick={() => setActiveTab("daily")}
-                    className={`px-4 py-1.5 text-sm transition-all ${
-                      activeTab === "daily"
-                        ? "bg-white/20 text-white font-medium rounded-md shadow-sm"
-                        : "text-white/70 hover:text-white"
-                    }`}
-                  >
-                    Daily
-                  </button>
-                </div>
-              </div>
-
-              {/* Forecast content container - modernized */}
-              <div className="rounded-3xl overflow-hidden border border-white/10 h-auto bg-gradient-to-br from-black/20 to-black/30 backdrop-blur-md">
-                <div className="p-4 h-full">
-                  {activeTab === "hourly" ? (
-                    <HourlyForecast hourlyData={weatherData.hourly} />
-                  ) : (
-                    <ForecastDay dailyData={weatherData.daily} />
-                  )}
-                </div>
-              </div>
-            </div>
+        {/* Footer */}
+        <footer className="py-3 px-4 bg-black/30 backdrop-blur-lg text-white text-xs flex items-center justify-between border-t border-white/10">
+          <div className="flex items-center">
+            <span className="text-white/80">
+              Powered by{" "}
+              <a
+                href="https://open-meteo.com/"
+                className="text-blue-300 hover:text-blue-200"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Open Meteo
+              </a>
+            </span>
           </div>
-        )}
+        </footer>
       </div>
-    </div>
+    </motion.div>
   );
 }

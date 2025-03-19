@@ -4,7 +4,7 @@ export interface WeatherInfo {
   className: string;
 }
 
-export const weatherCodeMap: Record<number, WeatherInfo> = {
+const weatherCodes: { [key: number]: WeatherInfo } = {
   0: {
     label: "Clear sky",
     icon: "sun",
@@ -18,7 +18,7 @@ export const weatherCodeMap: Record<number, WeatherInfo> = {
   2: {
     label: "Partly cloudy",
     icon: "cloud-sun",
-    className: "bg-cloudy text-white",
+    className: "bg-partly-cloudy text-white",
   },
   3: {
     label: "Overcast",
@@ -28,12 +28,12 @@ export const weatherCodeMap: Record<number, WeatherInfo> = {
   45: {
     label: "Fog",
     icon: "cloud-fog",
-    className: "bg-foggy text-text-dark",
+    className: "bg-foggy text-gray-800",
   },
   48: {
     label: "Depositing rime fog",
     icon: "cloud-fog",
-    className: "bg-foggy text-text-dark",
+    className: "bg-foggy text-gray-800",
   },
   51: {
     label: "Light drizzle",
@@ -72,7 +72,7 @@ export const weatherCodeMap: Record<number, WeatherInfo> = {
   },
   65: {
     label: "Heavy rain",
-    icon: "cloud-rain-heavy",
+    icon: "cloud-rain",
     className: "bg-rainy text-white",
   },
   66: {
@@ -86,24 +86,24 @@ export const weatherCodeMap: Record<number, WeatherInfo> = {
     className: "bg-rainy text-white",
   },
   71: {
-    label: "Slight snow",
+    label: "Slight snow fall",
     icon: "cloud-snow",
-    className: "bg-snowy text-text-dark",
+    className: "bg-snowy text-white",
   },
   73: {
-    label: "Moderate snow",
+    label: "Moderate snow fall",
     icon: "cloud-snow",
-    className: "bg-snowy text-text-dark",
+    className: "bg-snowy text-white",
   },
   75: {
-    label: "Heavy snow",
+    label: "Heavy snow fall",
     icon: "cloud-snow",
-    className: "bg-snowy text-text-dark",
+    className: "bg-snowy text-white",
   },
   77: {
     label: "Snow grains",
     icon: "cloud-snow",
-    className: "bg-snowy text-text-dark",
+    className: "bg-snowy text-white",
   },
   80: {
     label: "Slight rain showers",
@@ -117,18 +117,18 @@ export const weatherCodeMap: Record<number, WeatherInfo> = {
   },
   82: {
     label: "Violent rain showers",
-    icon: "cloud-rain-heavy",
+    icon: "cloud-rain",
     className: "bg-rainy text-white",
   },
   85: {
     label: "Slight snow showers",
     icon: "cloud-snow",
-    className: "bg-snowy text-text-dark",
+    className: "bg-snowy text-white",
   },
   86: {
     label: "Heavy snow showers",
     icon: "cloud-snow",
-    className: "bg-snowy text-text-dark",
+    className: "bg-snowy text-white",
   },
   95: {
     label: "Thunderstorm",
@@ -137,7 +137,7 @@ export const weatherCodeMap: Record<number, WeatherInfo> = {
   },
   96: {
     label: "Thunderstorm with slight hail",
-    icon: "cloud-lightning-rain",
+    icon: "cloud-hail",
     className: "bg-stormy text-white",
   },
   99: {
@@ -148,11 +148,14 @@ export const weatherCodeMap: Record<number, WeatherInfo> = {
 };
 
 export function getWeatherInfo(code: number): WeatherInfo {
-  return (
-    weatherCodeMap[code] || {
-      label: "Unknown",
-      icon: "question",
-      className: "bg-gray-500 text-white",
-    }
-  );
+  if (code in weatherCodes) {
+    return weatherCodes[code];
+  }
+
+  // Default fallback
+  return {
+    label: "Unknown",
+    icon: "cloud",
+    className: "bg-cloudy text-white",
+  };
 }

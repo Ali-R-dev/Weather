@@ -1,15 +1,13 @@
 import { useEffect, useState } from "react";
 import { WeatherProvider } from "./context/WeatherContext";
 import { ThemeProvider } from "./context/ThemeContext";
-import PremiumHomePage from "./pages/PremiumHomePage";
 import HomePage from "./pages/HomePage";
 import PrivacyPolicyModal from "./components/PrivacyPolicyModal";
 import WeatherLoadingScreen from "./components/common/WeatherLoadingScreen";
+import "./premium-styles.css";
 
-// Add proper TypeScript interface for AppContent props
 interface AppContentProps {
   initialLoading: boolean;
-  isPremium: boolean;
   privacyModalVisible: boolean;
   setPrivacyModalVisible: (visible: boolean) => void;
 }
@@ -17,8 +15,6 @@ interface AppContentProps {
 function App() {
   const [privacyModalVisible, setPrivacyModalVisible] = useState(false);
   const [initialLoading, setInitialLoading] = useState(true);
-  // Set to true to enable the premium version
-  const [isPremium, setIsPremium] = useState(true);
 
   useEffect(() => {
     // Update theme-color meta tag
@@ -32,7 +28,7 @@ function App() {
       document.head.appendChild(meta);
     }
 
-    // Simulate initial loading (you might want to adjust this)
+    // Simulate initial loading
     const timer = setTimeout(() => {
       setInitialLoading(false);
     }, 2000);
@@ -45,7 +41,6 @@ function App() {
       <WeatherProvider>
         <AppContent
           initialLoading={initialLoading}
-          isPremium={isPremium}
           privacyModalVisible={privacyModalVisible}
           setPrivacyModalVisible={setPrivacyModalVisible}
         />
@@ -56,29 +51,15 @@ function App() {
 
 function AppContent({
   initialLoading,
-  isPremium,
   privacyModalVisible,
   setPrivacyModalVisible,
 }: AppContentProps) {
-  // Using the context inside the AppContent component
-  const [loading, setLoading] = useState(true);
-  const [weatherData, setWeatherData] = useState(null);
-
-  // Effect to simulate loading state for demonstration purposes
-  useEffect(() => {
-    // This would typically be replaced with actual data loading
-    const timer = setTimeout(() => {
-      setLoading(false);
-    }, 1500);
-    return () => clearTimeout(timer);
-  }, []);
-
   return (
     <>
-      <WeatherLoadingScreen isLoading={initialLoading || loading} />
+      <WeatherLoadingScreen isLoading={initialLoading} />
       <div className="flex flex-col min-h-screen relative">
         <main className="flex-grow overflow-y-auto">
-          {isPremium ? <PremiumHomePage /> : <HomePage />}
+          <HomePage />
         </main>
         <PrivacyPolicyModal
           visible={privacyModalVisible}
