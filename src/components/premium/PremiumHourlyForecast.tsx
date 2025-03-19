@@ -14,6 +14,7 @@ const PremiumHourlyForecast: React.FC<PremiumHourlyForecastProps> = ({
   const [chartData, setChartData] = useState<{ time: string; temp: number }[]>(
     []
   );
+  const [currentTimeIndex, setCurrentTimeIndex] = useState(0);
 
   // Format time to show only hour
   const formatHour = (timeStr: string): string => {
@@ -40,6 +41,22 @@ const PremiumHourlyForecast: React.FC<PremiumHourlyForecastProps> = ({
       const displayHours = expandedView
         ? hourlyData.time.slice(0, 48) // Show two days if expanded
         : hourlyData.time.slice(0, 24); // Show one day by default
+
+      // Find the index where "now" is
+      const now = new Date();
+      let closestIndex = 0;
+      let smallestDiff = Infinity;
+
+      displayHours.forEach((timeStr, idx) => {
+        const timeDate = new Date(timeStr);
+        const diff = Math.abs(timeDate.getTime() - now.getTime());
+        if (diff < smallestDiff) {
+          smallestDiff = diff;
+          closestIndex = idx;
+        }
+      });
+
+      setCurrentTimeIndex(closestIndex);
 
       const data = displayHours.map((time, index) => ({
         time,
@@ -113,104 +130,219 @@ const PremiumHourlyForecast: React.FC<PremiumHourlyForecastProps> = ({
     <div className="h-full">
       {/* Temperature graph */}
       <div className="relative h-32 mb-2 mt-1">
-        <motion.div
-          className="absolute bottom-0 left-0 right-0 h-24"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.6 }}
-        >
-          {/* Temperature curve */}
+        <motion.div className="absolute bottom-0 left-0 right-0 h-24">
           <svg className="w-full h-full overflow-visible">
+            {/* Grid lines - keep these */}
+            <g className="grid-lines">
+              {[0, 25, 50, 75, 100].map((x) => (
+                <line
+                  key={`grid-v-${x}`}
+                  x1={`${x}%`}
+                  y1="0"
+                  x2={`${x}%`}
+                  y2="24"
+                  stroke="rgba(255,255,255,0.1)"
+                  strokeDasharray="2,2"
+                />
+              ))}
+              {[0, 8, 16, 24].map((y) => (
+                <line
+                  key={`grid-h-${y}`}
+                  x1="0"
+                  y1={y}
+                  x2="100%"
+                  y2={y}
+                  stroke="rgba(255,255,255,0.1)"
+                  strokeDasharray="2,2"
+                />
+              ))}
+            </g>
+
+            {/* Past temperatures path */}
+            <motion.path
+              d={visibleTemps
+                .slice(0, currentTimeIndex + 1)
+                .map((temp, i) => {
+                  const x = (i / (visibleTemps.length - 1)) * 100;
+                  const y =
+                    24 - (temp - minTemp) * (24 / Math.max(3, tempRange));
+                  return (i === 0 ? "M" : "L") + `${x} ${y}`;
+                })
+                .join(" ")}
+              stroke="rgba(102,187,255,0.9)" // Light blue for historical data
+              strokeWidth="2"
+              fill="none"
+              initial={{ pathLength: 0 }}
+              animate={{ pathLength: 1, opacity: 1 }}
+              transition={{ duration: 1, type: "spring" }}
+            />
+
+            {/* Future temperatures path */}
+            <motion.path
+              d={visibleTemps
+                .slice(currentTimeIndex)
+                .map((temp, i) => {
+                  const actualIndex = i + currentTimeIndex;
+                  const x = (actualIndex / (visibleTemps.length - 1)) * 100;
+                  const y =
+                    24 - (temp - minTemp) * (24 / Math.max(3, tempRange));
+                  return (i === 0 ? "M" : "L") + `${x} ${y}`;
+                })
+                .join(" ")}
+              stroke="rgba(255,255,255,0.8)" // White for forecast data
+              strokeWidth="1.5"
+              strokeDasharray="3,1" // Optional: make forecast line dashed
+              fill="none"
+              initial={{ pathLength: 0 }}
+              animate={{ pathLength: 1, opacity: 1 }}
+              transition={{ duration: 1, delay: 0.4, type: "spring" }}
+            />
+
+            {/* Past area fill */}
+            <motion.path
+              d={`${visibleTemps
+                .slice(0, currentTimeIndex + 1)
+                .map((temp, i) => {
+                  const x = (i / (visibleTemps.length - 1)) * 100;
+                  const y =
+                    24 - (temp - minTemp) * (24 / Math.max(3, tempRange));
+                  return (i === 0 ? "M" : "L") + `${x} ${y}`;
+                })
+                .join(" ")} L${
+                (currentTimeIndex / (visibleTemps.length - 1)) * 100
+              } 24 L0 24 Z`}
+              fill="url(#past-gradient)"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.3 }}
+              transition={{ delay: 0.5 }}
+            />
+
+            {/* Future area fill */}
+            <motion.path
+              d={`${visibleTemps
+                .slice(currentTimeIndex)
+                .map((temp, i) => {
+                  const actualIndex = i + currentTimeIndex;
+                  const x = (actualIndex / (visibleTemps.length - 1)) * 100;
+                  const y =
+                    24 - (temp - minTemp) * (24 / Math.max(3, tempRange));
+                  return (i === 0 ? "M" : "L") + `${x} ${y}`;
+                })
+                .join(" ")} L100 24 L${
+                (currentTimeIndex / (visibleTemps.length - 1)) * 100
+              } 24 Z`}
+              fill="url(#future-gradient)"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 0.2 }}
+              transition={{ delay: 0.5 }}
+            />
+
+            {/* "Now" marker - vertical line at current time */}
+            <motion.line
+              x1={`${(currentTimeIndex / (visibleTemps.length - 1)) * 100}%`}
+              y1="0"
+              x2={`${(currentTimeIndex / (visibleTemps.length - 1)) * 100}%`}
+              y2="24"
+              stroke="rgba(255,255,255,0.7)"
+              strokeWidth="1"
+              initial={{ height: 0 }}
+              animate={{ height: 24 }}
+              transition={{ delay: 0.8 }}
+            />
+
+            {/* "Now" marker dot */}
+            <motion.circle
+              cx={`${(currentTimeIndex / (visibleTemps.length - 1)) * 100}%`}
+              cy={
+                24 -
+                (visibleTemps[currentTimeIndex] - minTemp) *
+                  (24 / Math.max(3, tempRange))
+              }
+              r="3"
+              fill="white"
+              initial={{ scale: 0 }}
+              animate={{ scale: 1 }}
+              transition={{ delay: 1, type: "spring" }}
+            />
+
+            {/* Gradients */}
             <defs>
-              <linearGradient
-                id="premium-temp-gradient"
-                x1="0%"
-                y1="0%"
-                x2="0%"
-                y2="100%"
-              >
-                <stop offset="0%" stopColor="rgba(255,255,255,0.5)" />
-                <stop offset="100%" stopColor="rgba(255,255,255,0)" />
+              <linearGradient id="past-gradient" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0%" stopColor="#66BBFF" />
+                <stop offset="100%" stopColor="#66BBFF" stopOpacity="0.1" />
+              </linearGradient>
+              <linearGradient id="future-gradient" x1="0" x2="0" y1="0" y2="1">
+                <stop offset="0%" stopColor="#FFFFFF" />
+                <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.1" />
               </linearGradient>
             </defs>
 
-            {/* Line path with smoother animation */}
-            <motion.path
-              initial={{ pathLength: 0, opacity: 0 }}
-              animate={{ pathLength: 1, opacity: 1 }}
-              transition={{ duration: 1, ease: "easeInOut" }}
-              d={`M0,${
-                24 - (visibleTemps[0] - minTemp) * (24 / Math.max(3, tempRange))
-              } ${visibleTemps
-                .map((temp, i) => {
-                  const x = (i / (visibleTemps.length - 1)) * 100;
-                  const y =
-                    24 - (temp - minTemp) * (24 / Math.max(3, tempRange));
-                  return `L${x},${y}`;
-                })
-                .join(" ")}`}
-              fill="none"
-              stroke="rgba(255,255,255,0.8)"
-              strokeWidth="2"
-              strokeLinecap="round"
-            />
-
-            {/* Area fill with reduced opacity */}
-            <motion.path
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 0.2 }} // Reduced opacity
-              transition={{ duration: 0.8, delay: 0.3 }}
-              d={`M0,${
-                24 - (visibleTemps[0] - minTemp) * (24 / Math.max(3, tempRange))
-              } ${visibleTemps
-                .map((temp, i) => {
-                  const x = (i / (visibleTemps.length - 1)) * 100;
-                  const y =
-                    24 - (temp - minTemp) * (24 / Math.max(3, tempRange));
-                  return `L${x},${y}`;
-                })
-                .join(" ")} L100,24 L0,24 Z`}
-              fill="url(#premium-temp-gradient)"
-            />
-
-            {/* Temperature dots with consistent spacing */}
+            {/* Temperature dots at key points */}
             {visibleTemps.map((temp, i) => {
-              // Show dots at more logical intervals based on view mode
-              const interval = expandedView ? 6 : 3;
-              if (
-                i % interval !== 0 &&
-                i !== 0 &&
-                i !== visibleTemps.length - 1
-              )
-                return null;
+              if (i % 4 === 0 || i === visibleTemps.length - 1) {
+                const x = (i / (visibleTemps.length - 1)) * 100;
+                const y = 24 - (temp - minTemp) * (24 / Math.max(3, tempRange));
+                const isPast = i <= currentTimeIndex;
 
-              const x = (i / (visibleTemps.length - 1)) * 100;
-              const y = 24 - (temp - minTemp) * (24 / Math.max(3, tempRange));
-
-              return (
-                <motion.g
-                  key={i}
-                  initial={{ opacity: 0, scale: 0 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.5 + i * 0.02, duration: 0.2 }}
-                  className="group"
-                >
-                  <circle cx={`${x}%`} cy={y} r="3" fill="white" />
-                  <text
-                    x={`${x}%`}
-                    y={y - 8}
-                    fontSize="10"
-                    fontWeight="bold"
-                    fill="white"
-                    textAnchor="middle"
-                    opacity="0"
-                    className="group-hover:opacity-100 transition-opacity"
-                  >
-                    {Math.round(temp)}°
-                  </text>
-                </motion.g>
-              );
+                return (
+                  <motion.circle
+                    key={`dot-${i}`}
+                    cx={`${x}%`}
+                    cy={y}
+                    r="2"
+                    fill={isPast ? "#66BBFF" : "white"}
+                    initial={{ opacity: 0, scale: 0 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.8 + i * 0.05 }}
+                  />
+                );
+              }
+              return null;
             })}
+
+            {/* Temperature labels */}
+            {[0, visibleTemps.length - 1].map((i) => (
+              <text
+                key={`temp-${i}`}
+                x={`${(i / (visibleTemps.length - 1)) * 100}%`}
+                y={
+                  24 -
+                  (visibleTemps[i] - minTemp) * (24 / Math.max(3, tempRange)) -
+                  8
+                }
+                fontSize="10"
+                fill="white"
+                textAnchor={i === 0 ? "start" : "end"}
+              >
+                {Math.round(visibleTemps[i])}°
+              </text>
+            ))}
+
+            {/* Add time markers */}
+            {[0, visibleTemps.length - 1].map((i) => (
+              <text
+                key={`time-${i}`}
+                x={`${(i / (visibleTemps.length - 1)) * 100}%`}
+                y="30"
+                fontSize="9"
+                fill="rgba(255,255,255,0.7)"
+                textAnchor={i === 0 ? "start" : "end"}
+              >
+                {formatHour(displayHours[i])}
+              </text>
+            ))}
+
+            {/* Add "Now" label */}
+            <text
+              x={`${(currentTimeIndex / (visibleTemps.length - 1)) * 100}%`}
+              y="30"
+              fontSize="9"
+              fill="rgba(255,255,255,0.9)"
+              textAnchor="middle"
+              fontWeight="bold"
+            >
+              Now
+            </text>
           </svg>
         </motion.div>
       </div>
@@ -305,7 +437,7 @@ const PremiumHourlyForecast: React.FC<PremiumHourlyForecastProps> = ({
                           fill="currentColor"
                           className="w-8 h-8 text-yellow-300"
                         >
-                          <path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06l-1.591 1.59a.75.75 0 001.06 1.061l1.591-1.59zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.697 7.757a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 00-1.061 1.06l1.59 1.591z" />
+                          <path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.06-1.591a.75.75 0 10-1.061 1.06l1.06 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06l-1.591 1.59a.75.75 0 001.06 1.061l1.591-1.59zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.697 7.757a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 00-1.061 1.06l1.59 1.591z" />
                         </svg>
                       ) : weatherInfo.icon === "cloud" ? (
                         <svg
