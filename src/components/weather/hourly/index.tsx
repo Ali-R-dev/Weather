@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion } from "framer-motion";
 import { HourlyWeather } from "../../../types/weather.types";
 import {
@@ -8,7 +8,6 @@ import {
 } from "../../../utils/formatting";
 import TemperatureGraph from "./TemperatureGraph";
 import HourlyForecastItem from "./HourlyForecastItem";
-import ExpandToggle from "../../ui/ExpandToggle";
 
 interface HourlyForecastProps {
   hourlyData: HourlyWeather;
@@ -17,6 +16,9 @@ interface HourlyForecastProps {
 const HourlyForecast: React.FC<HourlyForecastProps> = ({ hourlyData }) => {
   const [expandedView, setExpandedView] = useState<boolean>(false);
   const [currentTimeIndex, setCurrentTimeIndex] = useState<number>(0);
+  const scrollContainerRefs = useRef<{ [key: string]: HTMLDivElement | null }>(
+    {}
+  );
 
   // Show a variable number of hours based on expandedView state
   const displayHours: string[] = expandedView
@@ -28,46 +30,45 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({ hourlyData }) => {
     expandedView ? 48 : 24
   );
 
-  // Animation variants
-  const containerVariants = {
-    hidden: { opacity: 0 },
-    visible: {
-      opacity: 1,
-      transition: {
-        staggerChildren: 0.05,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: {
-      y: 20,
-      opacity: 0,
-    },
-    visible: {
-      y: 0,
-      opacity: 1,
-      transition: {
-        type: "spring",
-        stiffness: 300,
-        damping: 24,
-      },
-    },
-  };
-
   // Find the current time index when data changes
   useEffect(() => {
     if (hourlyData && hourlyData.time && hourlyData.time.length > 0) {
       const index = findCurrentTimeIndex(displayHours);
       setCurrentTimeIndex(index);
+
+      // Auto-scroll to current hour
+      setTimeout(() => {
+        const currentHourElement = document.getElementById(`hour-${index}`);
+        if (currentHourElement) {
+          currentHourElement.scrollIntoView({
+            behavior: "smooth",
+            block: "nearest",
+            inline: "center",
+          });
+        }
+      }, 500);
     }
   }, [hourlyData, displayHours]);
 
   // Group hours by day for UI organization
   const groupedHours = groupHoursByDay(displayHours);
 
+  // Calculate highest and lowest temperatures
+  const highTemp = Math.round(Math.max(...displayTemps));
+  const lowTemp = Math.round(Math.min(...displayTemps));
+
   return (
     <div className="h-full">
+      {/* Section header with forecast info */}
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-lg font-semibold text-white">Hourly Forecast</h2>
+        <div className="text-sm text-white/80">
+          <span>
+            {lowTemp}° - {highTemp}°
+          </span>
+        </div>
+      </div>
+
       {/* Temperature graph */}
       <TemperatureGraph
         temperatures={displayTemps}
@@ -76,34 +77,31 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({ hourlyData }) => {
       />
 
       {/* Day headers and hourly forecast */}
-      <motion.div
-        variants={containerVariants}
-        initial="hidden"
-        animate="visible"
-        className="relative"
-      >
+      <div className="mt-4">
         {Object.entries(groupedHours).map(([day, hours], dayIndex) => (
           <div key={day} className="mb-4">
             {/* Day header */}
-            <motion.div
-              variants={itemVariants}
-              className="sticky top-0 z-20 mb-2 py-1 pl-2 backdrop-blur-md bg-black/30 rounded-lg text-white font-medium text-xs uppercase"
-            >
-              {dayIndex === 0 ? "Today" : formatDay(hours[0])} -{" "}
-              {new Date(day).toLocaleDateString("en-US", {
-                month: "short",
-                day: "numeric",
-              })}
-            </motion.div>
+            <div className="sticky top-0 z-20 mb-2 py-1.5 px-3 bg-gradient-to-r from-gray-900/80 to-transparent backdrop-blur-sm rounded-lg flex items-center">
+              <div className="w-1 h-4 rounded-full bg-white/50 mr-2"></div>
+              <h3 className="text-white font-medium text-sm">
+                {dayIndex === 0 ? "Today" : formatDay(hours[0])}
+              </h3>
+              <span className="text-xs text-white/60 ml-2">
+                {new Date(day).toLocaleDateString("en-US", {
+                  month: "short",
+                  day: "numeric",
+                })}
+              </span>
+            </div>
 
-            {/* Scrollable hours container */}
-            <div className="flex overflow-x-auto py-1 space-x-3 hide-scrollbar">
+            {/* Clean, scrollable hours container */}
+            <div className="flex overflow-x-auto py-1 space-x-2 hide-scrollbar">
               {hours.map((time) => {
                 const index = hourlyData.time.indexOf(time);
                 const isCurrentHour = index === currentTimeIndex;
 
                 return (
-                  <motion.div key={time} variants={itemVariants}>
+                  <div key={time} id={`hour-${index}`}>
                     <HourlyForecastItem
                       time={time}
                       temperature={hourlyData.temperature_2m[index]}
@@ -113,28 +111,34 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({ hourlyData }) => {
                       }
                       isCurrentHour={isCurrentHour}
                     />
-                  </motion.div>
+                  </div>
                 );
               })}
             </div>
           </div>
         ))}
-      </motion.div>
+      </div>
 
       {/* Toggle button for expanded view */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.8 }}
-        className="mt-3 flex justify-center"
-      >
-        <ExpandToggle
-          expanded={expandedView}
-          onToggle={() => setExpandedView(!expandedView)}
-          showLabel="Show 48 hours"
-          hideLabel="Show less"
-        />
-      </motion.div>
+      <div className="mt-3 flex justify-center">
+        <button
+          onClick={() => setExpandedView(!expandedView)}
+          className="px-4 py-1.5 rounded-full bg-white/10 text-sm font-medium text-white hover:bg-white/15 transition-all"
+        >
+          {expandedView ? "Show 24 Hours" : "Show 48 Hours"}
+        </button>
+      </div>
+
+      {/* Hide scrollbar styling */}
+      <style jsx global>{`
+        .hide-scrollbar::-webkit-scrollbar {
+          display: none;
+        }
+        .hide-scrollbar {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+      `}</style>
     </div>
   );
 };
