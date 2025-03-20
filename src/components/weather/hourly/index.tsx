@@ -36,15 +36,23 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({ hourlyData }) => {
       const index = findCurrentTimeIndex(displayHours);
       setCurrentTimeIndex(index);
 
-      // Auto-scroll to current hour
+      // Fixed version - only scroll horizontally
       setTimeout(() => {
         const currentHourElement = document.getElementById(`hour-${index}`);
         if (currentHourElement) {
-          currentHourElement.scrollIntoView({
-            behavior: "smooth",
-            block: "nearest",
-            inline: "center",
-          });
+          const container = currentHourElement.closest(".overflow-x-auto");
+          if (container) {
+            const containerRect = container.getBoundingClientRect();
+            const elementRect = currentHourElement.getBoundingClientRect();
+            const scrollOffset =
+              elementRect.left -
+              containerRect.left +
+              elementRect.width / 2 -
+              containerRect.width / 2;
+
+            // Only adjust horizontal scroll, not page position
+            container.scrollLeft += scrollOffset;
+          }
         }
       }, 500);
     }
