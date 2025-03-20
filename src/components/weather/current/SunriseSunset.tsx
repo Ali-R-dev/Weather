@@ -1,11 +1,18 @@
 import React from "react";
+import { formatTimeWithFormat } from "../../../utils/formatting";
+import { TimeFormat } from "../../../context/SettingsContext";
 
 interface SunriseSunsetProps {
   sunrise: string;
   sunset: string;
+  timeFormat: TimeFormat;
 }
 
-const SunriseSunset: React.FC<SunriseSunsetProps> = ({ sunrise, sunset }) => {
+const SunriseSunset: React.FC<SunriseSunsetProps> = ({
+  sunrise,
+  sunset,
+  timeFormat,
+}) => {
   return (
     <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 border border-white/10">
       <div className="text-xs text-white/70 mb-1">Day Length</div>
@@ -23,10 +30,7 @@ const SunriseSunset: React.FC<SunriseSunsetProps> = ({ sunrise, sunset }) => {
             <span className="text-sm">Sunrise:</span>
           </div>
           <div className="text-sm font-medium ml-5">
-            {new Date(sunrise).toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-            })}
+            {formatTimeWithFormat(sunrise, timeFormat)}
           </div>
         </div>
         <div>
@@ -42,10 +46,7 @@ const SunriseSunset: React.FC<SunriseSunsetProps> = ({ sunrise, sunset }) => {
             <span className="text-sm">Sunset:</span>
           </div>
           <div className="text-sm font-medium ml-5">
-            {new Date(sunset).toLocaleTimeString([], {
-              hour: "2-digit",
-              minute: "2-digit",
-            })}
+            {formatTimeWithFormat(sunset, timeFormat)}
           </div>
         </div>
       </div>

@@ -1,10 +1,14 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, Suspense, lazy } from "react";
 import { WeatherProvider } from "./context/WeatherContext";
 import { ThemeProvider } from "./context/ThemeContext";
-import HomePage from "./pages/HomePage";
-import PrivacyPolicyModal from "./components/PrivacyPolicyModal";
+import { SettingsProvider } from "./context/SettingsContext";
 import WeatherLoadingScreen from "./components/common/WeatherLoadingScreen";
+import PrivacyPolicyModal from "./components/PrivacyPolicyModal";
+import ErrorBoundary from "./components/common/ErrorBoundary";
 import "./premium-styles.css";
+
+// Lazy load heavyweight components
+const HomePage = lazy(() => import("./pages/HomePage"));
 
 interface AppContentProps {
   initialLoading: boolean;
@@ -37,15 +41,19 @@ function App() {
   }, []);
 
   return (
-    <ThemeProvider>
-      <WeatherProvider>
-        <AppContent
-          initialLoading={initialLoading}
-          privacyModalVisible={privacyModalVisible}
-          setPrivacyModalVisible={setPrivacyModalVisible}
-        />
-      </WeatherProvider>
-    </ThemeProvider>
+    <ErrorBoundary>
+      <SettingsProvider>
+        <ThemeProvider>
+          <WeatherProvider>
+            <AppContent
+              initialLoading={initialLoading}
+              privacyModalVisible={privacyModalVisible}
+              setPrivacyModalVisible={setPrivacyModalVisible}
+            />
+          </WeatherProvider>
+        </ThemeProvider>
+      </SettingsProvider>
+    </ErrorBoundary>
   );
 }
 
@@ -59,7 +67,17 @@ function AppContent({
       <WeatherLoadingScreen isLoading={initialLoading} />
       <div className="flex flex-col min-h-screen relative">
         <main className="flex-grow overflow-y-auto">
-          <HomePage />
+          <ErrorBoundary>
+            <Suspense
+              fallback={
+                <div className="flex items-center justify-center h-64">
+                  <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white"></div>
+                </div>
+              }
+            >
+              <HomePage />
+            </Suspense>
+          </ErrorBoundary>
         </main>
         <PrivacyPolicyModal
           visible={privacyModalVisible}

@@ -1,6 +1,16 @@
 import React from "react";
-import { motion } from "framer-motion";
 import { formatHour } from "../../../utils/formatting";
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  ResponsiveContainer,
+  ReferenceLine,
+  Area,
+} from "recharts";
 
 interface TemperatureGraphProps {
   temperatures: number[];
@@ -13,231 +23,186 @@ const TemperatureGraph: React.FC<TemperatureGraphProps> = ({
   times,
   currentTimeIndex,
 }) => {
-  const minTemp = Math.min(...temperatures);
-  const maxTemp = Math.max(...temperatures);
-  const tempRange = Math.max(maxTemp - minTemp, 4); // Ensure at least 4 degrees of range for visibility
+  // Format data for recharts
+  const data = temperatures.map((temp, i) => ({
+    temp,
+    time: times[i],
+    isPast: i <= currentTimeIndex,
+    hour: formatHour(times[i]),
+  }));
+
+  // Find min and max temperatures with padding
+  const minTemp = Math.floor(Math.min(...temperatures) - 1);
+  const maxTemp = Math.ceil(Math.max(...temperatures) + 1);
+
+  // Custom dot component to handle past/future styling
+  const CustomDot = (props) => {
+    const { cx, cy, index, payload } = props;
+    const isCurrentTime = index === currentTimeIndex;
+
+    // Only show dots at key points or current time
+    if (
+      index % 3 === 0 ||
+      isCurrentTime ||
+      index === 0 ||
+      index === temperatures.length - 1
+    ) {
+      return (
+        <circle
+          cx={cx}
+          cy={cy}
+          r={isCurrentTime ? 4 : 3}
+          fill={isCurrentTime ? "white" : payload.isPast ? "#66FF66" : "white"}
+          stroke={isCurrentTime ? "rgba(255,255,255,0.3)" : "none"}
+          strokeWidth={isCurrentTime ? 2 : 0}
+        />
+      );
+    }
+    return null;
+  };
+
+  // Custom tick component for X axis
+  const CustomTick = (props) => {
+    const { x, y, payload } = props;
+    const isCurrentTime = payload.index === currentTimeIndex;
+
+    // Show only selected hours to avoid crowding
+    if (
+      payload.index % 4 === 0 ||
+      isCurrentTime ||
+      payload.index === 0 ||
+      payload.index === temperatures.length - 1
+    ) {
+      return (
+        <g transform={`translate(${x},${y})`}>
+          <text
+            x={0}
+            y={0}
+            dy={16}
+            textAnchor="middle"
+            fill={isCurrentTime ? "white" : "rgba(255,255,255,0.7)"}
+            fontSize={10}
+            fontWeight={isCurrentTime ? "bold" : "normal"}
+          >
+            {isCurrentTime ? "NOW" : formatHour(times[payload.index])}
+          </text>
+        </g>
+      );
+    }
+    return null;
+  };
+
+  // Custom tooltip
+  const CustomTooltip = ({ active, payload }) => {
+    if (active && payload && payload.length) {
+      return (
+        <div className="bg-gray-800 text-white text-xs px-2 py-1 rounded shadow">
+          <p>{`${payload[0].payload.hour}: ${Math.round(
+            payload[0].value
+          )}°`}</p>
+        </div>
+      );
+    }
+    return null;
+  };
 
   return (
     <div className="relative h-32 mb-2 mt-1">
-      <motion.div
-        className="absolute bottom-0 left-0 right-0 h-24"
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.7 }}
-      >
-        <svg className="w-full h-full overflow-visible">
-          {/* Grid lines */}
-          <g className="grid-lines">
-            {[0, 25, 50, 75, 100].map((x) => (
-              <line
-                key={`grid-v-${x}`}
-                x1={`${x}%`}
-                y1="0"
-                x2={`${x}%`}
-                y2="24"
-                stroke="rgba(255,255,255,0.1)"
-                strokeDasharray="2,2"
-              />
-            ))}
-            {[0, 8, 16, 24].map((y) => (
-              <line
-                key={`grid-h-${y}`}
-                x1="0"
-                y1={y}
-                x2="100%"
-                y2={y}
-                stroke="rgba(255,255,255,0.1)"
-                strokeDasharray="2,2"
-              />
-            ))}
-          </g>
+      <div className="absolute top-1 right-3 flex space-x-4 text-xs z-10">
+        <span className="text-green-400">Actual</span>
+        <span className="text-white">Forecast</span>
+      </div>
 
-          {/* Gradients */}
-          <defs>
-            <linearGradient id="line-gradient" x1="0" y1="0" x2="1" y2="0">
-              <stop
-                offset={`${currentTimeIndex / (temperatures.length - 1)}`}
-                stopColor="rgba(102,255,102,0.9)"
-              />
-              <stop
-                offset={`${currentTimeIndex / (temperatures.length - 1)}`}
-                stopColor="rgba(255,255,255,0.9)"
-              />
-            </linearGradient>
-            <linearGradient id="past-gradient" x1="0" x2="0" y1="0" y2="1">
-              <stop offset="0%" stopColor="#66FF66" />
-              <stop offset="100%" stopColor="#66FF66" stopOpacity="0.1" />
-            </linearGradient>
-            <linearGradient id="future-gradient" x1="0" x2="0" y1="0" y2="1">
-              <stop offset="0%" stopColor="#FFFFFF" />
-              <stop offset="100%" stopColor="#FFFFFF" stopOpacity="0.1" />
-            </linearGradient>
-          </defs>
-
-          {/* Continuous temperature path */}
-          <motion.path
-            d={temperatures
-              .map((temp, i) => {
-                const x = (i / (temperatures.length - 1)) * 100;
-                const y = 24 - (temp - minTemp) * (24 / tempRange);
-                return (i === 0 ? "M" : "L") + `${x} ${y}`;
-              })
-              .join(" ")}
-            stroke="url(#line-gradient)"
-            strokeWidth="2"
-            fill="none"
-            initial={{ pathLength: 0 }}
-            animate={{ pathLength: 1, opacity: 1 }}
-            transition={{ duration: 1, type: "spring" }}
-          />
-
-          {/* Past area fill */}
-          <motion.path
-            d={`${temperatures
-              .slice(0, currentTimeIndex + 1)
-              .map((temp, i) => {
-                const x = (i / (temperatures.length - 1)) * 100;
-                const y = 24 - (temp - minTemp) * (24 / tempRange);
-                return (i === 0 ? "M" : "L") + `${x} ${y}`;
-              })
-              .join(" ")} L${
-              (currentTimeIndex / (temperatures.length - 1)) * 100
-            } 24 L0 24 Z`}
-            fill="url(#past-gradient)"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.4 }}
-            transition={{ delay: 0.5 }}
-          />
-
-          {/* Future area fill */}
-          <motion.path
-            d={`${temperatures
-              .slice(currentTimeIndex)
-              .map((temp, i) => {
-                const actualIndex = i + currentTimeIndex;
-                const x = (actualIndex / (temperatures.length - 1)) * 100;
-                const y = 24 - (temp - minTemp) * (24 / tempRange);
-                return (i === 0 ? "M" : "L") + `${x} ${y}`;
-              })
-              .join(" ")} L100 24 L${
-              (currentTimeIndex / (temperatures.length - 1)) * 100
-            } 24 Z`}
-            fill="url(#future-gradient)"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 0.3 }}
-            transition={{ delay: 0.5 }}
-          />
-
-          {/* "Now" marker */}
-          <motion.line
-            x1={`${(currentTimeIndex / (temperatures.length - 1)) * 100}%`}
-            y1="0"
-            x2={`${(currentTimeIndex / (temperatures.length - 1)) * 100}%`}
-            y2="24"
-            stroke="rgba(255,255,255,0.9)"
-            strokeWidth="1.5"
-            initial={{ height: 0 }}
-            animate={{ height: 24 }}
-            transition={{ delay: 0.8 }}
-          />
-
-          {/* "Now" marker dot */}
-          <motion.circle
-            cx={`${(currentTimeIndex / (temperatures.length - 1)) * 100}%`}
-            cy={
-              24 - (temperatures[currentTimeIndex] - minTemp) * (24 / tempRange)
-            }
-            r="4"
-            fill="white"
-            initial={{ scale: 0 }}
-            animate={{ scale: 1 }}
-            transition={{ delay: 1, type: "spring" }}
-          />
-
-          {/* Temperature dots */}
-          {temperatures.map((temp, i) => {
-            if (i % 4 === 0 || i === temperatures.length - 1) {
-              const x = (i / (temperatures.length - 1)) * 100;
-              const y = 24 - (temp - minTemp) * (24 / tempRange);
-              const isPast = i <= currentTimeIndex;
-
-              return (
-                <motion.circle
-                  key={`dot-${i}`}
-                  cx={`${x}%`}
-                  cy={y}
-                  r="2.5"
-                  fill={isPast ? "#66FF66" : "white"}
-                  initial={{ opacity: 0, scale: 0 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  transition={{ delay: 0.8 + i * 0.05 }}
-                />
-              );
-            }
-            return null;
-          })}
-
-          {/* Temperature labels */}
-          {[
-            0,
-            Math.floor(temperatures.length / 2),
-            temperatures.length - 1,
-          ].map((i) => (
-            <text
-              key={`temp-${i}`}
-              x={`${(i / (temperatures.length - 1)) * 100}%`}
-              y={24 - (temperatures[i] - minTemp) * (24 / tempRange) - 8}
-              fontSize="10"
-              fill="white"
-              textAnchor={
-                i === 0
-                  ? "start"
-                  : i === temperatures.length - 1
-                  ? "end"
-                  : "middle"
-              }
-            >
-              {Math.round(temperatures[i])}°
-            </text>
-          ))}
-
-          {/* Time markers */}
-          {[
-            0,
-            Math.floor(temperatures.length / 2),
-            temperatures.length - 1,
-          ].map((i) => (
-            <text
-              key={`time-${i}`}
-              x={`${(i / (temperatures.length - 1)) * 100}%`}
-              y="30"
-              fontSize="9"
-              fill="rgba(255,255,255,0.8)"
-              textAnchor={
-                i === 0
-                  ? "start"
-                  : i === temperatures.length - 1
-                  ? "end"
-                  : "middle"
-              }
-            >
-              {formatHour(times[i])}
-            </text>
-          ))}
-
-          {/* Now label */}
-          <text
-            x={`${(currentTimeIndex / (temperatures.length - 1)) * 100}%`}
-            y="30"
-            fontSize="9"
-            fill="rgba(255,255,255,1)"
-            textAnchor="middle"
-            fontWeight="bold"
+      <div className="absolute inset-0">
+        <ResponsiveContainer width="100%" height="100%">
+          <LineChart
+            data={data}
+            margin={{ top: 20, right: 5, left: 5, bottom: 15 }}
           >
-            Now
-          </text>
-        </svg>
-      </motion.div>
+            <defs>
+              <linearGradient id="pastGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#66FF66" stopOpacity={0.2} />
+                <stop offset="95%" stopColor="#66FF66" stopOpacity={0} />
+              </linearGradient>
+              <linearGradient id="futureGradient" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="5%" stopColor="#FFFFFF" stopOpacity={0.2} />
+                <stop offset="95%" stopColor="#FFFFFF" stopOpacity={0} />
+              </linearGradient>
+            </defs>
+
+            <CartesianGrid
+              strokeDasharray="3 3"
+              vertical={false}
+              stroke="rgba(255,255,255,0.1)"
+            />
+
+            <XAxis
+              dataKey="time"
+              tick={CustomTick}
+              axisLine={false}
+              tickLine={false}
+              minTickGap={20}
+            />
+
+            <YAxis domain={[minTemp, maxTemp]} hide={true} />
+
+            <Tooltip content={<CustomTooltip />} />
+
+            {/* Reference line for current time */}
+            <ReferenceLine
+              x={data[currentTimeIndex].time}
+              stroke="rgba(255,255,255,0.4)"
+              strokeDasharray="3 3"
+            />
+
+            {/* Past area fill */}
+            <Area
+              type="monotone"
+              dataKey="temp"
+              stroke="none"
+              fill="url(#pastGradient)"
+              fillOpacity={1}
+              activeDot={false}
+              data={data.slice(0, currentTimeIndex + 1)}
+            />
+
+            {/* Future area fill */}
+            <Area
+              type="monotone"
+              dataKey="temp"
+              stroke="none"
+              fill="url(#futureGradient)"
+              fillOpacity={1}
+              activeDot={false}
+              data={data.slice(currentTimeIndex)}
+            />
+
+            {/* Past temperature line */}
+            <Line
+              type="monotone"
+              dataKey="temp"
+              stroke="#66FF66"
+              strokeWidth={2}
+              activeDot={false}
+              isAnimationActive={false}
+              dot={CustomDot}
+              data={data.slice(0, currentTimeIndex + 1)}
+            />
+
+            {/* Future temperature line */}
+            <Line
+              type="monotone"
+              dataKey="temp"
+              stroke="white"
+              strokeWidth={2}
+              activeDot={false}
+              isAnimationActive={false}
+              dot={CustomDot}
+              data={data.slice(currentTimeIndex)}
+            />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
     </div>
   );
 };

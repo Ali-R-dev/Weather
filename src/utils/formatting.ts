@@ -1,3 +1,5 @@
+import { TimeFormat } from "../context/SettingsContext";
+
 /**
  * Format a time string to 12-hour format
  */
@@ -22,16 +24,34 @@ export const formatHour = (timeString: string): string => {
 };
 
 /**
+ * Format a time string with user's preferred format
+ */
+export const formatTimeWithFormat = (
+  timeString: string,
+  format: TimeFormat
+): string => {
+  const date = new Date(timeString);
+  return date.toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: format === "12h",
+  });
+};
+
+/**
  * Format time for a specific timezone
  */
-export const formatLocalTime = (timezone?: string) => {
+export const formatLocalTime = (
+  timezone?: string,
+  format: TimeFormat = "12h"
+) => {
   try {
     if (!timezone) return "";
 
     return new Date().toLocaleTimeString("en-US", {
       hour: "numeric",
       minute: "2-digit",
-      hour12: true,
+      hour12: format === "12h",
       timeZone: timezone,
     });
   } catch (error) {

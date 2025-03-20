@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { getComfortLevel } from "../../../utils/weather";
+import { TemperatureUnit } from "../../../context/SettingsContext";
 import WeatherIcon from "../shared/WeatherIcon";
 
 interface TemperatureDisplayProps {
@@ -11,6 +12,7 @@ interface TemperatureDisplayProps {
     icon: string;
   };
   humidity: number;
+  temperatureUnit: TemperatureUnit;
 }
 
 const TemperatureDisplay: React.FC<TemperatureDisplayProps> = ({
@@ -18,8 +20,10 @@ const TemperatureDisplay: React.FC<TemperatureDisplayProps> = ({
   feelsLike,
   weatherInfo,
   humidity,
+  temperatureUnit,
 }) => {
   const comfortLevel = getComfortLevel(temperature, humidity);
+  const unitSymbol = temperatureUnit === "celsius" ? "°C" : "°F";
 
   return (
     <motion.div
@@ -44,7 +48,9 @@ const TemperatureDisplay: React.FC<TemperatureDisplayProps> = ({
           <span className="text-6xl sm:text-7xl font-bold tracking-tighter bg-gradient-to-b from-white to-white/80 bg-clip-text text-transparent">
             {Math.round(temperature)}
           </span>
-          <span className="text-3xl sm:text-4xl font-light mt-1">°C</span>
+          <span className="text-3xl sm:text-4xl font-light mt-1">
+            {unitSymbol}
+          </span>
         </motion.div>
 
         <div className="text-base sm:text-lg opacity-90 mt-1">

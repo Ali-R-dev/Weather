@@ -26,6 +26,7 @@ interface WeatherContextType {
   setLocation: (location: LocationInfo) => void;
   currentLocation: LocationInfo | null;
   lastUpdated: Date | null;
+  isOffline: boolean;
 }
 
 const WeatherContext = createContext<WeatherContextType | undefined>(undefined);
@@ -38,17 +39,68 @@ export function WeatherProvider({ children }: { children: ReactNode }) {
     null
   );
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
-
+  const [isOffline, setIsOffline] = useState<boolean>(!navigator.onLine);
+  const [retryCount, setRetryCount] = useState(0);
   const { defaultLocation, savedLocations } = useSavedLocations();
+
+  // Listen for online/offline status
+  useEffect(() => {
+    const handleOnline = () => setIsOffline(false);
+    const handleOffline = () => setIsOffline(true);
+
+    window.addEventListener("online", handleOnline);
+    window.addEventListener("offline", handleOffline);
+
+    return () => {
+      window.removeEventListener("online", handleOnline);
+      window.removeEventListener("offline", handleOffline);
+    };
+  }, []);
+
+  // Load cached weather data when offline
+  useEffect(() => {
+    if (isOffline && !weatherData) {
+      try {
+        const cachedData = localStorage.getItem("weatherCache");
+        const cachedLocation = localStorage.getItem("cachedLocation");
+
+        if (cachedData && cachedLocation) {
+          setWeatherData(JSON.parse(cachedData));
+          setCurrentLocation(JSON.parse(cachedLocation));
+          setLastUpdated(
+            new Date(
+              JSON.parse(
+                localStorage.getItem("cacheTimestamp") || Date.now().toString()
+              )
+            )
+          );
+          setError("You're offline. Showing cached data.");
+        }
+      } catch (err) {
+        console.error("Failed to load cached weather data:", err);
+      }
+    }
+  }, [isOffline, weatherData]);
 
   const fetchWeather = useCallback(
     async (latitude: number, longitude: number) => {
       setLoading(true);
       setError(null);
       try {
+        // Check if we're offline
+        if (!navigator.onLine) {
+          throw new Error(
+            "You're offline. Check your connection and try again."
+          );
+        }
+
         const response = await fetch(
           `https://api.open-meteo.com/v1/forecast?latitude=${latitude}&longitude=${longitude}&current=temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,wind_direction_10m,is_day,uv_index&hourly=temperature_2m,precipitation_probability,weather_code&daily=weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max,wind_speed_10m_max&timezone=auto`
         );
+
+        if (!response.ok) {
+          throw new Error(`Weather service error: ${response.status}`);
+        }
 
         // Get the weather data
         const data = await response.json();
@@ -59,6 +111,11 @@ export function WeatherProvider({ children }: { children: ReactNode }) {
             const geoResponse = await fetch(
               `https://api.open-meteo.com/v1/geocoding-reverse?latitude=${latitude}&longitude=${longitude}&format=json`
             );
+
+            if (!geoResponse.ok) {
+              throw new Error(`Geocoding error: ${geoResponse.status}`);
+            }
+
             const geoData = await geoResponse.json();
 
             if (geoData && geoData.results && geoData.results.length > 0) {
@@ -86,17 +143,44 @@ export function WeatherProvider({ children }: { children: ReactNode }) {
           }
         }
 
+        // Cache the data for offline use
+        try {
+          localStorage.setItem("weatherCache", JSON.stringify(data));
+          localStorage.setItem(
+            "cachedLocation",
+            JSON.stringify(currentLocation || { latitude, longitude })
+          );
+          localStorage.setItem(
+            "cacheTimestamp",
+            JSON.stringify(new Date().toISOString())
+          );
+        } catch (e) {
+          console.warn("Failed to cache weather data:", e);
+        }
+
         setWeatherData(data);
         setLastUpdated(new Date());
+        setRetryCount(0); // Reset retry count on success
       } catch (err) {
-        setError(
-          err instanceof Error ? err.message : "Failed to fetch weather data"
-        );
+        const errorMsg =
+          err instanceof Error ? err.message : "Failed to fetch weather data";
+        setError(errorMsg);
+
+        // Implement exponential backoff for retries
+        if (retryCount < 3) {
+          const retryDelay = Math.pow(2, retryCount) * 1000; // 1s, 2s, 4s
+          console.log(`Retrying in ${retryDelay}ms...`);
+
+          setTimeout(() => {
+            setRetryCount((prev) => prev + 1);
+            fetchWeather(latitude, longitude);
+          }, retryDelay);
+        }
       } finally {
         setLoading(false);
       }
     },
-    [currentLocation]
+    [currentLocation, retryCount]
   );
 
   const setLocation = useCallback(
@@ -118,7 +202,10 @@ export function WeatherProvider({ children }: { children: ReactNode }) {
       } else {
         // Fallback to user's IP geolocation
         fetch("https://ipapi.co/json/")
-          .then((res) => res.json())
+          .then((res) => {
+            if (!res.ok) throw new Error("IP Geolocation failed");
+            return res.json();
+          })
           .then((ipData) => {
             setLocation({
               latitude: ipData.latitude,
@@ -128,7 +215,16 @@ export function WeatherProvider({ children }: { children: ReactNode }) {
               admin1: ipData.region,
             });
           })
-          .catch((err) => console.error("IP geolocation error:", err));
+          .catch((err) => {
+            console.error("IP geolocation error:", err);
+            // Last resort - use a default location
+            setLocation({
+              latitude: 51.5074,
+              longitude: -0.1278,
+              name: "London",
+              country: "United Kingdom",
+            });
+          });
       }
     }
   }, [currentLocation, defaultLocation, savedLocations, setLocation]);
@@ -143,6 +239,7 @@ export function WeatherProvider({ children }: { children: ReactNode }) {
         setLocation,
         currentLocation,
         lastUpdated,
+        isOffline,
       }}
     >
       {children}

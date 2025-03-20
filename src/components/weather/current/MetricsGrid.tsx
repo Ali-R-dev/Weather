@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { getUVIndexInfo, getWindDirection } from "../../../utils/weather";
+import { WindUnit } from "../../../context/SettingsContext";
 
 interface MetricsGridProps {
   humidity: number;
@@ -9,6 +10,7 @@ interface MetricsGridProps {
   precipitation: number;
   uvIndex?: number;
   precipitationProbability?: number;
+  windUnit: WindUnit;
 }
 
 const MetricsGrid: React.FC<MetricsGridProps> = ({
@@ -18,9 +20,11 @@ const MetricsGrid: React.FC<MetricsGridProps> = ({
   precipitation,
   uvIndex,
   precipitationProbability,
+  windUnit,
 }) => {
   const windDirectionStr = getWindDirection(windDirectionDegrees);
   const uvInfo = uvIndex !== undefined ? getUVIndexInfo(uvIndex) : null;
+  const windUnitLabel = windUnit === "kph" ? "km/h" : "mph";
 
   return (
     <motion.div
@@ -83,7 +87,7 @@ const MetricsGrid: React.FC<MetricsGridProps> = ({
             <div className="text-xs text-white/80">Wind</div>
           </div>
           <div className="text-lg font-medium">
-            {Math.round(windSpeed)} km/h
+            {Math.round(windSpeed)} {windUnitLabel}
             <div className="text-xs text-white/70 mt-0.5">
               Direction: {windDirectionStr} ({windDirectionDegrees}°)
             </div>

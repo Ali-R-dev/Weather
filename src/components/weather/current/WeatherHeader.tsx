@@ -1,12 +1,14 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { formatLocalTime } from "../../../utils/formatting";
+import { TimeFormat } from "../../../context/SettingsContext";
 
 interface WeatherHeaderProps {
   locationName: string | undefined;
   region?: string;
   country?: string;
   timezone?: string;
+  timeFormat: TimeFormat;
 }
 
 const WeatherHeader: React.FC<WeatherHeaderProps> = ({
@@ -14,6 +16,7 @@ const WeatherHeader: React.FC<WeatherHeaderProps> = ({
   region,
   country,
   timezone,
+  timeFormat,
 }) => {
   return (
     <motion.div
@@ -39,7 +42,9 @@ const WeatherHeader: React.FC<WeatherHeaderProps> = ({
               clipRule="evenodd"
             />
           </svg>
-          <span className="font-medium">{formatLocalTime(timezone)}</span>
+          <span className="font-medium">
+            {formatLocalTime(timezone, timeFormat)}
+          </span>
         </div>
       </div>
 
