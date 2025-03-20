@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useWeather } from "../../context/WeatherContext";
+import { reverseGeocode } from "../../services/geocodingService";
 
 interface MiniSearchBarProps {
   onFocus: () => void;
@@ -166,15 +167,12 @@ export default function MiniSearchBar({
                 navigator.geolocation.getCurrentPosition(
                   async (position) => {
                     try {
-                      // Reverse geocode to get the location name
-                      const response = await fetch(
-                        `https://geocoding-api.open-meteo.com/v1/reverse?latitude=${position.coords.latitude}&longitude=${position.coords.longitude}&format=json`
+                      const locationInfo = await reverseGeocode(
+                        position.coords.latitude,
+                        position.coords.longitude
                       );
-                      const data = await response.json();
 
-                      if (data && data.features && data.features.length > 0) {
-                        const locationInfo = data.features[0].properties;
-                        // Set location with the actual city name
+                      if (locationInfo) {
                         setLocation({
                           latitude: position.coords.latitude,
                           longitude: position.coords.longitude,

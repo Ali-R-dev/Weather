@@ -1,3 +1,6 @@
+import { TemperatureUnit } from "../context/SettingsContext";
+import { AppConfig } from "../config/appConfig";
+
 /**
  * Get information about UV index
  */
@@ -21,11 +24,10 @@ export const getWindDirection = (degrees: number) => {
 /**
  * Calculate comfort level based on temperature and humidity
  */
-export const getComfortLevel = (temperature: number, humidity: number) => {
-  if (temperature > 30 && humidity > 70)
-    return { level: "Uncomfortable", color: "text-red-500" };
-  if (temperature > 28 && humidity > 60)
-    return { level: "Warm", color: "text-orange-400" };
-  if (temperature < 5) return { level: "Cold", color: "text-blue-400" };
-  return { level: "Comfortable", color: "text-green-400" };
+export const getComfortLevel = (
+  temperature: number,
+  humidity: number,
+  unit: TemperatureUnit = "celsius"
+) => {
+  return AppConfig.getComfortLevel(temperature, humidity, unit);
 };

@@ -22,7 +22,8 @@ const TemperatureDisplay: React.FC<TemperatureDisplayProps> = ({
   humidity,
   temperatureUnit,
 }) => {
-  const comfortLevel = getComfortLevel(temperature, humidity);
+  // Pass the temperature unit to getComfortLevel
+  const comfortLevel = getComfortLevel(temperature, humidity, temperatureUnit);
   const unitSymbol = temperatureUnit === "celsius" ? "°C" : "°F";
 
   // Calculate temperature difference

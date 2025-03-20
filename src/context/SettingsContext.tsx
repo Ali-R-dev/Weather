@@ -5,6 +5,7 @@ import {
   useEffect,
   ReactNode,
 } from "react";
+import { AppConfig } from "../config/appConfig";
 
 export type TemperatureUnit = "celsius" | "fahrenheit";
 export type WindUnit = "kph" | "mph";
@@ -27,15 +28,16 @@ interface SettingsContextType {
   updateSettings: (newSettings: Settings) => void;
 }
 
+// Use the defaults from our config
 const defaultSettings: Settings = {
   units: {
-    temperature: "celsius",
-    wind: "kph",
+    temperature: AppConfig.defaults.temperatureUnit,
+    wind: AppConfig.defaults.windUnit,
   },
-  timeFormat: "12h",
+  timeFormat: AppConfig.defaults.timeFormat,
   accessibility: {
-    reduceMotion: false,
-    highContrast: false,
+    reduceMotion: AppConfig.defaults.reduceMotion,
+    highContrast: AppConfig.defaults.highContrast,
   },
 };
 
@@ -68,6 +70,11 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
     } else {
       document.documentElement.classList.remove("reduce-motion");
     }
+  }, [settings]);
+
+  // This will force components to re-render when settings change
+  useEffect(() => {
+    console.log("Settings updated:", settings);
   }, [settings]);
 
   const updateSettings = (newSettings: Settings) => {

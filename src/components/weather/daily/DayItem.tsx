@@ -4,11 +4,13 @@ import { motion } from "framer-motion";
 import WeatherIcon from "../shared/WeatherIcon";
 import { getWeatherInfo } from "../../../utils/weatherCodeMap";
 import { formatDay, formatDate } from "../../../utils/formatting";
+import { useSettings } from "../../../context/SettingsContext";
+import { AppConfig } from "../../../config/appConfig";
 
 interface DayItemProps {
   day: string;
-  maxTemp: number;
-  minTemp: number;
+  maxTemp: number; // Temperature in Celsius from API
+  minTemp: number; // Temperature in Celsius from API
   weatherCode: number;
   precipProbability: number;
   isToday: boolean;
@@ -24,11 +26,27 @@ const DayItem: React.FC<DayItemProps> = ({
 }) => {
   const weatherInfo = getWeatherInfo(weatherCode);
   const hasPrecip = precipProbability > 0;
+  const { settings } = useSettings();
 
-  // Calculate temperature difference for visual indicator
-  const tempDiff = maxTemp - minTemp;
-  const tempRange = 40; // Approximate maximum temperature range to visualize
+  // Convert temperatures for display if needed (they come in Celsius)
+  const displayMaxTemp =
+    settings.units.temperature === "celsius"
+      ? maxTemp
+      : AppConfig.utils.convertTemperature(maxTemp, "fahrenheit");
+
+  const displayMinTemp =
+    settings.units.temperature === "celsius"
+      ? minTemp
+      : AppConfig.utils.convertTemperature(minTemp, "fahrenheit");
+
+  // Calculate temperature difference using converted temperatures
+  const tempDiff = displayMaxTemp - displayMinTemp;
+  // Adjust temperature range based on unit
+  const tempRange = settings.units.temperature === "celsius" ? 40 : 72; // 40°C ≈ 72°F
   const rangeWidth = Math.min(100, (tempDiff / tempRange) * 100);
+
+  // Use original Celsius temperatures for color determination
+  const maxTempCelsius = maxTemp; // Already in Celsius from API
 
   // Determine weather-specific accent colors
   const getWeatherAccent = () => {
@@ -139,20 +157,24 @@ const DayItem: React.FC<DayItemProps> = ({
       {/* Temperature range with visual indicator */}
       <div className="flex flex-col items-end space-y-1.5 ml-2">
         <div className="flex items-center space-x-2 whitespace-nowrap">
-          <span className="font-bold text-sm">{Math.round(maxTemp)}°</span>
-          <span className="text-sm text-white/70">{Math.round(minTemp)}°</span>
+          <span className="font-bold text-sm">
+            {Math.round(displayMaxTemp)}°
+          </span>
+          <span className="text-sm text-white/70">
+            {Math.round(displayMinTemp)}°
+          </span>
         </div>
 
         <div className="w-20 h-1.5 bg-white/10 rounded-full overflow-hidden">
           <div
             className={`h-full ${
-              maxTemp > 30
+              maxTempCelsius > 30
                 ? "bg-gradient-to-r from-orange-300 to-red-500"
-                : maxTemp > 20
+                : maxTempCelsius > 20
                 ? "bg-gradient-to-r from-yellow-300 to-orange-400"
-                : maxTemp > 10
+                : maxTempCelsius > 10
                 ? "bg-gradient-to-r from-green-300 to-green-500"
-                : maxTemp > 0
+                : maxTempCelsius > 0
                 ? "bg-gradient-to-r from-blue-300 to-indigo-500"
                 : "bg-gradient-to-r from-blue-300 to-blue-600"
             }`}

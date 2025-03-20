@@ -1,4 +1,5 @@
 import { TemperatureUnit, WindUnit } from "../context/SettingsContext";
+import { AppConfig } from "../config/appConfig";
 
 /**
  * Convert temperature between Celsius and Fahrenheit
@@ -7,11 +8,7 @@ export function convertTemperature(
   temperature: number,
   unit: TemperatureUnit
 ): number {
-  if (unit === "celsius") {
-    return temperature;
-  } else {
-    return (temperature * 9) / 5 + 32;
-  }
+  return AppConfig.utils.convertTemperature(temperature, unit);
 }
 
 /**
@@ -23,18 +20,14 @@ export function formatTemperature(
 ): string {
   const convertedTemp = convertTemperature(temperature, unit);
   const roundedTemp = Math.round(convertedTemp);
-  return `${roundedTemp}°${unit === "celsius" ? "C" : "F"}`;
+  return `${roundedTemp}${AppConfig.utils.getUnitSymbol("temperature", unit)}`;
 }
 
 /**
  * Convert wind speed between km/h and mph
  */
 export function convertWindSpeed(speedKmh: number, unit: WindUnit): number {
-  if (unit === "kph") {
-    return speedKmh;
-  } else {
-    return speedKmh * 0.621371;
-  }
+  return AppConfig.utils.convertWindSpeed(speedKmh, unit);
 }
 
 /**
@@ -43,5 +36,5 @@ export function convertWindSpeed(speedKmh: number, unit: WindUnit): number {
 export function formatWindSpeed(speedKmh: number, unit: WindUnit): string {
   const convertedSpeed = convertWindSpeed(speedKmh, unit);
   const roundedSpeed = Math.round(convertedSpeed);
-  return `${roundedSpeed} ${unit === "kph" ? "km/h" : "mph"}`;
+  return `${roundedSpeed} ${AppConfig.utils.getUnitSymbol("wind", unit)}`;
 }

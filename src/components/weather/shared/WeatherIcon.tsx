@@ -43,69 +43,71 @@ const WeatherIcon: React.FC<WeatherIconProps> = ({
   };
 
   // Get animation variants based on weather type
-  const getAnimationProps = () => {
-    if (!animated) return {};
+  // const getAnimationProps = () => {
+  //   if (!animated) return {};
 
-    if (type.includes("sun")) {
-      return {
-        animate: {
-          rotate: 360,
-          scale: [1, 1.05, 1],
-        },
-        transition: {
-          rotate: { duration: 20, repeat: Infinity, ease: "linear" },
-          scale: { duration: 3, repeat: Infinity, repeatType: "reverse" },
-        },
-      };
-    }
+  //   if (type.includes("sun")) {
+  //     return {
+  //       animate: {
+  //         rotate: 360,
+  //         scale: [1, 1.05, 1],
+  //       },
+  //       transition: {
+  //         rotate: { duration: 20, repeat: Infinity, ease: "linear" },
+  //         scale: { duration: 3, repeat: Infinity, repeatType: "reverse" },
+  //       },
+  //     };
+  //   }
 
-    if (type.includes("cloud")) {
-      return {
-        animate: {
-          x: [0, 5, 0, -5, 0],
-        },
-        transition: {
-          duration: 5,
-          repeat: Infinity,
-          repeatType: "reverse",
-        },
-      };
-    }
+  //   if (type.includes("cloud")) {
+  //     return {
+  //       animate: {
+  //         x: [0, 5, 0, -5, 0],
+  //       },
+  //       transition: {
+  //         duration: 5,
+  //         repeat: Infinity,
+  //         repeatType: "reverse",
+  //       },
+  //     };
+  //   }
 
-    if (type.includes("lightning")) {
-      return {
-        animate: {
-          opacity: [1, 0.7, 1, 0.9, 1],
-          scale: [1, 1.02, 1, 1.01, 1],
-        },
-        transition: {
-          duration: 2,
-          repeat: Infinity,
-          repeatType: "reverse",
-        },
-      };
-    }
+  //   if (type.includes("lightning")) {
+  //     return {
+  //       animate: {
+  //         opacity: [1, 0.7, 1, 0.9, 1],
+  //         scale: [1, 1.02, 1, 1.01, 1],
+  //       },
+  //       transition: {
+  //         duration: 2,
+  //         repeat: Infinity,
+  //         repeatType: "reverse",
+  //       },
+  //     };
+  //   }
 
-    return {
-      animate: { scale: [1, 1.03, 1] },
-      transition: {
-        duration: 2,
-        repeat: Infinity,
-        repeatType: "reverse",
-      },
-    };
-  };
+  //   return {
+  //     animate: { scale: [1, 1.03, 1] },
+  //     transition: {
+  //       duration: 2,
+  //       repeat: Infinity,
+  //       repeatType: "reverse",
+  //     },
+  //   };
+  // };
 
   // Wrap icon in motion.div if animated
   const IconWrapper = ({ children }: { children: React.ReactNode }) => {
     if (animated || withGlow) {
       return (
         <motion.div
-          style={{
-            display: "inline-block",
-            filter: getGlowColor(),
+          animate={{ x: [0, 10, 0] }} // Your animation
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            repeatType: "loop", // Change this to "loop", "reverse", or "mirror"
           }}
-          {...getAnimationProps()}
+          style={{ display: "inline-block", filter: getGlowColor() }}
         >
           {children}
         </motion.div>

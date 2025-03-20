@@ -11,9 +11,28 @@ import {
   ReferenceLine,
   Label,
 } from "recharts";
+import { useSettings } from "../../../context/SettingsContext";
+import { AppConfig } from "../../../config/appConfig";
+
+// Create proper types
+interface TemperatureDataPoint {
+  temp: number;
+  time: string;
+  label: string;
+  isCurrent: boolean;
+  isPast: boolean;
+  isKey: boolean;
+}
+
+interface DotProps {
+  cx?: number;
+  cy?: number;
+  index?: number;
+  payload?: TemperatureDataPoint;
+}
 
 interface TemperatureGraphProps {
-  temperatures: number[];
+  temperatures: number[]; // Temperatures in Celsius from API
   times: string[];
   currentTimeIndex: number;
 }
@@ -23,9 +42,18 @@ const TemperatureGraph: React.FC<TemperatureGraphProps> = ({
   times,
   currentTimeIndex,
 }) => {
-  // Format data with additional fields for premium styling
+  const { settings } = useSettings();
+
+  // Convert temperatures if needed (they come in Celsius)
+  const convertedTemps = temperatures.map((temp) =>
+    settings.units.temperature === "celsius"
+      ? temp
+      : AppConfig.utils.convertTemperature(temp, "fahrenheit")
+  );
+
+  // Use convertedTemps for data processing
   const data = useMemo(() => {
-    return temperatures.map((temp, i) => ({
+    return convertedTemps.map((temp, i) => ({
       temp,
       time: times[i],
       label: formatHour(times[i]),
@@ -34,35 +62,56 @@ const TemperatureGraph: React.FC<TemperatureGraphProps> = ({
       isKey:
         i === 0 ||
         i === currentTimeIndex ||
-        i === temperatures.length - 1 ||
+        i === convertedTemps.length - 1 ||
         i % 4 === 0,
     }));
-  }, [temperatures, times, currentTimeIndex]);
+  }, [convertedTemps, times, currentTimeIndex]);
 
   // Find temperature extremes for the day
-  const minTemp = Math.floor(Math.min(...temperatures)) - 1;
-  const maxTemp = Math.ceil(Math.max(...temperatures)) + 1;
-  const range = maxTemp - minTemp;
+  const minTemp = Math.floor(Math.min(...convertedTemps)) - 1;
+  const maxTemp = Math.ceil(Math.max(...convertedTemps)) + 1;
 
   // Calculate gradient transition point
   const gradientBreakpoint =
-    (currentTimeIndex / (temperatures.length - 1)) * 100;
+    (currentTimeIndex / (convertedTemps.length - 1)) * 100;
+
+  // Determine if the graph is showing a significant temperature change
+  const tempChange =
+    convertedTemps[convertedTemps.length - 1] - convertedTemps[0];
+  const showsTempTrend =
+    Math.abs(tempChange) >= (settings.units.temperature === "celsius" ? 3 : 5);
 
   // Custom dot renderer with premium styling
-  const renderDot = (props) => {
-    const { cx, cy, index, payload } = props;
+  const renderDot = (props: DotProps) => {
+    const { cx = 0, cy = 0, index = 0, payload } = props;
 
-    if (!payload.isKey && index !== currentTimeIndex) return null;
+    // Instead of returning null, return an invisible element
+    if (!payload?.isKey && index !== currentTimeIndex) {
+      return <g key={`dot-empty-${index}`}></g>;
+    }
 
     if (index === currentTimeIndex) {
       // Current time dot with glow effect
       return (
-        <g>
+        <g key={`dot-current-${index}`}>
           {/* Subtle glow effect */}
-          <circle cx={cx} cy={cy} r={8} fill="rgba(255,255,255,0.15)" />
-          <circle cx={cx} cy={cy} r={6} fill="rgba(255,255,255,0.25)" />
+          <circle
+            key={`dot-glow-outer-${index}`}
+            cx={cx}
+            cy={cy}
+            r={8}
+            fill="rgba(255,255,255,0.15)"
+          />
+          <circle
+            key={`dot-glow-inner-${index}`}
+            cx={cx}
+            cy={cy}
+            r={6}
+            fill="rgba(255,255,255,0.25)"
+          />
           {/* Main dot */}
           <circle
+            key={`dot-main-${index}`}
             cx={cx}
             cy={cy}
             r={5}
@@ -76,8 +125,9 @@ const TemperatureGraph: React.FC<TemperatureGraphProps> = ({
 
     // Regular dots with subtle inner glow
     return (
-      <g>
+      <g key={`dot-regular-${index}`}>
         <circle
+          key={`dot-outer-${index}`}
           cx={cx}
           cy={cy}
           r={4}
@@ -85,6 +135,7 @@ const TemperatureGraph: React.FC<TemperatureGraphProps> = ({
           opacity={0.9}
         />
         <circle
+          key={`dot-inner-${index}`}
           cx={cx}
           cy={cy}
           r={2}
@@ -94,34 +145,6 @@ const TemperatureGraph: React.FC<TemperatureGraphProps> = ({
       </g>
     );
   };
-
-  // Custom premium tooltip
-  const CustomTooltip = ({ active, payload }) => {
-    if (active && payload && payload.length) {
-      const isPast = payload[0].payload.isPast;
-      const isCurrent = payload[0].payload.isCurrent;
-      return (
-        <div className="backdrop-blur-md bg-gray-900/80 border border-gray-700 text-white px-3 py-2 rounded-lg shadow-lg">
-          <div className="font-medium text-xs mb-0.5">
-            {payload[0].payload.label}
-            {isCurrent && <span className="text-xs ml-1 font-bold">(Now)</span>}
-          </div>
-          <div
-            className={`text-sm font-bold ${
-              isPast ? "text-green-400" : "text-white"
-            }`}
-          >
-            {Math.round(payload[0].value)}°
-          </div>
-        </div>
-      );
-    }
-    return null;
-  };
-
-  // Determine if the graph is showing a significant temperature change
-  const tempChange = temperatures[temperatures.length - 1] - temperatures[0];
-  const showsTempTrend = Math.abs(tempChange) >= 3;
 
   return (
     <div className="relative h-36 mb-2 mt-2 px-0.5">
@@ -221,13 +244,30 @@ const TemperatureGraph: React.FC<TemperatureGraphProps> = ({
 
             <YAxis domain={[minTemp, maxTemp]} hide={true} />
 
-            {/* Premium tooltip */}
+            {/* Use a function to render CustomTooltip with proper props */}
             <Tooltip
-              content={<CustomTooltip />}
-              cursor={{
-                stroke: "rgba(255,255,255,0.1)",
-                strokeWidth: 1,
-                strokeDasharray: "3 3",
+              content={({ active, payload }) => {
+                if (active && payload && payload.length) {
+                  const data = payload[0].payload as TemperatureDataPoint;
+                  return (
+                    <div className="backdrop-blur-md bg-gray-900/80 border border-gray-700 text-white px-3 py-2 rounded-lg shadow-lg">
+                      <div className="font-medium text-xs mb-0.5">
+                        {data.label}
+                        {data.isCurrent && (
+                          <span className="text-xs ml-1 font-bold">(Now)</span>
+                        )}
+                      </div>
+                      <div
+                        className={`text-sm font-bold ${
+                          data.isPast ? "text-green-400" : "text-white"
+                        }`}
+                      >
+                        {Math.round(data.temp)}°
+                      </div>
+                    </div>
+                  );
+                }
+                return null;
               }}
             />
 
@@ -254,12 +294,12 @@ const TemperatureGraph: React.FC<TemperatureGraphProps> = ({
               dataKey="temp"
               stroke="url(#temperatureGradient)"
               strokeWidth={3}
-              dot={renderDot}
+              dot={(props) => renderDot(props)}
               activeDot={{
                 r: 5.5,
                 stroke: "white",
                 strokeWidth: 1.5,
-                fill: ({ payload }) => (payload.isPast ? "#66FF66" : "white"),
+                fill: "white", // Fixed string value instead of function
               }}
               isAnimationActive={false}
               connectNulls={true}

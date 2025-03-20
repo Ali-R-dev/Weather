@@ -1,5 +1,4 @@
-import React, { useState, useEffect, useRef } from "react";
-import { motion } from "framer-motion";
+import React, { useState, useEffect } from "react";
 import { HourlyWeather } from "../../../types/weather.types";
 import {
   formatDay,
@@ -16,9 +15,10 @@ interface HourlyForecastProps {
 const HourlyForecast: React.FC<HourlyForecastProps> = ({ hourlyData }) => {
   const [expandedView, setExpandedView] = useState<boolean>(false);
   const [currentTimeIndex, setCurrentTimeIndex] = useState<number>(0);
-  const scrollContainerRefs = useRef<{ [key: string]: HTMLDivElement | null }>(
-    {}
-  );
+  // const [showGraph, setShowGraph] = useState(false);
+  // const scrollContainerRefs = useRef<{ [key: string]: HTMLDivElement | null }>(
+  //   {}
+  // );
 
   // Show a variable number of hours based on expandedView state
   const displayHours: string[] = expandedView
@@ -138,7 +138,7 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({ hourlyData }) => {
       </div>
 
       {/* Hide scrollbar styling */}
-      <style jsx global>{`
+      <style>{`
         .hide-scrollbar::-webkit-scrollbar {
           display: none;
         }
