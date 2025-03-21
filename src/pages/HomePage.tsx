@@ -199,29 +199,12 @@ export default function HomePage() {
           )}
         </main>
 
-        {/* Footer */}
-        <footer className="py-3 px-4 bg-black/30 backdrop-blur-lg text-white text-xs flex items-center justify-between border-t border-white/10">
-          <div className="flex items-center">
-            <span className="text-white/80">
-              Powered by{" "}
-              <a
-                href="https://open-meteo.com/"
-                className="text-blue-300 hover:text-blue-200"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Open Meteo
-              </a>
-            </span>
-          </div>
-        </footer>
+        {/* Settings Panel */}
+        <SettingsPanel
+          isOpen={showSettings}
+          onClose={() => setShowSettings(false)}
+        />
       </div>
-
-      {/* Settings Panel */}
-      <SettingsPanel
-        isOpen={showSettings}
-        onClose={() => setShowSettings(false)}
-      />
     </motion.div>
   );
 }
