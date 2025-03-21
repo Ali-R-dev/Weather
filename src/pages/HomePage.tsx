@@ -6,7 +6,6 @@ import useSavedLocations from "../hooks/useSavedLocations";
 import CurrentWeather from "../components/weather/current";
 import HourlyForecast from "../components/weather/hourly";
 import DailyForecast from "../components/weather/daily";
-import LocationSearch from "../components/weather/LocationSearch";
 import MiniSearchBar from "../components/weather/MiniSearchBar";
 import SettingsPanel from "../components/settings/SettingsPanel";
 import { timeAgo } from "../utils/dateUtils";
@@ -120,23 +119,6 @@ export default function HomePage() {
               Last updated: {lastUpdated ? timeAgo(lastUpdated) : "recently"}
             </div>
           )}
-
-          {/* Search results overlay */}
-          <AnimatePresence>
-            {showSearchResults && (
-              <motion.div
-                initial={{ opacity: 0, y: -10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                className="absolute top-16 left-0 right-0 z-50 mx-4"
-                style={{ willChange: "transform" }}
-              >
-                <LocationSearch
-                  onLocationSelect={() => setShowSearchResults(false)}
-                />
-              </motion.div>
-            )}
-          </AnimatePresence>
 
           {/* Weather content */}
           {weatherData && !showSearchResults && (

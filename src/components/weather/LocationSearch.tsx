@@ -184,7 +184,7 @@ export default function LocationSearch({
 
   return (
     <div
-      className="relative w-full"
+      className="relative w-full max-w-md"
       ref={dropdownRef}
       style={{ zIndex: compact ? 9999 : 30 }}
     >
@@ -268,8 +268,8 @@ export default function LocationSearch({
           <motion.div
             className={`${
               compact
-                ? "fixed top-0 left-1/2 -translate-x-1/2 w-[320px]"
-                : "absolute z-[100] mt-2 w-[320px]"
+                ? "fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-md"
+                : "absolute z-[100] mt-2 w-full"
             } shadow-2xl max-h-[50vh] overflow-auto backdrop-blur-xl bg-black/60 border border-white/20 rounded-2xl`}
             style={{ zIndex: 9999 }}
             initial={{ opacity: 0, y: -10, scale: 0.95 }}
