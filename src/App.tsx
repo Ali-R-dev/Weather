@@ -69,8 +69,8 @@ function App() {
 
   return (
     <ErrorBoundary>
-      <SettingsProvider>
-        <ThemeProvider>
+      <ThemeProvider>
+        <SettingsProvider>
           <WeatherProvider>
             <AppContent
               initialLoading={initialLoading}
@@ -78,8 +78,8 @@ function App() {
               setPrivacyModalVisible={setPrivacyModalVisible}
             />
           </WeatherProvider>
-        </ThemeProvider>
-      </SettingsProvider>
+        </SettingsProvider>
+      </ThemeProvider>
     </ErrorBoundary>
   );
 }

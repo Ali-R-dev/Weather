@@ -21,6 +21,7 @@ export default function HomePage() {
   const [activeTab, setActiveTab] = useState<"hourly" | "daily">("hourly");
   const [showSearchResults, setShowSearchResults] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const searchContainerRef = useRef<HTMLDivElement>(null);
 
   // Location loading logic
   useEffect(() => {
@@ -52,6 +53,26 @@ export default function HomePage() {
     }
   }, [weatherData, defaultLocation, location, loading, setLocation]);
 
+  // Handle click outside search
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (
+        searchContainerRef.current &&
+        !searchContainerRef.current.contains(event.target as Node)
+      ) {
+        setShowSearchResults(false);
+      }
+    }
+
+    if (showSearchResults) {
+      document.addEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showSearchResults]);
+
   return (
     <motion.div
       initial={{ opacity: 0 }}
@@ -77,7 +98,10 @@ export default function HomePage() {
       <div className="relative z-10 flex-1 flex flex-col">
         <main className="flex-1 container mx-auto px-4 py-4 flex flex-col">
           {/* Search bar and settings */}
-          <div className="flex items-center justify-between mb-2">
+          <div
+            className="flex items-center justify-between mb-2"
+            ref={searchContainerRef}
+          >
             <MiniSearchBar
               onFocus={() => setShowSearchResults(true)}
               onSelect={() => setShowSearchResults(false)}
