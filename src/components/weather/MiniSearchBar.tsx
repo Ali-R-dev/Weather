@@ -42,6 +42,7 @@ export default function MiniSearchBar({
   useEffect(() => {
     if (query.trim().length < 2) {
       setResults([]);
+      setIsSearching(false); // Stop loading when query is cleared or too short
       return;
     }
 
@@ -60,7 +61,7 @@ export default function MiniSearchBar({
         setIsSearching(false);
         setIsDropdownOpen(true);
       }
-    }, 500);
+    }, 300); // Reduced debounce time for better responsiveness
 
     return () => {
       if (searchTimeout.current) {
@@ -68,6 +69,13 @@ export default function MiniSearchBar({
       }
     };
   }, [query]);
+
+  // Clear loading state when component unmounts
+  useEffect(() => {
+    return () => {
+      setIsSearching(false);
+    };
+  }, []);
 
   // Load recently used locations from localStorage
   useEffect(() => {
@@ -100,6 +108,7 @@ export default function MiniSearchBar({
 
   // Add to recently used locations
   const addToRecentlyUsed = (location: SavedLocation) => {
+    setIsSearching(false); // Ensure loading is stopped when selecting a location
     const updatedRecent = [
       location,
       ...recentlyUsed.filter((loc) => loc.id !== location.id),
@@ -154,7 +163,7 @@ export default function MiniSearchBar({
       return;
     }
 
-    // Update location without fetching weather initially
+    // Update location and fetch weather data
     setLocation(
       {
         latitude: location.latitude,
@@ -164,7 +173,7 @@ export default function MiniSearchBar({
         admin1: location.admin1,
         admin2: "admin2" in location ? location.admin2 : undefined,
       },
-      false
+      true // Set to true to fetch weather data for the new location
     );
 
     // Save to localStorage
@@ -244,18 +253,22 @@ export default function MiniSearchBar({
           animate={{ scale: isActive ? 1.1 : 1 }}
           transition={{ duration: 0.2 }}
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-            className="w-4 h-4"
-          >
-            <path
-              fillRule="evenodd"
-              d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
-              clipRule="evenodd"
-            />
-          </svg>
+          {isSearching && query.trim().length >= 2 ? (
+            <LoadingSpinner size="small" />
+          ) : (
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 20 20"
+              fill="currentColor"
+              className="w-4 h-4"
+            >
+              <path
+                fillRule="evenodd"
+                d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
+                clipRule="evenodd"
+              />
+            </svg>
+          )}
         </motion.div>
 
         <input
@@ -394,7 +407,7 @@ export default function MiniSearchBar({
       <AnimatePresence>
         {isDropdownOpen && (
           <motion.div
-            className="absolute z-[100] mt-2 w-full max-w-md shadow-2xl max-h-[50vh] overflow-auto backdrop-blur-xl bg-black/60 border border-white/20 rounded-2xl"
+            className="absolute z-[100] mt-2 w-full max-w-md shadow-2xl max-h-[50vh] overflow-auto backdrop-blur-xl bg-gradient-to-b from-black/80 to-black/60 border border-white/20 rounded-2xl"
             initial={{ opacity: 0, y: -10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.95 }}
@@ -413,20 +426,35 @@ export default function MiniSearchBar({
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.1 }}
               >
-                <div className="px-4 py-2 text-[10px] uppercase tracking-wider font-medium text-white/50">
-                  Recent
+                <div className="px-4 py-3 text-[11px] uppercase tracking-wider font-semibold text-white/60 flex items-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    className="w-3.5 h-3.5 mr-1.5 opacity-70"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M10 2a.75.75 0 01.75.75v.258a33.186 33.186 0 016.668.83.75.75 0 01-.336 1.461 31.28 31.28 0 00-1.103-.232l1.702 7.545a.75.75 0 01-.387.832A4.981 4.981 0 0115 14c-.825 0-1.606-.2-2.294-.556a.75.75 0 01-.387-.832l1.77-7.849a31.743 31.743 0 00-3.339-.254v11.505a20.01 20.01 0 013.78.501.75.75 0 11-.339 1.462A18.51 18.51 0 0010 17.5c-1.442 0-2.845.165-4.191.477a.75.75 0 01-.338-1.462 20.01 20.01 0 013.779-.501V4.509c-1.129.026-2.243.112-3.34.254l1.771 7.85a.75.75 0 01-.387.831A4.981 4.981 0 015 14c-.825 0-1.606-.2-2.294-.556a.75.75 0 01-.387-.832l1.702-7.545c-.37.053-.738.11-1.103.232a.75.75 0 11-.336-1.461 33.186 33.186 0 016.668-.83V2.75A.75.75 0 0110 2z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  Recent Locations
                 </div>
-                <div className="px-2 pb-2">
+                <div className="px-2 pb-3">
                   {recentlyUsed.map((location, index) => (
                     <motion.div
                       key={`recent-${location.id}`}
-                      className="mx-1 px-2 py-2 cursor-pointer flex justify-between items-center rounded-lg bg-transparent hover:bg-white/10 transition-all duration-200 group"
+                      className="mx-1 px-2.5 py-2.5 cursor-pointer flex justify-between items-center rounded-xl bg-transparent hover:bg-white/10 transition-all duration-200 group"
                       onClick={(e) => handleSelectLocation(location, e)}
                       initial={{ opacity: 0, y: 5 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.1 + index * 0.05 }}
-                      whileHover={{ scale: 1.01 }}
-                      whileTap={{ scale: 0.99 }}
+                      whileHover={{
+                        scale: 1.02,
+                        backgroundColor: "rgba(255, 255, 255, 0.1)",
+                      }}
+                      whileTap={{ scale: 0.98 }}
                     >
                       <div className="flex items-center">
                         <div className="mr-2 p-1 rounded-full bg-white/10">
@@ -513,22 +541,37 @@ export default function MiniSearchBar({
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ delay: 0.3 }}
+                transition={{ delay: 0.2 }}
               >
-                <div className="px-4 py-2 text-[10px] uppercase tracking-wider font-medium text-white/50">
-                  Search results
+                <div className="px-4 py-3 text-[11px] uppercase tracking-wider font-semibold text-white/60 flex items-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 20 20"
+                    fill="currentColor"
+                    className="w-3.5 h-3.5 mr-1.5 opacity-70"
+                  >
+                    <path
+                      fillRule="evenodd"
+                      d="M9.69 18.933l.003.001C9.89 19.02 10 19 10 19s.11.02.308-.066l.002-.001.006-.003.018-.008a5.741 5.741 0 00.281-.14c.186-.096.446-.24.757-.433.62-.384 1.445-.966 2.274-1.765C15.302 14.988 17 12.493 17 9A7 7 0 103 9c0 3.492 1.698 5.988 3.355 7.584a13.731 13.731 0 002.273 1.765 11.842 11.842 0 00.976.544l.062.029.018.008.006.003zM10 11.25a2.25 2.25 0 100-4.5 2.25 2.25 0 000 4.5z"
+                      clipRule="evenodd"
+                    />
+                  </svg>
+                  Search Results
                 </div>
-                <div className="px-2 py-0.5">
+                <div className="px-2 py-1">
                   {results.map((location, index) => (
                     <motion.div
                       key={location.id}
-                      className="mx-1 px-2 py-1.5 cursor-pointer flex items-center justify-between rounded-lg bg-transparent hover:bg-white/10 transition-all duration-200"
+                      className="mx-1 px-2.5 py-2.5 cursor-pointer flex items-center justify-between rounded-xl bg-transparent hover:bg-white/10 transition-all duration-200"
                       onClick={(e) => handleSelectLocation(location, e)}
                       initial={{ opacity: 0, y: 5 }}
                       animate={{ opacity: 1, y: 0 }}
-                      transition={{ delay: 0.3 + index * 0.05 }}
-                      whileHover={{ scale: 1.01 }}
-                      whileTap={{ scale: 0.99 }}
+                      transition={{ delay: 0.2 + index * 0.05 }}
+                      whileHover={{
+                        scale: 1.02,
+                        backgroundColor: "rgba(255, 255, 255, 0.1)",
+                      }}
+                      whileTap={{ scale: 0.98 }}
                     >
                       <div className="flex items-center">
                         <div className="mr-2 p-1 rounded-full bg-white/10">
@@ -565,15 +608,20 @@ export default function MiniSearchBar({
             {query.trim().length > 1 &&
               results.length === 0 &&
               !isSearching && (
-                <div className="px-3 py-4 text-center">
-                  <div className="inline-block p-2 rounded-full bg-white/10 mb-2">
+                <div className="px-3 py-6 text-center">
+                  <motion.div
+                    className="inline-block p-2.5 rounded-full bg-white/10 mb-3"
+                    initial={{ scale: 0.8, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ delay: 0.1 }}
+                  >
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
                       viewBox="0 0 24 24"
                       strokeWidth={1.5}
                       stroke="currentColor"
-                      className="w-5 h-5 text-white/70"
+                      className="w-6 h-6 text-white/70"
                     >
                       <path
                         strokeLinecap="round"
@@ -581,25 +629,25 @@ export default function MiniSearchBar({
                         d="M15.182 16.318A4.486 4.486 0 0012.016 15a4.486 4.486 0 00-3.198 1.318M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75zm-.375 0h.008v.015h-.008V9.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75z"
                       />
                     </svg>
-                  </div>
-                  <div className="text-sm text-white/70">
+                  </motion.div>
+                  <motion.div
+                    className="text-sm font-medium text-white/70"
+                    initial={{ y: 5, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.2 }}
+                  >
                     No locations found for "{query}"
-                  </div>
-                  <div className="text-[10px] text-white/50 mt-1">
+                  </motion.div>
+                  <motion.div
+                    className="text-xs text-white/50 mt-1.5"
+                    initial={{ y: 5, opacity: 0 }}
+                    animate={{ y: 0, opacity: 1 }}
+                    transition={{ delay: 0.3 }}
+                  >
                     Try a different search term
-                  </div>
+                  </motion.div>
                 </div>
               )}
-
-            {/* Loading state */}
-            {isSearching && (
-              <div className="px-3 py-4 text-center">
-                <LoadingSpinner />
-                <div className="text-sm text-white/70 mt-2">
-                  Searching locations...
-                </div>
-              </div>
-            )}
           </motion.div>
         )}
       </AnimatePresence>
