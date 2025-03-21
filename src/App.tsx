@@ -5,6 +5,7 @@ import { SettingsProvider } from "./context/SettingsContext";
 import WeatherLoadingScreen from "./components/common/WeatherLoadingScreen";
 import PrivacyPolicyModal from "./components/PrivacyPolicyModal";
 import ErrorBoundary from "./components/common/ErrorBoundary";
+import Footer from "./components/layout/Footer";
 import "./premium-styles.css";
 
 // Lazy load heavyweight components
@@ -21,6 +22,12 @@ function App() {
   const [initialLoading, setInitialLoading] = useState(true);
 
   useEffect(() => {
+    // Check if it's the first visit
+    const hasAcceptedPrivacy = localStorage.getItem("privacyPolicyAccepted");
+    if (!hasAcceptedPrivacy) {
+      setPrivacyModalVisible(true);
+    }
+
     // Update theme-color meta tag
     const metaThemeColor = document.querySelector('meta[name="theme-color"]');
     if (metaThemeColor) {
@@ -79,9 +86,13 @@ function AppContent({
             </Suspense>
           </ErrorBoundary>
         </main>
+        <Footer onShowPrivacyModal={() => setPrivacyModalVisible(true)} />
         <PrivacyPolicyModal
           visible={privacyModalVisible}
-          onClose={() => setPrivacyModalVisible(false)}
+          onClose={() => {
+            setPrivacyModalVisible(false);
+            localStorage.setItem("privacyPolicyAccepted", "true");
+          }}
         />
       </div>
     </>
