@@ -1,12 +1,14 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { formatLocalTime } from "../../../utils/formatting";
+import { TimeFormat } from "../../../context/SettingsContext";
 
 interface WeatherHeaderProps {
   locationName: string | undefined;
   region?: string;
   country?: string;
   timezone?: string;
+  timeFormat: TimeFormat;
 }
 
 const WeatherHeader: React.FC<WeatherHeaderProps> = ({
@@ -14,22 +16,54 @@ const WeatherHeader: React.FC<WeatherHeaderProps> = ({
   region,
   country,
   timezone,
+  timeFormat,
 }) => {
   return (
     <motion.div
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className="mb-6"
+      className="mb-7"
     >
       <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between">
-        <h1 className="text-4xl sm:text-5xl font-bold tracking-tight bg-gradient-to-r from-white to-white/70 bg-clip-text text-transparent">
-          {locationName || "Weather"}
-        </h1>
-        <div className="text-2xl font-light mt-1 sm:mt-0 flex items-center">
+        <div className="flex-1">
+          <motion.h1
+            className="text-4xl sm:text-5xl font-bold tracking-tight"
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+          >
+            <span className="bg-gradient-to-r from-white via-white to-white/60 bg-clip-text text-transparent">
+              {locationName}
+            </span>
+          </motion.h1>
+
+          <motion.div
+            className="flex items-center flex-wrap mt-1.5 text-sm sm:text-base text-white/80"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.6, delay: 0.3 }}
+          >
+            {(region || country) && (
+              <span className="font-medium text-white/90">
+                {region && country
+                  ? `${region}, ${country}`
+                  : country || region}
+              </span>
+            )}
+          </motion.div>
+        </div>
+
+        <motion.div
+          className="text-xl sm:text-2xl font-light mt-2 sm:mt-0 flex items-center backdrop-blur-sm px-3 py-1 rounded-full bg-white/5 border border-white/10"
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          whileHover={{ scale: 1.03, backgroundColor: "rgba(255,255,255,0.1)" }}
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5 mr-1 text-white/70"
+            className="h-5 w-5 mr-2 text-white/70"
             viewBox="0 0 20 20"
             fill="currentColor"
           >
@@ -39,14 +73,10 @@ const WeatherHeader: React.FC<WeatherHeaderProps> = ({
               clipRule="evenodd"
             />
           </svg>
-          <span className="font-medium">{formatLocalTime(timezone)}</span>
-        </div>
-      </div>
-
-      <div className="opacity-80 text-sm sm:text-base mt-1 flex items-center flex-wrap">
-        {region && <span className="font-medium">{region}</span>}
-        {region && country && <span className="mx-1">•</span>}
-        {country && <span>{country}</span>}
+          <span className="font-medium">
+            {formatLocalTime(timezone, timeFormat)}
+          </span>
+        </motion.div>
       </div>
     </motion.div>
   );

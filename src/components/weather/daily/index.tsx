@@ -1,40 +1,69 @@
 import React from "react";
-import { motion } from "framer-motion";
-import { DailyWeather } from "../../../types/weather.types";
 import DayItem from "./DayItem";
+import { formatDate } from "../../../utils/formatting";
 
 interface DailyForecastProps {
-  dailyData: DailyWeather;
+  dailyData?: {
+    time: string[];
+    temperature_2m_max: number[];
+    temperature_2m_min: number[];
+    weather_code: number[];
+    precipitation_probability_max: number[];
+  };
 }
 
 const DailyForecast: React.FC<DailyForecastProps> = ({ dailyData }) => {
-  return (
-    <div className="h-full">
-      <div className="space-y-3">
-        {dailyData.time.map((day, index) => {
-          const isToday = index === 0;
-
-          return (
-            <motion.div
-              key={day}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: index * 0.05 }}
-            >
-              <DayItem
-                day={day}
-                maxTemp={dailyData.temperature_2m_max[index]}
-                minTemp={dailyData.temperature_2m_min[index]}
-                weatherCode={dailyData.weather_code[index]}
-                precipProbability={
-                  dailyData.precipitation_probability_max[index]
-                }
-                isToday={isToday}
-              />
-            </motion.div>
-          );
-        })}
+  // Handle loading state
+  if (!dailyData) {
+    return (
+      <div className="flex flex-col items-center justify-center p-4 text-white/70">
+        <p>Loading forecast data...</p>
       </div>
+    );
+  }
+
+  // Handle missing or invalid data
+  if (!dailyData.time?.length) {
+    return (
+      <div className="flex flex-col items-center justify-center p-4 text-white/70">
+        <p>No forecast data available</p>
+      </div>
+    );
+  }
+
+  const today = formatDate(new Date().toISOString());
+
+  return (
+    <div className="flex flex-col gap-2">
+      {dailyData.time.map((time, index) => {
+        // Validate data for each item
+        const maxTemp = dailyData.temperature_2m_max?.[index];
+        const minTemp = dailyData.temperature_2m_min?.[index];
+        const weatherCode = dailyData.weather_code?.[index];
+        const precipProb = dailyData.precipitation_probability_max?.[index];
+
+        // Skip invalid entries
+        if (
+          maxTemp === undefined ||
+          minTemp === undefined ||
+          weatherCode === undefined ||
+          precipProb === undefined
+        ) {
+          return null;
+        }
+
+        return (
+          <DayItem
+            key={time}
+            day={time}
+            maxTemp={maxTemp}
+            minTemp={minTemp}
+            weatherCode={weatherCode}
+            precipProbability={precipProb}
+            isToday={formatDate(time) === today}
+          />
+        );
+      })}
     </div>
   );
 };

@@ -1,7 +1,10 @@
+/* DayItem.tsx - Enhanced */
 import React from "react";
 import WeatherIcon from "../shared/WeatherIcon";
 import { getWeatherInfo } from "../../../utils/weatherCodeMap";
 import { formatDay, formatDate } from "../../../utils/formatting";
+import { useSettings } from "../../../context/SettingsContext";
+import { AppConfig } from "../../../config/appConfig";
 
 interface DayItemProps {
   day: string;
@@ -22,50 +25,86 @@ const DayItem: React.FC<DayItemProps> = ({
 }) => {
   const weatherInfo = getWeatherInfo(weatherCode);
   const hasPrecip = precipProbability > 0;
+  const { settings } = useSettings();
+
+  const displayMaxTemp =
+    settings.units.temperature === "celsius"
+      ? maxTemp
+      : AppConfig.utils.convertTemperature(maxTemp, "fahrenheit");
+
+  const displayMinTemp =
+    settings.units.temperature === "celsius"
+      ? minTemp
+      : AppConfig.utils.convertTemperature(minTemp, "fahrenheit");
+
+  const maxTempCelsius = maxTemp;
+
+  const getTempColor = (temp: number) => {
+    if (temp >= 35) return "text-red-500"; // Extreme heat
+    if (temp >= 30) return "text-red-400"; // Very hot
+    if (temp >= 25) return "text-orange-400"; // Hot
+    if (temp >= 20) return "text-orange-300"; // Warm
+    if (temp >= 15) return "text-yellow-300"; // Mild
+    if (temp >= 10) return "text-green-300"; // Cool
+    if (temp >= 5) return "text-blue-300"; // Cold
+    if (temp >= 0) return "text-blue-400"; // Very cold
+    if (temp >= -5) return "text-indigo-400"; // Freezing
+    return "text-indigo-500"; // Extreme cold
+  };
 
   return (
     <div
-      className={`flex items-center p-2.5 rounded-xl transition-all ${
-        isToday ? "bg-white/20" : "bg-white/5 hover:bg-white/10"
-      }`}
+      className={`
+        relative flex items-center px-4 py-3 rounded-xl
+        backdrop-blur-sm border gap-3
+        ${
+          isToday
+            ? "bg-white/20 border-white/30"
+            : "bg-white/10 border-white/10"
+        }
+      `}
     >
-      {/* Day of week and date */}
-      <div className="flex flex-col w-[70px]">
-        <div className="font-medium text-sm text-white">
+      {/* Day info */}
+      <div className="flex flex-col min-w-[60px]">
+        <div className="font-semibold text-sm text-white">
           {isToday ? "Today" : formatDay(day)}
         </div>
-        <div className="text-xs text-white/60">{formatDate(day)}</div>
+        <div className="text-xs text-white/70 mt-0.5">{formatDate(day)}</div>
       </div>
 
-      {/* Weather condition icon */}
-      <div className="ml-1 mr-3">
+      {/* Weather icon */}
+      <div className="flex items-center justify-center w-8">
         <WeatherIcon type={weatherInfo.icon} />
       </div>
 
-      {/* Weather condition text */}
-      <div className="flex-grow">
-        <span className="text-sm text-white/90">{weatherInfo.label}</span>
+      {/* Weather info and precipitation */}
+      <div className="flex-grow flex items-center gap-3">
+        <span className="text-sm font-medium text-white/90 flex-grow">
+          {weatherInfo.label}
+        </span>
         {hasPrecip && (
-          <div className="flex items-center mt-0.5">
-            <svg
-              className="w-3 h-3 text-blue-300/80"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-            >
-              <path d="M11.28 15.63C11.28 17.73 9.57 19.44 7.47 19.44C5.38 19.44 3.67 17.73 3.67 15.63C3.67 14 6 11.37 7.47 10.03C8.93 11.37 11.28 14 11.28 15.63Z" />
-            </svg>
-            <span className="text-xs text-blue-100/70 ml-1">
+          <div className="flex items-center gap-1.5">
+            <div className="h-1 w-12 bg-blue-900/20 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-blue-400/70 rounded-full"
+                style={{ width: `${precipProbability}%` }}
+              />
+            </div>
+            <span className="text-xs font-medium text-blue-200 min-w-[28px]">
               {precipProbability}%
             </span>
           </div>
         )}
       </div>
 
-      {/* Temperature range */}
-      <div className="flex items-center space-x-1.5 whitespace-nowrap">
-        <span className="font-medium text-sm">{Math.round(maxTemp)}°</span>
-        <span className="h-0.5 w-2 bg-white/30 rounded-full"></span>
-        <span className="text-sm text-white/60">{Math.round(minTemp)}°</span>
+      {/* Temperature */}
+      <div className="flex items-center gap-2 min-w-[80px] justify-end">
+        <span className={`font-bold text-sm ${getTempColor(maxTempCelsius)}`}>
+          {Math.round(displayMaxTemp)}°
+        </span>
+        <span className="text-sm text-white/60">
+          {Math.round(displayMinTemp)}°
+        </span>
       </div>
     </div>
   );

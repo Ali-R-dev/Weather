@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { getUVIndexInfo, getWindDirection } from "../../../utils/weather";
+import { WindUnit } from "../../../context/SettingsContext";
 
 interface MetricsGridProps {
   humidity: number;
@@ -9,6 +10,7 @@ interface MetricsGridProps {
   precipitation: number;
   uvIndex?: number;
   precipitationProbability?: number;
+  windUnit: WindUnit;
 }
 
 const MetricsGrid: React.FC<MetricsGridProps> = ({
@@ -18,135 +20,225 @@ const MetricsGrid: React.FC<MetricsGridProps> = ({
   precipitation,
   uvIndex,
   precipitationProbability,
+  windUnit,
 }) => {
   const windDirectionStr = getWindDirection(windDirectionDegrees);
   const uvInfo = uvIndex !== undefined ? getUVIndexInfo(uvIndex) : null;
+  const windUnitLabel = windUnit === "kph" ? "km/h" : "mph";
+
+  // Staggered animation for grid items
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    show: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.3,
+      },
+    },
+  };
+
+  const itemVariants = {
+    hidden: { y: 20, opacity: 0 },
+    show: {
+      y: 0,
+      opacity: 1,
+      transition: { type: "spring", stiffness: 300, damping: 25 },
+    },
+  };
 
   return (
     <motion.div
-      initial={{ y: 20, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.6, delay: 0.5 }}
+      variants={containerVariants}
+      initial="hidden"
+      animate="show"
+      className="mb-4"
     >
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {/* Humidity */}
         <motion.div
-          key="humidity-card"
-          className="bg-white/10 backdrop-blur-lg rounded-2xl p-3 border border-white/20 shadow-lg transition-all hover:bg-white/15"
-          whileHover={{ scale: 1.02 }}
+          variants={itemVariants}
+          whileHover={{
+            scale: 1.02,
+            boxShadow: "0 10px 20px rgba(0,0,0,0.15)",
+          }}
+          className="bg-gradient-to-br from-white/15 to-white/5 backdrop-blur-lg rounded-2xl p-4 border border-white/20 shadow-lg transition-all"
         >
-          <div className="flex items-center mb-1">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              className="w-4 h-4 mr-1 text-blue-300"
-            >
-              <path
-                fillRule="evenodd"
-                d="M12.556 17.329l4.183 4.182a3.375 3.375 0 004.773-4.773l-3.306-3.305a6.803 6.803 0 01-1.53.043c-.394-.034-.682-.006-.867.042a.589.589 0 00-.167.063l-3.086 3.748zm3.414-1.36a.75.75 0 011.06 0l1.875 1.876a.75.75 0 11-1.06 1.06L15.97 17.03a.75.75 0 010-1.06z"
-                clipRule="evenodd"
-              />
-            </svg>
-            <div className="text-xs text-white/80">Humidity</div>
+          <div className="flex items-center mb-2">
+            <div className="bg-blue-400/20 p-1.5 rounded-lg mr-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="w-4 h-4 text-blue-300"
+              >
+                <path d="M13.5 4.06c0-1.336-1.616-2.005-2.56-1.06l-4.5 4.5H4.508c-1.141 0-2.318.664-2.66 1.905A9.76 9.76 0 001.5 12c0 .898.121 1.768.35 2.595.341 1.24 1.518 1.905 2.659 1.905h1.93l4.5 4.5c.945.945 2.561.276 2.561-1.06V4.06zM18.584 5.106a.75.75 0 011.06 0c3.808 3.807 3.808 9.98 0 13.788a.75.75 0 01-1.06-1.06 8.25 8.25 0 000-11.668.75.75 0 010-1.06z" />
+                <path d="M15.932 7.757a.75.75 0 011.061 0 6 6 0 010 8.486.75.75 0 01-1.06-1.061 4.5 4.5 0 000-6.364.75.75 0 010-1.06z" />
+              </svg>
+            </div>
+            <div className="text-xs font-medium text-white/90 uppercase tracking-wide">
+              Humidity
+            </div>
           </div>
-          <div className="text-lg font-medium flex justify-between items-end">
-            <span>{humidity}%</span>
-            <div className="w-16 h-1.5 bg-white/20 rounded-full overflow-hidden">
+          <div className="flex justify-between items-center">
+            <span className="text-2xl font-bold">{humidity}%</span>
+            <div className="w-20 h-2 bg-white/10 rounded-full overflow-hidden">
               <div
-                className="h-full bg-blue-400 rounded-full"
+                className={`h-full rounded-full ${
+                  humidity > 80
+                    ? "bg-blue-500"
+                    : humidity > 60
+                    ? "bg-blue-400"
+                    : "bg-blue-300"
+                }`}
                 style={{ width: `${humidity}%` }}
               ></div>
             </div>
+          </div>
+          <div className="text-xs mt-1 text-white/70">
+            {humidity > 80
+              ? "High humidity"
+              : humidity > 60
+              ? "Moderate"
+              : "Low humidity"}
           </div>
         </motion.div>
 
         {/* Wind */}
         <motion.div
-          key="wind-card"
-          className="bg-white/10 backdrop-blur-lg rounded-2xl p-3 border border-white/20 shadow-lg transition-all hover:bg-white/15"
-          whileHover={{ scale: 1.02 }}
+          variants={itemVariants}
+          whileHover={{
+            scale: 1.02,
+            boxShadow: "0 10px 20px rgba(0,0,0,0.15)",
+          }}
+          className="bg-gradient-to-br from-white/15 to-white/5 backdrop-blur-lg rounded-2xl p-4 border border-white/20 shadow-lg transition-all"
         >
-          <div className="flex items-center mb-1">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              className="w-4 h-4 mr-1 text-cyan-300"
-            >
-              <path
-                fillRule="evenodd"
-                d="M4.5 5.653c0-1.426 1.529-2.33 2.779-1.643l11.54 6.348c1.295.712 1.295 2.573 0 3.285L7.28 19.991c-1.25.687-2.779-.217-2.779-1.643V5.653z"
-                clipRule="evenodd"
-              />
-            </svg>
-            <div className="text-xs text-white/80">Wind</div>
-          </div>
-          <div className="text-lg font-medium">
-            {Math.round(windSpeed)} km/h
-            <div className="text-xs text-white/70 mt-0.5">
-              Direction: {windDirectionStr} ({windDirectionDegrees}°)
+          <div className="flex items-center mb-2">
+            <div className="bg-cyan-400/20 p-1.5 rounded-lg mr-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="w-4 h-4 text-cyan-300"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M14.615 1.595a.75.75 0 01.359.852L12.982 9.75h7.268a.75.75 0 01.548 1.262l-10.5 11.25a.75.75 0 01-1.272-.71l1.992-7.302H3.75a.75.75 0 01-.548-1.262l10.5-11.25a.75.75 0 01.913-.143z"
+                  clipRule="evenodd"
+                />
+              </svg>
             </div>
+            <div className="text-xs font-medium text-white/90 uppercase tracking-wide">
+              Wind
+            </div>
+          </div>
+          <div className="text-2xl font-bold">
+            {Math.round(windSpeed)} {windUnitLabel}
+          </div>
+          <div className="flex items-center text-xs text-white/70 mt-1">
+            <div
+              className="transform mr-1"
+              style={{
+                transform: `rotate(${windDirectionDegrees}deg)`,
+                display: "inline-block",
+              }}
+            >
+              ↑
+            </div>
+            {windDirectionStr} ({windDirectionDegrees}°)
           </div>
         </motion.div>
 
         {/* Precipitation */}
         <motion.div
-          key="precipitation-card"
-          className="bg-white/10 backdrop-blur-lg rounded-2xl p-3 border border-white/20 shadow-lg transition-all hover:bg-white/15"
-          whileHover={{ scale: 1.02 }}
+          variants={itemVariants}
+          whileHover={{
+            scale: 1.02,
+            boxShadow: "0 10px 20px rgba(0,0,0,0.15)",
+          }}
+          className="bg-gradient-to-br from-white/15 to-white/5 backdrop-blur-lg rounded-2xl p-4 border border-white/20 shadow-lg transition-all"
         >
-          <div className="flex items-center mb-1">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 24 24"
-              fill="currentColor"
-              className="w-4 h-4 mr-1 text-blue-400"
+          <div className="flex items-center mb-2">
+            <div className="bg-blue-400/20 p-1.5 rounded-lg mr-2">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="w-4 h-4 text-blue-300"
+              >
+                <path
+                  fillRule="evenodd"
+                  d="M12 6.75a.75.75 0 01.75.75v6.75h6.75a.75.75 0 010 1.5h-7.5a.75.75 0 01-.75-.75v-7.5a.75.75 0 01.75-.75z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </div>
+            <div className="text-xs font-medium text-white/90 uppercase tracking-wide">
+              Precipitation
+            </div>
+          </div>
+          <div className="text-2xl font-bold">{precipitation} mm</div>
+          {precipitationProbability !== undefined && (
+            <div
+              className={`text-xs mt-1 ${
+                precipitationProbability > 70
+                  ? "text-blue-300"
+                  : precipitationProbability > 30
+                  ? "text-white/70"
+                  : "text-white/60"
+              }`}
             >
-              <path
-                fillRule="evenodd"
-                d="M12 2.25c-5.385 0-9.75 4.365-9.75 9.75s4.365 9.75 9.75 9.75 9.75-4.365 9.75-9.75S17.385 2.25 12 2.25zm-4.125 9.75a.75.75 0 011.5 0v4.5a.75.75 0 01-1.5 0v-4.5zm4.125-2.25a.75.75 0 00-.75.75v6a.75.75 0 001.5 0v-6a.75.75 0 00-.75-.75zm3.75 3.75a.75.75 0 011.5 0v2.25a.75.75 0 01-1.5 0v-2.25z"
-                clipRule="evenodd"
-              />
-            </svg>
-            <div className="text-xs text-white/80">Precipitation</div>
-          </div>
-          <div className="text-lg font-medium">
-            {precipitation} mm
-            {precipitationProbability !== undefined &&
-              precipitationProbability > 0 && (
-                <div className="text-xs text-white/70 mt-0.5">
-                  {precipitationProbability}% chance today
-                </div>
-              )}
-          </div>
+              {precipitationProbability}% chance today
+            </div>
+          )}
         </motion.div>
 
         {/* UV Index */}
         {uvIndex !== undefined && (
           <motion.div
-            key="uv-index-card"
-            className="bg-white/10 backdrop-blur-lg rounded-2xl p-3 border border-white/20 shadow-lg transition-all hover:bg-white/15"
-            whileHover={{ scale: 1.02 }}
+            variants={itemVariants}
+            whileHover={{
+              scale: 1.02,
+              boxShadow: "0 10px 20px rgba(0,0,0,0.15)",
+            }}
+            className="bg-gradient-to-br from-white/15 to-white/5 backdrop-blur-lg rounded-2xl p-4 border border-white/20 shadow-lg transition-all"
           >
-            <div className="flex items-center mb-1">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-                className="w-4 h-4 mr-1 text-yellow-300"
-              >
-                <path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06l-1.591 1.59a.75.75 0 001.06 1.061l1.591-1.59zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.697 7.757a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 00-1.061 1.06l1.59 1.591z" />
-              </svg>
-              <div className="text-xs text-white/80">UV Index</div>
-            </div>
-            <div className="text-lg font-medium">
-              <div className="flex justify-between items-end">
-                <span>{Math.round(uvIndex)}</span>
-                <span className={`text-xs ${uvInfo?.color}`}>
-                  {uvInfo?.label}
-                </span>
+            <div className="flex items-center mb-2">
+              <div className="bg-yellow-400/20 p-1.5 rounded-lg mr-2">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  viewBox="0 0 24 24"
+                  fill="currentColor"
+                  className="w-4 h-4 text-yellow-300"
+                >
+                  <path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06l-1.591 1.59a.75.75 0 001.06 1.061l1.591-1.59zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.697 7.757a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 00-1.061 1.06l1.59 1.591z" />
+                </svg>
               </div>
+              <div className="text-xs font-medium text-white/90 uppercase tracking-wide">
+                UV Index
+              </div>
+            </div>
+            <div className="flex justify-between items-center">
+              <span className="text-2xl font-bold">{Math.round(uvIndex)}</span>
+              <span
+                className={`text-xs py-1 px-2 rounded-full ${uvInfo?.color} bg-white/10 font-medium`}
+              >
+                {uvInfo?.label}
+              </span>
+            </div>
+            <div className="w-full h-1.5 bg-white/10 rounded-full mt-2 overflow-hidden">
+              <div
+                className={`h-full ${
+                  uvIndex >= 8
+                    ? "bg-red-500"
+                    : uvIndex >= 6
+                    ? "bg-orange-500"
+                    : uvIndex >= 3
+                    ? "bg-yellow-500"
+                    : "bg-green-500"
+                }`}
+                style={{ width: `${Math.min(100, (uvIndex / 11) * 100)}%` }}
+              ></div>
             </div>
           </motion.div>
         )}
