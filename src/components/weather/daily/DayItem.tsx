@@ -1,6 +1,5 @@
 /* DayItem.tsx - Enhanced */
 import React from "react";
-import { motion } from "framer-motion";
 import WeatherIcon from "../shared/WeatherIcon";
 import { getWeatherInfo } from "../../../utils/weatherCodeMap";
 import { formatDay, formatDate } from "../../../utils/formatting";
@@ -9,8 +8,8 @@ import { AppConfig } from "../../../config/appConfig";
 
 interface DayItemProps {
   day: string;
-  maxTemp: number; // Temperature in Celsius from API
-  minTemp: number; // Temperature in Celsius from API
+  maxTemp: number;
+  minTemp: number;
   weatherCode: number;
   precipProbability: number;
   isToday: boolean;
@@ -28,7 +27,6 @@ const DayItem: React.FC<DayItemProps> = ({
   const hasPrecip = precipProbability > 0;
   const { settings } = useSettings();
 
-  // Convert temperatures for display if needed (they come in Celsius)
   const displayMaxTemp =
     settings.units.temperature === "celsius"
       ? maxTemp
@@ -39,150 +37,76 @@ const DayItem: React.FC<DayItemProps> = ({
       ? minTemp
       : AppConfig.utils.convertTemperature(minTemp, "fahrenheit");
 
-  // Calculate temperature difference using converted temperatures
-  const tempDiff = displayMaxTemp - displayMinTemp;
-  // Adjust temperature range based on unit
-  const tempRange = settings.units.temperature === "celsius" ? 40 : 72; // 40°C ≈ 72°F
-  const rangeWidth = Math.min(100, (tempDiff / tempRange) * 100);
+  const maxTempCelsius = maxTemp;
 
-  // Use original Celsius temperatures for color determination
-  const maxTempCelsius = maxTemp; // Already in Celsius from API
-
-  // Determine weather-specific accent colors
-  const getWeatherAccent = () => {
-    const icon = weatherInfo.icon;
-    if (icon.includes("sun")) return "from-yellow-400 to-orange-400";
-    if (icon.includes("cloud")) return "from-blue-300 to-gray-400";
-    if (icon.includes("rain")) return "from-blue-400 to-blue-600";
-    if (icon.includes("snow")) return "from-blue-100 to-blue-300";
-    if (icon.includes("fog")) return "from-gray-300 to-gray-500";
-    if (icon.includes("thunder")) return "from-yellow-400 to-purple-500";
-    return "from-blue-400 to-indigo-500";
+  const getTempColor = (temp: number) => {
+    if (temp >= 35) return "text-red-500"; // Extreme heat
+    if (temp >= 30) return "text-red-400"; // Very hot
+    if (temp >= 25) return "text-orange-400"; // Hot
+    if (temp >= 20) return "text-orange-300"; // Warm
+    if (temp >= 15) return "text-yellow-300"; // Mild
+    if (temp >= 10) return "text-green-300"; // Cool
+    if (temp >= 5) return "text-blue-300"; // Cold
+    if (temp >= 0) return "text-blue-400"; // Very cold
+    if (temp >= -5) return "text-indigo-400"; // Freezing
+    return "text-indigo-500"; // Extreme cold
   };
 
   return (
-    <motion.div
-      className={`relative overflow-hidden flex items-center p-3 rounded-xl transition-all ${
-        isToday
-          ? "bg-gradient-to-r from-white/25 to-white/15 backdrop-blur-sm border border-white/20 shadow-lg"
-          : "bg-white/10 backdrop-blur-sm border border-white/10 hover:bg-white/15 hover:border-white/20"
-      }`}
-      whileHover={{ scale: 1.01, y: -2 }}
-      transition={{ type: "spring", stiffness: 400, damping: 17 }}
+    <div
+      className={`
+        relative flex items-center px-4 py-3 rounded-xl
+        backdrop-blur-sm border gap-3
+        ${
+          isToday
+            ? "bg-white/20 border-white/30"
+            : "bg-white/10 border-white/10"
+        }
+      `}
     >
-      {/* Visual accent based on weather */}
-      <div
-        className={`absolute left-0 top-0 h-full w-1.5 bg-gradient-to-b ${getWeatherAccent()}`}
-        style={{ opacity: isToday ? 1 : 0.7 }}
-      />
-
-      {/* Today indicator */}
-      {isToday && (
-        <div className="absolute right-3 top-3">
-          <div className="px-2 py-0.5 rounded-full bg-white/20 backdrop-blur-sm border border-white/30">
-            <span className="text-xs font-semibold text-white">Today</span>
-          </div>
-        </div>
-      )}
-
-      {/* Day of week and date */}
-      <div className="flex flex-col pl-2 w-[70px]">
-        <div className="font-medium text-sm text-white">
+      {/* Day info */}
+      <div className="flex flex-col min-w-[60px]">
+        <div className="font-semibold text-sm text-white">
           {isToday ? "Today" : formatDay(day)}
         </div>
-        <div className="text-xs text-white/70 font-medium">
-          {formatDate(day)}
-        </div>
+        <div className="text-xs text-white/70 mt-0.5">{formatDate(day)}</div>
       </div>
 
-      {/* Weather condition icon with subtle animation */}
-      <div className="ml-2 mr-4">
-        <motion.div
-          animate={{
-            y: [0, 2, 0],
-            rotate: weatherInfo.icon.includes("wind") ? [0, 2, 0, -2, 0] : 0,
-          }}
-          transition={{
-            duration: 4,
-            repeat: Infinity,
-            repeatType: "reverse",
-          }}
-        >
-          <WeatherIcon type={weatherInfo.icon} />
-          {/* Subtle glow effect behind icon */}
-          <div
-            className="absolute inset-0 -z-10 blur-md opacity-30"
-            style={{
-              backgroundColor: weatherInfo.icon.includes("sun")
-                ? "rgba(252, 211, 77, 0.3)"
-                : weatherInfo.icon.includes("rain")
-                ? "rgba(96, 165, 250, 0.2)"
-                : weatherInfo.icon.includes("snow")
-                ? "rgba(241, 245, 249, 0.2)"
-                : "rgba(255, 255, 255, 0.1)",
-              width: "40px",
-              height: "40px",
-              borderRadius: "50%",
-              top: "50%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-            }}
-          />
-        </motion.div>
+      {/* Weather icon */}
+      <div className="flex items-center justify-center w-8">
+        <WeatherIcon type={weatherInfo.icon} />
       </div>
 
-      {/* Weather condition text */}
-      <div className="flex-grow">
-        <span className="text-sm font-medium text-white">
+      {/* Weather info and precipitation */}
+      <div className="flex-grow flex items-center gap-3">
+        <span className="text-sm font-medium text-white/90 flex-grow">
           {weatherInfo.label}
         </span>
         {hasPrecip && (
-          <div className="flex items-center mt-1">
-            <div className="relative h-1.5 w-full max-w-[100px] bg-blue-900/20 rounded-full overflow-hidden">
-              <motion.div
-                className="absolute left-0 top-0 h-full bg-gradient-to-r from-blue-300 to-blue-500"
+          <div className="flex items-center gap-1.5">
+            <div className="h-1 w-12 bg-blue-900/20 rounded-full overflow-hidden">
+              <div
+                className="h-full bg-blue-400/70 rounded-full"
                 style={{ width: `${precipProbability}%` }}
-                initial={{ width: 0 }}
-                animate={{ width: `${precipProbability}%` }}
-                transition={{ duration: 1, delay: 0.2 }}
               />
             </div>
-            <span className="text-xs font-medium text-blue-200 ml-2">
+            <span className="text-xs font-medium text-blue-200 min-w-[28px]">
               {precipProbability}%
             </span>
           </div>
         )}
       </div>
 
-      {/* Temperature range with visual indicator */}
-      <div className="flex flex-col items-end space-y-1.5 ml-2">
-        <div className="flex items-center space-x-2 whitespace-nowrap">
-          <span className="font-bold text-sm">
-            {Math.round(displayMaxTemp)}°
-          </span>
-          <span className="text-sm text-white/70">
-            {Math.round(displayMinTemp)}°
-          </span>
-        </div>
-
-        <div className="w-20 h-1.5 bg-white/10 rounded-full overflow-hidden">
-          <div
-            className={`h-full ${
-              maxTempCelsius > 30
-                ? "bg-gradient-to-r from-orange-300 to-red-500"
-                : maxTempCelsius > 20
-                ? "bg-gradient-to-r from-yellow-300 to-orange-400"
-                : maxTempCelsius > 10
-                ? "bg-gradient-to-r from-green-300 to-green-500"
-                : maxTempCelsius > 0
-                ? "bg-gradient-to-r from-blue-300 to-indigo-500"
-                : "bg-gradient-to-r from-blue-300 to-blue-600"
-            }`}
-            style={{ width: `${rangeWidth}%` }}
-          />
-        </div>
+      {/* Temperature */}
+      <div className="flex items-center gap-2 min-w-[80px] justify-end">
+        <span className={`font-bold text-sm ${getTempColor(maxTempCelsius)}`}>
+          {Math.round(displayMaxTemp)}°
+        </span>
+        <span className="text-sm text-white/60">
+          {Math.round(displayMinTemp)}°
+        </span>
       </div>
-    </motion.div>
+    </div>
   );
 };
 

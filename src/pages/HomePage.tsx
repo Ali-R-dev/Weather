@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useWeather } from "../context/WeatherContext";
 import useGeolocation from "../hooks/useGeolocation";
@@ -15,7 +15,7 @@ import BackgroundEffect from "../components/effects/BackgroundEffect";
 export default function HomePage() {
   const { loading, error, weatherData, setLocation, lastUpdated } =
     useWeather();
-  const { location, loading: _geoLoading, error: _geoError } = useGeolocation();
+  const { location } = useGeolocation();
   const { defaultLocation } = useSavedLocations();
   const initialLoadCompleted = useRef(false);
   const geoLocationUsed = useRef(false);
@@ -51,46 +51,45 @@ export default function HomePage() {
         longitude: location.longitude,
       });
     }
-  }, [defaultLocation, location, loading, setLocation, weatherData]);
-
-  // Animation variants
-  const pageVariants = {
-    initial: { opacity: 0 },
-    enter: { opacity: 1, transition: { duration: 0.3 } },
-    exit: { opacity: 0, transition: { duration: 0.2 } },
-  };
+  }, [weatherData, defaultLocation, location, loading, setLocation]);
 
   return (
     <motion.div
-      className="weather-app"
-      initial="initial"
-      animate="enter"
-      exit="exit"
-      variants={pageVariants}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="min-h-screen flex flex-col relative bg-gradient-to-br from-sky-400 to-blue-500"
+      style={{
+        willChange: "transform",
+        backfaceVisibility: "hidden",
+        transform: "translateZ(0)",
+        perspective: "1000px",
+      }}
     >
-      {weatherData && (
-        <BackgroundEffect
-          weatherCode={weatherData.current.weather_code}
-          isDay={weatherData.current.is_day === 1}
-        />
-      )}
+      {/* Background Effect - Lazy loaded with Suspense */}
+      <Suspense fallback={null}>
+        {weatherData && (
+          <BackgroundEffect
+            weatherCode={weatherData.current.weather_code}
+            isDay={weatherData.current.is_day === 1}
+          />
+        )}
+      </Suspense>
 
-      <div className="min-h-screen flex flex-col w-full relative z-10">
-        {/* Header with search */}
-        <header className="app-header pt-safe transition-all duration-300">
-          <div className="max-w-screen-sm mx-auto w-full px-4 py-4 flex justify-between items-center">
-            <div className="flex-grow">
-              <MiniSearchBar
-                onFocus={() => setShowSearchResults(true)}
-                onSelect={() => setShowSearchResults(false)}
-                isActive={showSearchResults}
-              />
-            </div>
+      <div className="relative z-10 flex-1 flex flex-col">
+        <main className="flex-1 container mx-auto px-4 py-4 flex flex-col">
+          {/* Search bar and settings */}
+          <div className="flex items-center justify-between mb-2">
+            <MiniSearchBar
+              onFocus={() => setShowSearchResults(true)}
+              onSelect={() => setShowSearchResults(false)}
+              isActive={showSearchResults}
+            />
 
             <button
               onClick={() => setShowSettings(true)}
               className="ml-3 p-2 rounded-full hover:bg-white/10 transition-colors"
               aria-label="Settings"
+              style={{ willChange: "transform" }}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -125,76 +124,91 @@ export default function HomePage() {
           {/* Search results overlay */}
           <AnimatePresence>
             {showSearchResults && (
-              <div className="search-overlay bg-gradient-to-b from-black/90 to-black/70 backdrop-blur-sm pt-20 px-3 pb-3 max-h-screen overflow-auto md:pt-24 fixed inset-0">
-                <div className="max-w-lg mx-auto">
-                  <LocationSearch
-                    compact={true}
-                    onLocationSelect={() => setShowSearchResults(false)}
-                  />
-                </div>
-              </div>
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                className="absolute top-16 left-0 right-0 z-50 mx-4"
+                style={{ willChange: "transform" }}
+              >
+                <LocationSearch
+                  onLocationSelect={() => setShowSearchResults(false)}
+                />
+              </motion.div>
             )}
           </AnimatePresence>
-        </header>
 
-        <main className="weather-content flex-1">
-          {/* Weather data content */}
-          {weatherData && (
-            <div className="flex flex-col flex-grow">
-              {/* Current weather */}
-              <div className="flex-grow flex flex-col justify-end p-5 pb-0">
-                <CurrentWeather data={weatherData} />
-              </div>
+          {/* Weather content */}
+          {weatherData && !showSearchResults && (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2 }}
+              className="mt-4"
+              style={{ willChange: "transform" }}
+            >
+              <CurrentWeather data={weatherData} />
 
-              {/* Forecast section */}
-              <div className="mt-auto p-5 pt-2">
-                {/* Forecast tabs */}
-                <div className="mb-4 flex items-center justify-between">
-                  <h2 className="text-xl font-bold text-white tracking-tight">
-                    Forecast
-                  </h2>
-                  <div className="forecast-tabs">
-                    <button
-                      onClick={() => setActiveTab("hourly")}
-                      className={`tab-button ${
-                        activeTab === "hourly" ? "tab-active" : "tab-inactive"
-                      }`}
-                    >
-                      Hourly
-                    </button>
-                    <button
-                      onClick={() => setActiveTab("daily")}
-                      className={`tab-button ${
-                        activeTab === "daily" ? "tab-active" : "tab-inactive"
-                      }`}
-                    >
-                      7-Day
-                    </button>
-                  </div>
+              {/* Forecast tabs */}
+              <div className="mt-8">
+                <div className="flex justify-center space-x-4 mb-6">
+                  <button
+                    onClick={() => setActiveTab("hourly")}
+                    className={`px-4 py-2 rounded-lg transition-colors ${
+                      activeTab === "hourly"
+                        ? "bg-white/20 text-white"
+                        : "text-white/60 hover:text-white"
+                    }`}
+                  >
+                    Hourly
+                  </button>
+                  <button
+                    onClick={() => setActiveTab("daily")}
+                    className={`px-4 py-2 rounded-lg transition-colors ${
+                      activeTab === "daily"
+                        ? "bg-white/20 text-white"
+                        : "text-white/60 hover:text-white"
+                    }`}
+                  >
+                    Daily
+                  </button>
                 </div>
 
-                {/* Forecast content */}
-                <div className="current-weather-card">
-                  <div className="p-4 h-full">
-                    {activeTab === "hourly" ? (
+                <AnimatePresence mode="wait">
+                  {activeTab === "hourly" ? (
+                    <motion.div
+                      key="hourly"
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: 20 }}
+                      transition={{ duration: 0.2 }}
+                      style={{ willChange: "transform" }}
+                    >
                       <HourlyForecast hourlyData={weatherData.hourly} />
-                    ) : (
+                    </motion.div>
+                  ) : (
+                    <motion.div
+                      key="daily"
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: 20 }}
+                      transition={{ duration: 0.2 }}
+                      style={{ willChange: "transform" }}
+                    >
                       <DailyForecast dailyData={weatherData.daily} />
-                    )}
-                  </div>
-                </div>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
               </div>
+            </motion.div>
+          )}
+
+          {loading && !weatherData && (
+            <div className="flex-1 flex items-center justify-center">
+              <div className="text-white text-opacity-80">Loading...</div>
             </div>
           )}
 
-          {/* Loading state */}
-          {loading && (
-            <div className="flex items-center justify-center h-64">
-              <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white"></div>
-            </div>
-          )}
-
-          {/* Error state */}
           {error && (
             <div className="text-center py-8 text-red-400">
               <div className="text-3xl mb-2">😕</div>

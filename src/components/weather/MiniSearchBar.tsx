@@ -37,14 +37,17 @@ export default function MiniSearchBar({
   // Animation variants
   const searchBarVariants = {
     inactive: {
+      width: "320px",
       boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
       y: 0,
     },
     active: {
+      width: "320px",
       boxShadow: "0 8px 20px rgba(0,0,0,0.2)",
       y: -2,
     },
     hovered: {
+      width: "320px",
       boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
       y: -1,
     },
@@ -52,7 +55,7 @@ export default function MiniSearchBar({
 
   return (
     <motion.div
-      className="relative w-full max-w-md mx-auto"
+      className="relative mx-auto"
       initial="inactive"
       animate={isActive ? "active" : isHovered ? "hovered" : "inactive"}
       variants={searchBarVariants}
@@ -67,7 +70,7 @@ export default function MiniSearchBar({
     >
       <motion.div
         className={`flex items-center bg-gradient-to-r from-white/20 via-white/15 to-white/10 backdrop-blur-md 
-                  rounded-full pl-3 pr-2 py-2 border border-white/20 transition-all`}
+                  rounded-full pl-3 pr-2 py-1.5 border border-white/20 transition-all overflow-hidden`}
         animate={{
           borderColor: isActive
             ? "rgba(255,255,255,0.3)"
@@ -83,7 +86,7 @@ export default function MiniSearchBar({
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 20 20"
             fill="currentColor"
-            className="w-5 h-5"
+            className="w-4 h-4"
           >
             <path
               fillRule="evenodd"
@@ -95,7 +98,7 @@ export default function MiniSearchBar({
 
         <input
           type="text"
-          className="bg-transparent border-none outline-none text-white flex-grow placeholder-white/70 text-sm md:text-base"
+          className="bg-transparent border-none outline-none text-white flex-grow placeholder-white/70 text-sm w-full"
           placeholder={isActive ? "Search for a location..." : locationName}
           value={query}
           onChange={(e) => setQuery(e.target.value)}
@@ -106,7 +109,7 @@ export default function MiniSearchBar({
           {isActive ? (
             <motion.button
               onClick={onSelect}
-              className="ml-1 p-1.5 rounded-full hover:bg-white/20 transition-colors"
+              className="ml-1 p-1 rounded-full hover:bg-white/20 transition-colors shrink-0"
               initial={{ opacity: 0, rotate: -90, scale: 0.8 }}
               animate={{ opacity: 1, rotate: 0, scale: 1 }}
               exit={{ opacity: 0, rotate: 90, scale: 0.8 }}
@@ -120,7 +123,7 @@ export default function MiniSearchBar({
                 viewBox="0 0 24 24"
                 strokeWidth={2.5}
                 stroke="currentColor"
-                className="w-4 h-4 text-white/90"
+                className="w-3.5 h-3.5 text-white/90"
               >
                 <path
                   strokeLinecap="round"
@@ -131,7 +134,7 @@ export default function MiniSearchBar({
             </motion.button>
           ) : isLocationLoading ? (
             <motion.div
-              className="ml-1 p-1.5"
+              className="ml-1 p-1 shrink-0"
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1, rotate: 360 }}
               transition={{
@@ -140,7 +143,7 @@ export default function MiniSearchBar({
               }}
             >
               <svg
-                className="animate-spin h-4 w-4 text-white/90"
+                className="animate-spin h-3.5 w-3.5 text-white/90"
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 24 24"
@@ -211,7 +214,7 @@ export default function MiniSearchBar({
                   }
                 );
               }}
-              className="ml-1 p-1.5 rounded-full hover:bg-white/20 transition-colors"
+              className="ml-1 p-1 rounded-full hover:bg-white/20 transition-colors shrink-0"
               title="Use current location"
               initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
@@ -226,7 +229,7 @@ export default function MiniSearchBar({
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 20 20"
                 fill="currentColor"
-                className="w-4 h-4 text-white/90"
+                className="w-3.5 h-3.5 text-white/90"
               >
                 <path
                   fillRule="evenodd"

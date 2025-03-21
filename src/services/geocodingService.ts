@@ -2,6 +2,8 @@ import type { GeocodingResult } from "../types/geocoding.types";
 export type { GeocodingResult };
 
 const API_ENDPOINT = "https://geocoding-api.open-meteo.com/v1/search";
+const REVERSE_GEOCODING_ENDPOINT =
+  "https://nominatim.openstreetmap.org/reverse";
 
 interface GeocodingParams {
   name?: string;
@@ -41,28 +43,49 @@ export async function searchLocations(
 }
 
 /**
- * Get location information from coordinates using Open-Meteo Geocoding API
+ * Get location information from coordinates using Nominatim API
  */
 export async function reverseGeocode(
   latitude: number,
   longitude: number
 ): Promise<GeocodingResult | null> {
   try {
-    const coordinates = `${latitude.toFixed(4)},${longitude.toFixed(4)}`;
-    const url = new URL(API_ENDPOINT);
-    url.searchParams.append("name", coordinates);
-    url.searchParams.append("count", "1");
-    url.searchParams.append("language", "en");
+    const url = new URL(REVERSE_GEOCODING_ENDPOINT);
+    url.searchParams.append("lat", latitude.toString());
+    url.searchParams.append("lon", longitude.toString());
     url.searchParams.append("format", "json");
+    url.searchParams.append("zoom", "10"); // City level zoom
+    url.searchParams.append("addressdetails", "1");
 
-    const response = await fetch(url.toString());
+    const response = await fetch(url.toString(), {
+      headers: {
+        "User-Agent":
+          "Weather App (https://github.com/yourusername/weather-app)", // Required by Nominatim ToS
+      },
+    });
 
     if (!response.ok) {
       throw new Error(`Reverse geocoding error: ${response.status}`);
     }
 
     const data = await response.json();
-    return data.results?.[0] || null;
+
+    // Convert Nominatim response format to our GeocodingResult format
+    return {
+      id: parseInt(data.place_id), // Nominatim place_id as our id
+      name:
+        data.address.city ||
+        data.address.town ||
+        data.address.village ||
+        data.address.municipality ||
+        data.name,
+      country: data.address.country,
+      admin1: data.address.state || data.address.province,
+      admin2: data.address.county || data.address.district,
+      latitude: parseFloat(data.lat),
+      longitude: parseFloat(data.lon),
+      timezone: "auto", // We don't get timezone from Nominatim
+    };
   } catch (error) {
     console.error("Failed to reverse geocode:", error);
     return null;
