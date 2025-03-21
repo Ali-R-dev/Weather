@@ -7,6 +7,11 @@ import PrivacyPolicyModal from "./components/PrivacyPolicyModal";
 import ErrorBoundary from "./components/common/ErrorBoundary";
 import Footer from "./components/layout/Footer";
 import "./premium-styles.css";
+import {
+  initializeAllMonitoring,
+  markPerformance,
+  measureBetweenMarks,
+} from "./utils/performance";
 
 // Lazy load heavyweight components
 const HomePage = lazy(() => import("./pages/HomePage"));
@@ -22,6 +27,12 @@ function App() {
   const [initialLoading, setInitialLoading] = useState(true);
 
   useEffect(() => {
+    // Initialize performance monitoring
+    initializeAllMonitoring();
+
+    // Mark the start of app initialization
+    markPerformance("app-mount-start");
+
     // Check if it's the first visit
     const hasAcceptedPrivacy = localStorage.getItem("privacyPolicyAccepted");
     if (!hasAcceptedPrivacy) {
@@ -44,7 +55,16 @@ function App() {
       setInitialLoading(false);
     }, 2000);
 
-    return () => clearTimeout(timer);
+    return () => {
+      // Measure total mount time when component unmounts
+      markPerformance("app-mount-end");
+      measureBetweenMarks(
+        "app-mount-start",
+        "app-mount-end",
+        "Total App Mount Time"
+      );
+      clearTimeout(timer);
+    };
   }, []);
 
   return (
