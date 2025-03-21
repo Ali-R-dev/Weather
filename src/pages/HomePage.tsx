@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, Suspense } from "react";
+import { useEffect, useRef, useState, Suspense, memo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useWeather } from "../context/WeatherContext";
 import useGeolocation from "../hooks/useGeolocation";
@@ -10,6 +10,10 @@ import MiniSearchBar from "../components/weather/MiniSearchBar";
 import SettingsPanel from "../components/settings/SettingsPanel";
 import { timeAgo } from "../utils/dateUtils";
 import BackgroundEffect from "../components/effects/BackgroundEffect";
+
+// Memoize the forecast components to prevent unnecessary re-renders
+const MemoizedHourlyForecast = memo(HourlyForecast);
+const MemoizedDailyForecast = memo(DailyForecast);
 
 export default function HomePage() {
   const { loading, error, weatherData, setLocation, lastUpdated } =
@@ -74,24 +78,16 @@ export default function HomePage() {
   }, [showSearchResults]);
 
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      className="min-h-screen flex flex-col relative bg-gradient-to-br from-sky-400 to-blue-500"
-      style={{
-        willChange: "transform",
-        backfaceVisibility: "hidden",
-        transform: "translateZ(0)",
-        perspective: "1000px",
-      }}
-    >
+    <div className="min-h-screen flex flex-col relative bg-gradient-to-br from-sky-400 to-blue-500">
       {/* Background Effect - Lazy loaded with Suspense */}
       <Suspense fallback={null}>
         {weatherData && (
-          <BackgroundEffect
-            weatherCode={weatherData.current.weather_code}
-            isDay={weatherData.current.is_day === 1}
-          />
+          <div className="fixed inset-0 pointer-events-none">
+            <BackgroundEffect
+              weatherCode={weatherData.current.weather_code}
+              isDay={weatherData.current.is_day === 1}
+            />
+          </div>
         )}
       </Suspense>
 
@@ -112,7 +108,6 @@ export default function HomePage() {
               onClick={() => setShowSettings(true)}
               className="ml-3 p-2 rounded-full hover:bg-white/10 transition-colors"
               aria-label="Settings"
-              style={{ willChange: "transform" }}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -151,7 +146,6 @@ export default function HomePage() {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
               className="mt-4"
-              style={{ willChange: "transform" }}
             >
               <CurrentWeather data={weatherData} />
 
@@ -188,9 +182,8 @@ export default function HomePage() {
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: 20 }}
                       transition={{ duration: 0.2 }}
-                      style={{ willChange: "transform" }}
                     >
-                      <HourlyForecast hourlyData={weatherData.hourly} />
+                      <MemoizedHourlyForecast hourlyData={weatherData.hourly} />
                     </motion.div>
                   ) : (
                     <motion.div
@@ -199,9 +192,8 @@ export default function HomePage() {
                       animate={{ opacity: 1, x: 0 }}
                       exit={{ opacity: 0, x: 20 }}
                       transition={{ duration: 0.2 }}
-                      style={{ willChange: "transform" }}
                     >
-                      <DailyForecast dailyData={weatherData.daily} />
+                      <MemoizedDailyForecast dailyData={weatherData.daily} />
                     </motion.div>
                   )}
                 </AnimatePresence>
@@ -246,6 +238,6 @@ export default function HomePage() {
         isOpen={showSettings}
         onClose={() => setShowSettings(false)}
       />
-    </motion.div>
+    </div>
   );
 }
