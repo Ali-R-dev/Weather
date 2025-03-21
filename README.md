@@ -1,93 +1,90 @@
-<div align="center">
+# Weather App
 
-# ☁️ Weather App ☀️
+A modern, responsive weather application built with React and TypeScript. View live at [weather.araza.me](https://weather.araza.me)
 
-**Elegantly experience weather through your screen.**
+![Weather App Screenshot](./public/screenshot.png)
 
-A sophisticated, responsive application delivering real-time meteorological data with stunning visual atmospheres.
+## Features
 
-[![Live Demo](https://img.shields.io/badge/LIVE-DEMO-brightgreen?style=for-the-badge&logo=vercel)](https://weather.araza.me)
+- 🌡️ Real-time weather data with hourly and daily forecasts
+- 🔍 Location search with recent locations history
+- 📍 Default location management
+- 🌗 Dynamic weather backgrounds and animations
+- 🔄 Auto-refresh weather data
+- 📱 Fully responsive design
+- ⚡ Fast and optimized performance
+- 🎨 Beautiful UI with smooth animations
+- 🌡️ Temperature unit switching (°C/°F)
 
-![Weather App Banner](https://weather.araza.me/banner.png)
+## Tech Stack
 
-</div>
+- React 18
+- TypeScript
+- Tailwind CSS
+- Framer Motion
+- Open-Meteo API
+- Vite
 
-## ✨ Experience
+## Getting Started
 
-Weather App transforms mundane forecasts into immersive experiences that capture nature's essence:
+### Prerequisites
 
-- **Adaptive Theming** — Interface automatically transforms with weather conditions and day/night cycle
-- **Dynamic Weather Effects** — Raindrops cascade down your screen, snowflakes drift gently, fog rolls in with haunting beauty
-- **Accessible Interface** — Essential weather information at a glance, detailed data in an organized layout
+- Node.js 16+
+- npm or yarn
 
-## 🌡️ Features
+### Installation
 
-- **Live Weather Effects** — Rain, snow, lightning, fog, and sunshine visual simulations
-- **Current Conditions** — Temperature, humidity, wind speed, precipitation, and UV index with health guidance
-- **Forecast Options** — Toggle between hourly and 7-day weather forecasts
-- **Smart Location** — Automatic geolocation with manual location search capabilities
-- **Responsive Design** — Optimized experience from mobile devices to desktop screens
-
-## 📱 Visual Gallery
-
-<div align="center">
-  <img src="https://weather.araza.me/screenshot-sunny.png" width="49%" alt="Sun-drenched interface" />
-  <img src="https://weather.araza.me/screenshot-rainy.png" width="49%" alt="Rain-soaked experience" />
-  <img src="https://weather.araza.me/screenshot-snowy.png" width="49%" alt="Snow-covered display" />
-  <img src="https://weather.araza.me/screenshot-night.png" width="49%" alt="Moonlit perspective" />
-</div>
-
-## 🛠️ Crafted With
-
-- **Framework** — React with TypeScript for type-safe development
-- **Styling** — TailwindCSS for utility-first responsive design
-- **Animation** — CSS animations for weather effects
-- **Data Source** — Open Meteo API for reliable global weather data
-
-## ⚡ Quick Start
-
+1. Clone the repository
 ```bash
-# Clone the repository
-git clone https://github.com/yourusername/weather-app.git
+git clone https://github.com/Ali-R-dev/Weather.git
+cd Weather
+```
 
-# Enter the project directory
-cd weather-app
-
-# Install dependencies
+2. Install dependencies
+```bash
 npm install
+# or
+yarn
+```
 
-# Start development server
+3. Start the development server
+```bash
 npm run dev
+# or
+yarn dev
 ```
 
-## 🧠 Architecture
-
-```
-/src
-├── /components        # UI components
-│   ├── /effects       # Weather visual effects
-│   └── /weather       # Weather information displays
-├── /context           # React context for state management
-├── /pages             # Page components
-├── /types             # TypeScript interfaces
-└── /utils             # Helper functions
+4. Build for production
+```bash
+npm run build
+# or
+yarn build
 ```
 
-## 🔮 Planned Features
+## API Usage
 
-- Multiple saved locations
-- Weather alerts for severe conditions
-- Historical weather data views
-- Dark/light theme preferences
+This app uses the [Open-Meteo API](https://open-meteo.com/) for weather data. The API is free to use and doesn't require an API key.
 
-## 👤 Creator
+Features include:
+- Current weather conditions
+- Hourly forecasts (48 hours)
+- Daily forecasts (7 days)
+- Location geocoding
 
-[Your Name](https://github.com/yourusername) — Web developer & weather enthusiast
+## Contributing
 
-<div align="center">
+Contributions are welcome! Please feel free to submit a Pull Request.
 
----
+## Contact
 
-Powered by [Open Meteo](https://open-meteo.com/) • Released under MIT License
+For any questions or feedback, please visit [araza.me/#contact](https://araza.me/#contact)
 
-</div>
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Acknowledgments
+
+- Weather data provided by [Open-Meteo](https://open-meteo.com/)
+- Icons and animations powered by custom components
+- Deployed and hosted on Vercel
