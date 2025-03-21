@@ -30,7 +30,8 @@ export default function MiniSearchBar({
   const { weatherData, setLocation } = useWeather();
   const [isHovered, setIsHovered] = useState(false);
   const [isLocationLoading, setIsLocationLoading] = useState(false);
-  const { saveLocation } = useSavedLocations();
+  const { saveLocation, setAsDefault, removeLocation, defaultLocation } =
+    useSavedLocations();
   const searchTimeout = useRef<number | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
@@ -107,16 +108,64 @@ export default function MiniSearchBar({
     localStorage.setItem("recentLocations", JSON.stringify(updatedRecent));
   };
 
+  // Handle removing a location
+  const handleRemoveLocation = (e: React.MouseEvent, locationId: number) => {
+    e.stopPropagation();
+    // Remove from recent locations
+    const updatedRecent = recentlyUsed.filter((loc) => loc.id !== locationId);
+    setRecentlyUsed(updatedRecent);
+    localStorage.setItem("recentLocations", JSON.stringify(updatedRecent));
+    // Remove from saved locations
+    removeLocation(locationId);
+  };
+
+  // Handle setting default location
+  const handleSetDefault = async (e: React.MouseEvent, locationId: number) => {
+    e.stopPropagation();
+    setAsDefault(locationId);
+
+    // Find the location in recently used
+    const location = recentlyUsed.find((loc) => loc.id === locationId);
+    if (location) {
+      // Update the location in state and fetch weather
+      setLocation(
+        {
+          latitude: location.latitude,
+          longitude: location.longitude,
+          name: location.name,
+          country: location.country,
+          admin1: location.admin1,
+        },
+        true
+      ); // Explicitly fetch weather for default location
+    }
+  };
+
   // Select a location from search results
-  const handleSelectLocation = (location: GeocodingResult) => {
-    setLocation({
-      latitude: location.latitude,
-      longitude: location.longitude,
-      name: location.name,
-      country: location.country,
-      admin1: location.admin1,
-      admin2: location.admin2,
-    });
+  const handleSelectLocation = (
+    location: GeocodingResult | SavedLocation,
+    event?: React.MouseEvent
+  ) => {
+    // Don't update weather if clicking remove/default buttons
+    if (
+      event?.target &&
+      (event.target as HTMLElement).closest(".action-button")
+    ) {
+      return;
+    }
+
+    // Update location without fetching weather initially
+    setLocation(
+      {
+        latitude: location.latitude,
+        longitude: location.longitude,
+        name: location.name,
+        country: location.country,
+        admin1: location.admin1,
+        admin2: "admin2" in location ? location.admin2 : undefined,
+      },
+      false
+    );
 
     // Save to localStorage
     const savedLocation: SavedLocation = {
@@ -126,6 +175,7 @@ export default function MiniSearchBar({
       longitude: location.longitude,
       country: location.country,
       admin1: location.admin1,
+      isDefault: defaultLocation?.id === location.id,
     };
 
     saveLocation(savedLocation);
@@ -135,18 +185,31 @@ export default function MiniSearchBar({
     onSelect();
   };
 
+  // Load default location on mount
+  useEffect(() => {
+    if (defaultLocation) {
+      setLocation({
+        latitude: defaultLocation.latitude,
+        longitude: defaultLocation.longitude,
+        name: defaultLocation.name,
+        country: defaultLocation.country,
+        admin1: defaultLocation.admin1,
+      });
+    }
+  }, [defaultLocation, setLocation]);
+
   // Animation variants
   const searchBarVariants = {
     inactive: {
-      boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+      boxShadow: "0 2px 6px rgba(0, 0, 0, 0.1)",
       y: 0,
     },
     active: {
-      boxShadow: "0 8px 20px rgba(0,0,0,0.2)",
+      boxShadow: "0 8px 20px rgba(0, 0, 0, 0.2)",
       y: -2,
     },
     hovered: {
-      boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+      boxShadow: "0 4px 12px rgba(0, 0, 0, 0.15)",
       y: -1,
     },
   };
@@ -172,8 +235,8 @@ export default function MiniSearchBar({
                   rounded-full pl-3 pr-2 py-1.5 border border-white/20 transition-all overflow-hidden`}
         animate={{
           borderColor: isActive
-            ? "rgba(255,255,255,0.3)"
-            : "rgba(255,255,255,0.2)",
+            ? "rgba(255, 255, 255, 0.3)"
+            : "rgba(255, 255, 255, 0.2)",
         }}
       >
         <motion.div
@@ -220,7 +283,7 @@ export default function MiniSearchBar({
               animate={{ opacity: 1, rotate: 0, scale: 1 }}
               exit={{ opacity: 0, rotate: 90, scale: 0.8 }}
               transition={{ duration: 0.2 }}
-              whileHover={{ backgroundColor: "rgba(255,255,255,0.1)" }}
+              whileHover={{ backgroundColor: "rgba(255, 255, 255, 0.1)" }}
               whileTap={{ scale: 0.9 }}
             >
               <svg
@@ -350,15 +413,15 @@ export default function MiniSearchBar({
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.1 }}
               >
-                <div className="px-3 py-1.5 text-[10px] uppercase tracking-wider font-medium text-white/50">
+                <div className="px-4 py-2 text-[10px] uppercase tracking-wider font-medium text-white/50">
                   Recent
                 </div>
-                <div className="px-2 py-0.5">
+                <div className="px-2 pb-2">
                   {recentlyUsed.map((location, index) => (
                     <motion.div
                       key={`recent-${location.id}`}
-                      className="mx-1 px-2 py-1.5 cursor-pointer flex justify-between items-center rounded-lg bg-transparent hover:bg-white/10 transition-all duration-200"
-                      onClick={() => handleSelectLocation(location)}
+                      className="mx-1 px-2 py-2 cursor-pointer flex justify-between items-center rounded-lg bg-transparent hover:bg-white/10 transition-all duration-200 group"
+                      onClick={(e) => handleSelectLocation(location, e)}
                       initial={{ opacity: 0, y: 5 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.1 + index * 0.05 }}
@@ -389,6 +452,56 @@ export default function MiniSearchBar({
                           </div>
                         </div>
                       </div>
+                      <div className="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <motion.button
+                          onClick={(e) => handleSetDefault(e, location.id)}
+                          className={`p-1 rounded-full hover:bg-white/10 transition-colors ${
+                            defaultLocation?.id === location.id
+                              ? "text-yellow-300"
+                              : "text-white/70 hover:text-white/90"
+                          }`}
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.95 }}
+                          title={
+                            defaultLocation?.id === location.id
+                              ? "Default location"
+                              : "Set as default"
+                          }
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                            className="w-3.5 h-3.5"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M10.868 2.884c-.321-.772-1.415-.772-1.736 0l-1.83 4.401-4.753.381c-.833.067-1.171 1.107-.536 1.651l3.62 3.102-1.106 4.637c-.194.813.691 1.456 1.405 1.02L10 15.591l4.069 2.485c.713.436 1.598-.207 1.404-1.02l-1.106-4.637 3.62-3.102c.635-.544.297-1.584-.536-1.65l-4.752-.382-1.831-4.401z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                        </motion.button>
+                        <motion.button
+                          onClick={(e) => handleRemoveLocation(e, location.id)}
+                          className="p-1 rounded-full hover:bg-white/10 text-white/70 hover:text-white/90 transition-colors"
+                          whileHover={{ scale: 1.1 }}
+                          whileTap={{ scale: 0.95 }}
+                          title="Remove from recent"
+                        >
+                          <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            viewBox="0 0 20 20"
+                            fill="currentColor"
+                            className="w-3.5 h-3.5"
+                          >
+                            <path
+                              fillRule="evenodd"
+                              d="M8.75 1A2.75 2.75 0 006 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 10.23 1.482l.149-.022.841 10.518A2.75 2.75 0 007.596 19h4.807a2.75 2.75 0 002.742-2.53l.841-10.52.149.023a.75.75 0 00.23-1.482A41.03 41.03 0 0014 4.193V3.75A2.75 2.75 0 0011.25 1h-2.5zM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4zM8.58 7.72a.75.75 0 00-1.5.06l.3 7.5a.75.75 0 101.5-.06l-.3-7.5zm4.34.06a.75.75 0 10-1.5-.06l-.3 7.5a.75.75 0 101.5.06l.3-7.5z"
+                              clipRule="evenodd"
+                            />
+                          </svg>
+                        </motion.button>
+                      </div>
                     </motion.div>
                   ))}
                 </div>
@@ -402,7 +515,7 @@ export default function MiniSearchBar({
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.3 }}
               >
-                <div className="px-3 py-1.5 text-[10px] uppercase tracking-wider font-medium text-white/50">
+                <div className="px-4 py-2 text-[10px] uppercase tracking-wider font-medium text-white/50">
                   Search results
                 </div>
                 <div className="px-2 py-0.5">
@@ -410,7 +523,7 @@ export default function MiniSearchBar({
                     <motion.div
                       key={location.id}
                       className="mx-1 px-2 py-1.5 cursor-pointer flex items-center justify-between rounded-lg bg-transparent hover:bg-white/10 transition-all duration-200"
-                      onClick={() => handleSelectLocation(location)}
+                      onClick={(e) => handleSelectLocation(location, e)}
                       initial={{ opacity: 0, y: 5 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ delay: 0.3 + index * 0.05 }}
