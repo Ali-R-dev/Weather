@@ -1,27 +1,15 @@
-import { useEffect, useRef, useState, Suspense, memo, lazy } from "react";
+import { useEffect, useRef, useState, Suspense } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import { useWeather } from "../context/WeatherContext";
 import useGeolocation from "../hooks/useGeolocation";
 import useSavedLocations from "../hooks/useSavedLocations";
 import CurrentWeather from "../components/weather/current";
+import HourlyForecast from "../components/weather/hourly";
+import DailyForecast from "../components/weather/daily";
 import MiniSearchBar from "../components/weather/MiniSearchBar";
 import SettingsPanel from "../components/settings/SettingsPanel";
 import { timeAgo } from "../utils/dateUtils";
 import BackgroundEffect from "../components/effects/BackgroundEffect";
-
-// Lazy load heavier components
-const HourlyForecast = lazy(() => import("../components/weather/hourly"));
-const DailyForecast = lazy(() => import("../components/weather/daily"));
-
-// Memoize the forecast components to prevent unnecessary re-renders
-const MemoizedHourlyForecast = memo(HourlyForecast);
-const MemoizedDailyForecast = memo(DailyForecast);
-
-// Simple loading component for lazy-loaded components
-const ForecastLoading = () => (
-  <div className="flex justify-center items-center p-10">
-    <div className="w-8 h-8 border-4 border-blue-300 border-t-transparent rounded-full animate-spin"></div>
-  </div>
-);
 
 export default function HomePage() {
   const { loading, error, weatherData, setLocation, lastUpdated } =
@@ -86,16 +74,24 @@ export default function HomePage() {
   }, [showSearchResults]);
 
   return (
-    <div className="min-h-screen flex flex-col relative bg-gradient-to-br from-sky-400 to-blue-500">
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      className="min-h-screen flex flex-col relative bg-gradient-to-br from-sky-400 to-blue-500"
+      style={{
+        willChange: "transform",
+        backfaceVisibility: "hidden",
+        transform: "translateZ(0)",
+        perspective: "1000px",
+      }}
+    >
       {/* Background Effect - Lazy loaded with Suspense */}
       <Suspense fallback={null}>
         {weatherData && (
-          <div className="fixed inset-0 pointer-events-none">
-            <BackgroundEffect
-              weatherCode={weatherData.current.weather_code}
-              isDay={weatherData.current.is_day === 1}
-            />
-          </div>
+          <BackgroundEffect
+            weatherCode={weatherData.current.weather_code}
+            isDay={weatherData.current.is_day === 1}
+          />
         )}
       </Suspense>
 
@@ -116,6 +112,7 @@ export default function HomePage() {
               onClick={() => setShowSettings(true)}
               className="ml-3 p-2 rounded-full hover:bg-white/10 transition-colors"
               aria-label="Settings"
+              style={{ willChange: "transform" }}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -149,7 +146,13 @@ export default function HomePage() {
 
           {/* Weather content */}
           {weatherData && !showSearchResults && (
-            <div className="mt-4 opacity-0 animate-fade-in">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2 }}
+              className="mt-4"
+              style={{ willChange: "transform" }}
+            >
               <CurrentWeather data={weatherData} />
 
               {/* Forecast tabs */}
@@ -177,19 +180,33 @@ export default function HomePage() {
                   </button>
                 </div>
 
-                <Suspense fallback={<ForecastLoading />}>
+                <AnimatePresence mode="wait">
                   {activeTab === "hourly" ? (
-                    <div key="hourly" className="animate-slide-in">
-                      <MemoizedHourlyForecast hourlyData={weatherData.hourly} />
-                    </div>
+                    <motion.div
+                      key="hourly"
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: 20 }}
+                      transition={{ duration: 0.2 }}
+                      style={{ willChange: "transform" }}
+                    >
+                      <HourlyForecast hourlyData={weatherData.hourly} />
+                    </motion.div>
                   ) : (
-                    <div key="daily" className="animate-slide-in">
-                      <MemoizedDailyForecast dailyData={weatherData.daily} />
-                    </div>
+                    <motion.div
+                      key="daily"
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      exit={{ opacity: 0, x: 20 }}
+                      transition={{ duration: 0.2 }}
+                      style={{ willChange: "transform" }}
+                    >
+                      <DailyForecast dailyData={weatherData.daily} />
+                    </motion.div>
                   )}
-                </Suspense>
+                </AnimatePresence>
               </div>
-            </div>
+            </motion.div>
           )}
 
           {loading && !weatherData && (
@@ -212,30 +229,6 @@ export default function HomePage() {
           onClose={() => setShowSettings(false)}
         />
       </div>
-
-      {/* Settings Panel */}
-      <SettingsPanel
-        isOpen={showSettings}
-        onClose={() => setShowSettings(false)}
-      />
-
-      {/* Add CSS animations */}
-      <style>{`
-        @keyframes fadeIn {
-          from { opacity: 0; }
-          to { opacity: 1; }
-        }
-        @keyframes slideIn {
-          from { opacity: 0; transform: translateX(-20px); }
-          to { opacity: 1; transform: translateX(0); }
-        }
-        .animate-fade-in {
-          animation: fadeIn 0.3s ease-in-out forwards;
-        }
-        .animate-slide-in {
-          animation: slideIn 0.2s ease-out forwards;
-        }
-      `}</style>
-    </div>
+    </motion.div>
   );
 }

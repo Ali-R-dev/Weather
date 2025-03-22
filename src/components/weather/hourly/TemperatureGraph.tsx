@@ -51,35 +51,25 @@ const TemperatureGraph: React.FC<TemperatureGraphProps> = ({
       : AppConfig.utils.convertTemperature(temp, "fahrenheit")
   );
 
-  // Memoize graph calculations to prevent recalculation on each render
-  const graphData = useMemo(() => {
-    // Find min and max temperatures for scaling
-    const minTemp = Math.min(...convertedTemps);
-    const maxTemp = Math.max(...convertedTemps);
-    const range = Math.max(maxTemp - minTemp, 5); // Ensure at least 5 degrees range for visual
+  // Use convertedTemps for data processing
+  const data = useMemo(() => {
+    return convertedTemps.map((temp, i) => ({
+      temp,
+      time: times[i],
+      label: formatHour(times[i]),
+      isCurrent: i === currentTimeIndex,
+      isPast: i <= currentTimeIndex,
+      isKey:
+        i === 0 ||
+        i === currentTimeIndex ||
+        i === convertedTemps.length - 1 ||
+        i % 4 === 0,
+    }));
+  }, [convertedTemps, times, currentTimeIndex]);
 
-    // Pad the min/max for better visualization
-    const adjustedMin = Math.floor(minTemp - range * 0.1);
-    const adjustedMax = Math.ceil(maxTemp + range * 0.1);
-    const adjustedRange = adjustedMax - adjustedMin;
-
-    // Calculate points for the graph line
-    const points = convertedTemps.map((temp, index) => {
-      // Normalize temperature to a percentage (0-100) for graphing
-      const percentage = ((temp - adjustedMin) / adjustedRange) * 100;
-      // Calculate x position (evenly distributed across width)
-      const x = (index / (convertedTemps.length - 1)) * 100;
-      // Calculate y position (inverted because SVG coordinates go from top to bottom)
-      const y = 100 - percentage;
-      return { x, y, temp, time: times[index] };
-    });
-
-    return {
-      points,
-      minTemp: adjustedMin,
-      maxTemp: adjustedMax,
-    };
-  }, [convertedTemps, times]);
+  // Find temperature extremes for the day
+  const minTemp = Math.floor(Math.min(...convertedTemps)) - 1;
+  const maxTemp = Math.ceil(Math.max(...convertedTemps)) + 1;
 
   // Calculate gradient transition point
   const gradientBreakpoint =
@@ -172,15 +162,11 @@ const TemperatureGraph: React.FC<TemperatureGraphProps> = ({
       <div className="absolute top-0 left-2 flex space-x-3 text-xs z-10">
         <div className="flex items-center">
           <span className="text-white opacity-80 mr-1">↑</span>
-          <span className="font-medium">
-            {Math.round(graphData.maxTemp - 1)}°
-          </span>
+          <span className="font-medium">{Math.round(maxTemp - 1)}°</span>
         </div>
         <div className="flex items-center">
           <span className="text-white opacity-80 mr-1">↓</span>
-          <span className="font-medium">
-            {Math.round(graphData.minTemp + 1)}°
-          </span>
+          <span className="font-medium">{Math.round(minTemp + 1)}°</span>
         </div>
       </div>
 
@@ -201,18 +187,7 @@ const TemperatureGraph: React.FC<TemperatureGraphProps> = ({
       <div className="absolute inset-0">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart
-            data={graphData.points.map((point, i) => ({
-              temp: point.temp,
-              time: point.time,
-              label: formatHour(point.time),
-              isCurrent: i === currentTimeIndex,
-              isPast: i <= currentTimeIndex,
-              isKey:
-                i === 0 ||
-                i === currentTimeIndex ||
-                i === convertedTemps.length - 1 ||
-                i % 4 === 0,
-            }))}
+            data={data}
             margin={{ top: 25, right: 8, left: 8, bottom: 15 }}
           >
             <defs>
@@ -267,10 +242,7 @@ const TemperatureGraph: React.FC<TemperatureGraphProps> = ({
               padding={{ left: 10, right: 10 }}
             />
 
-            <YAxis
-              domain={[graphData.minTemp, graphData.maxTemp]}
-              hide={true}
-            />
+            <YAxis domain={[minTemp, maxTemp]} hide={true} />
 
             {/* Use a function to render CustomTooltip with proper props */}
             <Tooltip
@@ -301,7 +273,7 @@ const TemperatureGraph: React.FC<TemperatureGraphProps> = ({
 
             {/* Current time indicator */}
             <ReferenceLine
-              x={graphData.points[currentTimeIndex].x}
+              x={data[currentTimeIndex].label}
               stroke="rgba(255,255,255,0.35)"
               strokeDasharray="3 3"
               strokeWidth={1.2}

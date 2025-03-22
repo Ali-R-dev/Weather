@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import { HourlyWeather } from "../../../types/weather.types";
 import {
   formatDay,
@@ -15,35 +15,20 @@ interface HourlyForecastProps {
 const HourlyForecast: React.FC<HourlyForecastProps> = ({ hourlyData }) => {
   const [expandedView, setExpandedView] = useState<boolean>(false);
   const [currentTimeIndex, setCurrentTimeIndex] = useState<number>(0);
+  // const [showGraph, setShowGraph] = useState(false);
+  // const scrollContainerRefs = useRef<{ [key: string]: HTMLDivElement | null }>(
+  //   {}
+  // );
 
-  // Memoize displayHours and displayTemps to prevent recalculation
-  const displayHours = useMemo(() => {
-    return expandedView
-      ? hourlyData.time.slice(0, 48) // Show two days if expanded
-      : hourlyData.time.slice(0, 24); // Show one day by default
-  }, [hourlyData.time, expandedView]);
+  // Show a variable number of hours based on expandedView state
+  const displayHours: string[] = expandedView
+    ? hourlyData.time.slice(0, 48) // Show two days if expanded
+    : hourlyData.time.slice(0, 24); // Show one day by default
 
-  const displayTemps = useMemo(() => {
-    return hourlyData.temperature_2m.slice(0, expandedView ? 48 : 24);
-  }, [hourlyData.temperature_2m, expandedView]);
-
-  // Memoize groupedHours to prevent recalculation
-  const groupedHours = useMemo(() => {
-    return groupHoursByDay(displayHours);
-  }, [displayHours]);
-
-  // Calculate highest and lowest temperatures
-  const { highTemp, lowTemp } = useMemo(() => {
-    return {
-      highTemp: Math.round(Math.max(...displayTemps)),
-      lowTemp: Math.round(Math.min(...displayTemps)),
-    };
-  }, [displayTemps]);
-
-  // Memoize the toggle function
-  const toggleExpandedView = useCallback(() => {
-    setExpandedView((prev) => !prev);
-  }, []);
+  const displayTemps: number[] = hourlyData.temperature_2m.slice(
+    0,
+    expandedView ? 48 : 24
+  );
 
   // Find the current time index when data changes
   useEffect(() => {
@@ -51,8 +36,8 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({ hourlyData }) => {
       const index = findCurrentTimeIndex(displayHours);
       setCurrentTimeIndex(index);
 
-      // Use requestAnimationFrame for smoother scrolling
-      requestAnimationFrame(() => {
+      // Fixed version - only scroll horizontally
+      setTimeout(() => {
         const currentHourElement = document.getElementById(`hour-${index}`);
         if (currentHourElement) {
           const container = currentHourElement.closest(".overflow-x-auto");
@@ -65,16 +50,20 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({ hourlyData }) => {
               elementRect.width / 2 -
               containerRect.width / 2;
 
-            // Use smooth scrolling for better performance
-            container.scrollTo({
-              left: container.scrollLeft + scrollOffset,
-              behavior: "smooth",
-            });
+            // Only adjust horizontal scroll, not page position
+            container.scrollLeft += scrollOffset;
           }
         }
-      });
+      }, 500);
     }
   }, [hourlyData, displayHours]);
+
+  // Group hours by day for UI organization
+  const groupedHours = groupHoursByDay(displayHours);
+
+  // Calculate highest and lowest temperatures
+  const highTemp = Math.round(Math.max(...displayTemps));
+  const lowTemp = Math.round(Math.min(...displayTemps));
 
   return (
     <div className="h-full">
@@ -113,14 +102,8 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({ hourlyData }) => {
               </span>
             </div>
 
-            {/* Clean, scrollable hours container with content-visibility */}
-            <div
-              className="flex overflow-x-auto py-1 space-x-2 hide-scrollbar"
-              style={{
-                contentVisibility: "auto",
-                containIntrinsicSize: "0 200px",
-              }}
-            >
+            {/* Clean, scrollable hours container */}
+            <div className="flex overflow-x-auto py-1 space-x-2 hide-scrollbar">
               {hours.map((time) => {
                 const index = hourlyData.time.indexOf(time);
                 const isCurrentHour = index === currentTimeIndex;
@@ -147,8 +130,8 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({ hourlyData }) => {
       {/* Toggle button for expanded view */}
       <div className="mt-3 flex justify-center">
         <button
-          onClick={toggleExpandedView}
-          className="px-4 py-1.5 rounded-full bg-white/10 text-sm font-medium text-white hover:bg-white/15"
+          onClick={() => setExpandedView(!expandedView)}
+          className="px-4 py-1.5 rounded-full bg-white/10 text-sm font-medium text-white hover:bg-white/15 transition-all"
         >
           {expandedView ? "Show 24 Hours" : "Show 48 Hours"}
         </button>
