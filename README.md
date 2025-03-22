@@ -1,93 +1,72 @@
-<div align="center">
+# Modern Weather App ⛅
 
-# ☁️ Weather App ☀️
+[![Website](https://img.shields.io/website?url=https%3A%2F%2Fweather.araza.me)](https://weather.araza.me)
+[![TypeScript](https://img.shields.io/badge/TypeScript-007ACC?style=flat&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![React](https://img.shields.io/badge/React-20232A?style=flat&logo=react&logoColor=61DAFB)](https://reactjs.org/)
+[![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=flat&logo=tailwind-css&logoColor=white)](https://tailwindcss.com/)
+[![Vite](https://img.shields.io/badge/Vite-646CFF?style=flat&logo=vite&logoColor=white)](https://vitejs.dev/)
+[![License](https://img.shields.io/github/license/yourusername/weather-app)](LICENSE)
 
-**Elegantly experience weather through your screen.**
+A modern, responsive weather application built with React, TypeScript, and Tailwind CSS. Get real-time weather information with a beautiful, intuitive interface.
 
-A sophisticated, responsive application delivering real-time meteorological data with stunning visual atmospheres.
+![Weather App Screenshot](public/screenshot.png)
 
-[![Live Demo](https://img.shields.io/badge/LIVE-DEMO-brightgreen?style=for-the-badge&logo=vercel)](https://weather.araza.me)
+## ✨ Features
 
-![Weather App Banner](https://weather.araza.me/banner.png)
+- 🌡️ Real-time weather data with hourly and daily forecasts
+- 🌍 Location-based weather information
+- 📱 Responsive design for all devices
+- 🎨 Beautiful animations and transitions
+- 🌓 Dark/Light mode support
+- 🔍 Search for any location worldwide
+- 📍 Save favorite locations
+- ⚡ Weather alerts and warnings
+- 🕒 12/24 hour time format support
+- 🌡️ Temperature unit conversion (°C/°F)
 
-</div>
+## 🚀 Demo
 
-## ✨ Experience
+Visit the live demo at [weather.araza.me](https://weather.araza.me)
 
-Weather App transforms mundane forecasts into immersive experiences that capture nature's essence:
+## 🛠️ Tech Stack
 
-- **Adaptive Theming** — Interface automatically transforms with weather conditions and day/night cycle
-- **Dynamic Weather Effects** — Raindrops cascade down your screen, snowflakes drift gently, fog rolls in with haunting beauty
-- **Accessible Interface** — Essential weather information at a glance, detailed data in an organized layout
+- [React](https://reactjs.org/)
+- [TypeScript](https://www.typescriptlang.org/)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Framer Motion](https://www.framer.com/motion/)
+- [Vite](https://vitejs.dev/)
+- [Open-Meteo API](https://open-meteo.com/)
 
-## 🌡️ Features
+## 📦 Installation
 
-- **Live Weather Effects** — Rain, snow, lightning, fog, and sunshine visual simulations
-- **Current Conditions** — Temperature, humidity, wind speed, precipitation, and UV index with health guidance
-- **Forecast Options** — Toggle between hourly and 7-day weather forecasts
-- **Smart Location** — Automatic geolocation with manual location search capabilities
-- **Responsive Design** — Optimized experience from mobile devices to desktop screens
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/yourusername/weather-app.git
+   cd weather-app
+   ```
 
-## 📱 Visual Gallery
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-<div align="center">
-  <img src="https://weather.araza.me/screenshot-sunny.png" width="49%" alt="Sun-drenched interface" />
-  <img src="https://weather.araza.me/screenshot-rainy.png" width="49%" alt="Rain-soaked experience" />
-  <img src="https://weather.araza.me/screenshot-snowy.png" width="49%" alt="Snow-covered display" />
-  <img src="https://weather.araza.me/screenshot-night.png" width="49%" alt="Moonlit perspective" />
-</div>
+3. Start the development server:
+   ```bash
+   npm run dev
+   ```
 
-## 🛠️ Crafted With
+## 🤝 Contributing
 
-- **Framework** — React with TypeScript for type-safe development
-- **Styling** — TailwindCSS for utility-first responsive design
-- **Animation** — CSS animations for weather effects
-- **Data Source** — Open Meteo API for reliable global weather data
+We welcome contributions! Please see our [Contributing Guide](/.github/CONTRIBUTING.md) for more details.
 
-## ⚡ Quick Start
+## 📝 Project Information
 
-```bash
-# Clone the repository
-git clone https://github.com/yourusername/weather-app.git
+### License
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-# Enter the project directory
-cd weather-app
+### Acknowledgments
+- Weather data provided by [Open-Meteo](https://open-meteo.com/)
+- Animations powered by [Framer Motion](https://www.framer.com/motion/)
 
-# Install dependencies
-npm install
-
-# Start development server
-npm run dev
-```
-
-## 🧠 Architecture
-
-```
-/src
-├── /components        # UI components
-│   ├── /effects       # Weather visual effects
-│   └── /weather       # Weather information displays
-├── /context           # React context for state management
-├── /pages             # Page components
-├── /types             # TypeScript interfaces
-└── /utils             # Helper functions
-```
-
-## 🔮 Planned Features
-
-- Multiple saved locations
-- Weather alerts for severe conditions
-- Historical weather data views
-- Dark/light theme preferences
-
-## 👤 Creator
-
-[Your Name](https://github.com/yourusername) — Web developer & weather enthusiast
-
-<div align="center">
-
----
-
-Powered by [Open Meteo](https://open-meteo.com/) • Released under MIT License
-
-</div>
+### Contact
+For any questions or feedback, please open an issue or reach out to the maintainers.
