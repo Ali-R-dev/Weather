@@ -65,11 +65,9 @@ const HourlyForecastItem: React.FC<HourlyForecastItemProps> = ({
         ${
           isCurrentHour
             ? "bg-gradient-to-b from-white/25 to-white/15 border-2 border-white/30 shadow-lg"
-            : "bg-gradient-to-b from-white/10 to-white/5 border border-white/10 hover:border-white/30"
+            : "bg-gradient-to-b from-white/10 to-white/5 border border-white/10"
         }
       `}
-      whileHover={{ y: -3, scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
     >
       {/* Weather-specific gradient overlay */}
       <div
