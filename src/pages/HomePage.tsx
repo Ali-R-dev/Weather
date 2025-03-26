@@ -6,7 +6,7 @@ import useSavedLocations from "../hooks/useSavedLocations";
 import CurrentWeather from "../components/weather/current";
 import HourlyForecast from "../components/weather/hourly";
 import DailyForecast from "../components/weather/daily";
-import MiniSearchBar from "../components/weather/MiniSearchBar";
+import { MiniSearchBar } from "../components/weather/search";
 import SettingsPanel from "../components/settings/SettingsPanel";
 import { timeAgo } from "../utils/dateUtils";
 import BackgroundEffect from "../components/effects/BackgroundEffect";

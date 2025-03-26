@@ -1,13 +1,10 @@
 import React from "react";
-import "./WeatherEffects.css"; // Keep the original CSS file for animations
-import styles from "./WeatherEffects.module.css"; // Add the module CSS
-
-// For each weather effect component, update the className references
-// Example for RainEffect:
+// Keep original CSS for animations
+import "./WeatherEffects.css";
+// Use CSS modules for component styles
+import styles from "./WeatherEffects.module.css";
 
 export const RainEffect = ({ intensity = "medium", isDay = true }) => {
-  // ...existing code...
-
   return (
     <div className={styles.weatherScene}>
       <div
@@ -25,8 +22,6 @@ export const RainEffect = ({ intensity = "medium", isDay = true }) => {
 };
 
 export const SnowEffect = ({ intensity = "medium", isDay = true }) => {
-  // ...existing code...
-
   return (
     <div className={styles.weatherScene}>
       <div
@@ -39,8 +34,6 @@ export const SnowEffect = ({ intensity = "medium", isDay = true }) => {
 };
 
 export const FogEffect = ({ intensity = "medium", isDay = true }) => {
-  // ...existing code...
-
   return (
     <div className={styles.weatherScene}>
       <div
@@ -55,8 +48,6 @@ export const FogEffect = ({ intensity = "medium", isDay = true }) => {
 };
 
 export const SunnyEffect = () => {
-  // ...existing code...
-
   return (
     <div className={styles.weatherScene}>
       <div className={styles.sunnyContainer}>
@@ -68,8 +59,6 @@ export const SunnyEffect = () => {
 };
 
 export const NightClearEffect = () => {
-  // ...existing code...
-
   return (
     <div className={styles.weatherScene}>
       <div className={styles.nightClearContainer}>
@@ -91,8 +80,6 @@ export const NightClearEffect = () => {
 };
 
 export const CloudyEffect = ({ isDay = true }) => {
-  // ...existing code...
-
   return (
     <div className={styles.weatherScene}>
       <div className={`${styles.cloudyContainer} ${isDay ? "" : "night"}`}>
@@ -103,8 +90,6 @@ export const CloudyEffect = ({ isDay = true }) => {
 };
 
 export const StormyEffect = ({ isDay = true }) => {
-  // ...existing code...
-
   return (
     <div className={styles.weatherScene}>
       <div className={`${styles.stormyContainer} ${isDay ? "" : "night"}`}>

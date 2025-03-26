@@ -9,7 +9,7 @@ import {
   convertWindSpeed,
 } from "../../../utils/unitConversion";
 
-import WeatherHeader from "./WeatherHeader";
+import WeatherHeader from "./Header";
 import TemperatureDisplay from "./TemperatureDisplay";
 import MetricsGrid from "./MetricsGrid";
 import DetailPanel from "./DetailPanel";

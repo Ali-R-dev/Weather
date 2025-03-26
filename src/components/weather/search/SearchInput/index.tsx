@@ -1,6 +1,6 @@
 import React from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import styles from "../MiniSearchBar/styles.module.css";
+import styles from "./styles.module.css";
 
 interface SearchInputProps {
   query: string;

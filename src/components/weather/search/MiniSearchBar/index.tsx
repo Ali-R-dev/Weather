@@ -4,7 +4,7 @@ import { useWeather } from "../../../../context/WeatherContext";
 import useSavedLocations, {
   SavedLocation,
 } from "../../../../hooks/useSavedLocations";
-import { GeocodingResult } from "../../../../services/geocodingService";
+import { GeocodingResult } from "../../../../types/geocoding.types";
 import { useLocationSearch } from "../../../../hooks/useLocationSearch";
 import SearchInput from "../SearchInput";
 import LocationItem from "../LocationItem";

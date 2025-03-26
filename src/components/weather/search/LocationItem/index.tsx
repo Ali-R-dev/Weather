@@ -1,8 +1,9 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { SavedLocation } from "../../../../hooks/useSavedLocations";
-import { GeocodingResult } from "../../../../services/geocodingService";
-import styles from "../MiniSearchBar/styles.module.css";
+// Fix the import path to get from types instead of service
+import { GeocodingResult } from "../../../../types/geocoding.types";
+import styles from "./styles.module.css";
 
 interface LocationItemProps {
   location: SavedLocation | GeocodingResult;

@@ -1,6 +1,7 @@
 import React from "react";
 import { motion } from "framer-motion";
 import styles from "./styles.module.css";
+// Fix this import path
 import { WeatherIconProps, getGlowColor, getIconColorClass } from "./IconTypes";
 
 // Import individual icon components
