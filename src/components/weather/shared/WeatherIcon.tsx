@@ -1,7 +1,8 @@
 import React from "react";
 import { motion } from "framer-motion";
+import styles from "./WeatherIcon.module.css";
 
-type IconSize = "sm" | "md" | "lg" | "xl" | "xxl";
+type IconSize = "small" | "medium" | "large" | "xlarge";
 
 interface WeatherIconProps {
   type: string;
@@ -13,90 +14,11 @@ interface WeatherIconProps {
 
 const WeatherIcon: React.FC<WeatherIconProps> = ({
   type,
-  size = "md",
+  size = "medium",
   className = "",
   animated = false,
   withGlow = false,
 }) => {
-  const sizeClasses = {
-    sm: "w-5 h-5",
-    md: "w-8 h-8",
-    lg: "w-16 h-16",
-    xl: "w-20 h-20",
-    xxl: "w-24 h-24",
-  };
-
-  const baseClass = `${sizeClasses[size]} ${className}`;
-
-  // Determine glow color based on weather type
-  const getGlowColor = () => {
-    if (!withGlow) return "none";
-
-    if (type.includes("sun")) return "0 0 20px rgba(250, 204, 21, 0.5)";
-    if (type.includes("cloud-rain")) return "0 0 20px rgba(96, 165, 250, 0.3)";
-    if (type.includes("cloud-snow")) return "0 0 20px rgba(226, 232, 240, 0.3)";
-    if (type.includes("cloud-lightning"))
-      return "0 0 20px rgba(250, 204, 21, 0.4)";
-    if (type.includes("cloud")) return "0 0 20px rgba(203, 213, 225, 0.3)";
-
-    return "0 0 20px rgba(255, 255, 255, 0.3)";
-  };
-
-  // Get animation variants based on weather type
-  // const getAnimationProps = () => {
-  //   if (!animated) return {};
-
-  //   if (type.includes("sun")) {
-  //     return {
-  //       animate: {
-  //         rotate: 360,
-  //         scale: [1, 1.05, 1],
-  //       },
-  //       transition: {
-  //         rotate: { duration: 20, repeat: Infinity, ease: "linear" },
-  //         scale: { duration: 3, repeat: Infinity, repeatType: "reverse" },
-  //       },
-  //     };
-  //   }
-
-  //   if (type.includes("cloud")) {
-  //     return {
-  //       animate: {
-  //         x: [0, 5, 0, -5, 0],
-  //       },
-  //       transition: {
-  //         duration: 5,
-  //         repeat: Infinity,
-  //         repeatType: "reverse",
-  //       },
-  //     };
-  //   }
-
-  //   if (type.includes("lightning")) {
-  //     return {
-  //       animate: {
-  //         opacity: [1, 0.7, 1, 0.9, 1],
-  //         scale: [1, 1.02, 1, 1.01, 1],
-  //       },
-  //       transition: {
-  //         duration: 2,
-  //         repeat: Infinity,
-  //         repeatType: "reverse",
-  //       },
-  //     };
-  //   }
-
-  //   return {
-  //     animate: { scale: [1, 1.03, 1] },
-  //     transition: {
-  //       duration: 2,
-  //       repeat: Infinity,
-  //       repeatType: "reverse",
-  //     },
-  //   };
-  // };
-
-  // Wrap icon in motion.div if animated
   const IconWrapper = ({ children }: { children: React.ReactNode }) => {
     if (animated || withGlow) {
       return (
@@ -115,6 +37,59 @@ const WeatherIcon: React.FC<WeatherIconProps> = ({
     }
 
     return <>{children}</>;
+  };
+
+  // Get base class for icon size
+  const getIconSizeClass = (): string => {
+    switch (size) {
+      case "small":
+        return styles.small;
+      case "medium":
+        return styles.medium;
+      case "large":
+        return styles.large;
+      case "xlarge":
+        return styles.xlarge;
+      default:
+        return styles.medium;
+    }
+  };
+
+  // Get icon color class based on type
+  const getIconColorClass = (): string => {
+    if (type.includes("sun")) return styles.sunny;
+    if (type.includes("cloud") && !type.includes("night")) return styles.cloudy;
+    if (type.includes("rain")) return styles.rainy;
+    if (type.includes("snow")) return styles.snowy;
+    if (type.includes("thunder") || type.includes("lightning"))
+      return styles.stormy;
+    if (type.includes("fog")) return styles.foggy;
+    if (type.includes("night") || type.includes("moon"))
+      return styles.clearNight;
+    if (type === "partly-cloudy-day") return styles.partlyCloudy;
+    if (type === "partly-cloudy-night") return styles.partlyCloudyNight;
+    return "";
+  };
+
+  // Combine classes
+  const baseClass = `${
+    styles.icon
+  } ${getIconSizeClass()} ${getIconColorClass()} ${
+    animated ? styles.animated : ""
+  } ${className}`;
+
+  // Determine glow color based on weather type
+  const getGlowColor = () => {
+    if (!withGlow) return "none";
+
+    if (type.includes("sun")) return "0 0 20px rgba(250, 204, 21, 0.5)";
+    if (type.includes("cloud-rain")) return "0 0 20px rgba(96, 165, 250, 0.3)";
+    if (type.includes("cloud-snow")) return "0 0 20px rgba(226, 232, 240, 0.3)";
+    if (type.includes("cloud-lightning"))
+      return "0 0 20px rgba(250, 204, 21, 0.4)";
+    if (type.includes("cloud")) return "0 0 20px rgba(203, 213, 225, 0.3)";
+
+    return "0 0 20px rgba(255, 255, 255, 0.3)";
   };
 
   // Render the appropriate icon based on the type

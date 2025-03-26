@@ -5,6 +5,7 @@ import { getWeatherInfo } from "../../../utils/weatherCodeMap";
 import { formatHour } from "../../../utils/formatting";
 import { useSettings } from "../../../context/SettingsContext";
 import { AppConfig } from "../../../config/appConfig";
+import styles from "../hourly/HourlyForecast.module.css";
 
 interface HourlyForecastItemProps {
   time: string;
@@ -59,25 +60,12 @@ const HourlyForecastItem: React.FC<HourlyForecastItemProps> = ({
 
   return (
     <motion.div
-      className={`
-        relative flex flex-col items-center min-w-[75px] flex-shrink-0 py-3 px-2.5 rounded-xl 
-        backdrop-blur-sm transition-all duration-300
-        ${
-          isCurrentHour
-            ? "bg-gradient-to-b from-white/25 to-white/15 border-2 border-white/30 shadow-lg"
-            : "bg-gradient-to-b from-white/10 to-white/5 border border-white/10"
-        }
-      `}
+      className={`${styles.hourlyItem} ${isCurrentHour ? styles.current : ""}`}
+      whileHover={{ scale: 1.05, y: -5 }}
+      whileTap={{ scale: 0.98 }}
     >
-      {/* Weather-specific gradient overlay */}
-      <div
-        className={`absolute inset-0 rounded-xl bg-gradient-to-b ${getWeatherGradient()} opacity-${
-          isCurrentHour ? "50" : "30"
-        }`}
-      />
-
       {/* Time display */}
-      <div className="relative font-medium text-xs text-white/90 mb-1.5">
+      <div className={styles.timeText}>
         {isCurrentHour ? (
           <span className="px-2 py-0.5 bg-white/30 rounded-full text-white text-[10px] font-bold tracking-wide">
             NOW
@@ -87,7 +75,7 @@ const HourlyForecastItem: React.FC<HourlyForecastItemProps> = ({
         )}
       </div>
 
-      {/* Weather icon with subtle animation */}
+      {/* Weather icon */}
       <motion.div
         className="relative my-1.5"
         animate={{
@@ -103,7 +91,7 @@ const HourlyForecastItem: React.FC<HourlyForecastItemProps> = ({
         <WeatherIcon type={weatherInfo.icon} />
         {/* Glow effect */}
         <div
-          className="absolute inset-0 -z-10 blur-md opacity-30"
+          className="absolute inset-0 -z-10 blur-md opacity-30 scale-125"
           style={{
             backgroundColor: weatherInfo.icon.includes("sun")
               ? "rgba(252, 211, 77, 0.3)"
@@ -115,28 +103,27 @@ const HourlyForecastItem: React.FC<HourlyForecastItemProps> = ({
         />
       </motion.div>
 
-      {/* Temperature with dynamic color */}
-      <div
-        className={`relative font-bold text-lg ${getTempColor()} transition-colors duration-300`}
-      >
-        {Math.round(displayTemp)}°
-      </div>
+      {/* Temperature */}
+      <div className={styles.temperature}>{Math.round(displayTemp)}°</div>
 
-      {/* Precipitation probability with improved visualization */}
+      {/* Precipitation probability */}
       {hasPrecip && (
-        <div className="relative mt-2 flex flex-col items-center">
-          <div className="h-1.5 w-12 bg-blue-900/20 rounded-full overflow-hidden">
-            <motion.div
-              className="h-full bg-gradient-to-r from-blue-300 to-blue-500"
-              style={{ width: `${precipitationProbability}%` }}
-              initial={{ width: 0 }}
-              animate={{ width: `${precipitationProbability}%` }}
-              transition={{ duration: 1, delay: 0.2 }}
+        <div className={styles.precipChance}>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={2}
+            stroke="currentColor"
+            className={styles.precipIcon}
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M19.5 13.5L12 21m0 0l-7.5-7.5M12 21V3"
             />
-          </div>
-          <span className="text-[10px] font-medium text-blue-200 mt-1">
-            {precipitationProbability}%
-          </span>
+          </svg>
+          <span>{precipitationProbability}%</span>
         </div>
       )}
     </motion.div>

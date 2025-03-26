@@ -1,0 +1,71 @@
+.container {
+  overflow-x: auto;
+  padding: 1rem 0;
+}
+
+.hideScrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+
+.hideScrollbar::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari, Opera */
+}
+
+.hourlyList {
+  display: flex;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+}
+
+.hourlyItem {
+  flex-shrink: 0;
+  border-radius: 1rem;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 5rem;
+}
+
+.hourlyItem:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+.current {
+  background: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.timeText {
+  font-size: 0.875rem;
+  font-weight: 500;
+  margin-bottom: 0.25rem;
+}
+
+.temperature {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0.5rem 0;
+}
+
+.precipChance {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.8);
+  display: flex;
+  align-items: center;
+  margin-top: 0.25rem;
+}
+
+.precipIcon {
+  width: 0.875rem;
+  height: 0.875rem;
+  margin-right: 0.25rem;
+  color: #93c5fd;
+}

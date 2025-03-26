@@ -2,6 +2,7 @@ import React from "react";
 import { motion } from "framer-motion";
 import { formatLocalTime } from "../../../utils/formatting";
 import { TimeFormat } from "../../../context/SettingsContext";
+import styles from "./WeatherHeader.module.css";
 
 interface WeatherHeaderProps {
   locationName: string | undefined;
@@ -28,7 +29,7 @@ const WeatherHeader: React.FC<WeatherHeaderProps> = ({
       <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between">
         <div className="flex-1">
           <motion.h1
-            className="text-4xl sm:text-5xl font-bold tracking-tight"
+            className={styles.headerTitle}
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.1 }}
@@ -39,13 +40,13 @@ const WeatherHeader: React.FC<WeatherHeaderProps> = ({
           </motion.h1>
 
           <motion.div
-            className="flex items-center flex-wrap mt-1.5 text-sm sm:text-base text-white/80"
+            className={styles.locationInfo}
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.3 }}
           >
             {(region || country) && (
-              <span className="font-medium text-white/90">
+              <span className={styles.locationDetails}>
                 {region && country
                   ? `${region}, ${country}`
                   : country || region}
@@ -55,7 +56,7 @@ const WeatherHeader: React.FC<WeatherHeaderProps> = ({
         </div>
 
         <motion.div
-          className="text-xl sm:text-2xl font-light mt-2 sm:mt-0 flex items-center backdrop-blur-sm px-3 py-1 rounded-full bg-white/5 border border-white/10"
+          className={styles.weatherConditions}
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.4 }}

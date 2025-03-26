@@ -1,0 +1,86 @@
+.currentWeatherCard {
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+}
+
+.temperatureDisplay {
+  font-size: 5rem;
+  font-weight: 700;
+  line-height: 1;
+  color: white;
+  text-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.weatherInfo {
+  display: flex;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.weatherIcon {
+  margin-right: 1rem;
+}
+
+.weatherDetails {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1rem;
+}
+
+.detailCard {
+  flex: 1;
+  min-width: 120px;
+  border-radius: 1rem;
+  padding: 0.75rem;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  transition: all 0.2s ease;
+}
+
+.detailCard:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+.detailLabel {
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-bottom: 0.25rem;
+  display: flex;
+  align-items: center;
+}
+
+.detailIcon {
+  width: 0.875rem;
+  height: 0.875rem;
+  margin-right: 0.25rem;
+  opacity: 0.8;
+}
+
+.detailValue {
+  font-size: 1.125rem;
+  font-weight: 600;
+}
+
+.detailUnit {
+  font-size: 0.75rem;
+  font-weight: 400;
+  margin-left: 0.125rem;
+  opacity: 0.7;
+}
+
+@media (max-width: 640px) {
+  .temperatureDisplay {
+    font-size: 4rem;
+  }
+  
+  .detailCard {
+    padding: 0.5rem;
+  }
+}

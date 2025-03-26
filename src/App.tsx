@@ -6,7 +6,6 @@ import WeatherLoadingScreen from "./components/common/WeatherLoadingScreen";
 import PrivacyPolicyModal from "./components/PrivacyPolicyModal";
 import ErrorBoundary from "./components/common/ErrorBoundary";
 import Footer from "./components/layout/Footer";
-import "./premium-styles.css";
 import {
   initializeAllMonitoring,
   markPerformance,

@@ -1,15 +1,16 @@
-import { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useWeather } from "../../context/WeatherContext";
-import {
-  reverseGeocode,
-  searchLocations,
-  GeocodingResult,
-} from "../../services/geocodingService";
 import useSavedLocations, {
   SavedLocation,
 } from "../../hooks/useSavedLocations";
+import {
+  searchLocations,
+  reverseGeocode,
+  GeocodingResult,
+} from "../../services/geocodingService";
 import LoadingSpinner from "../common/LoadingSpinner";
+import styles from "./MiniSearchBar.module.css";
 
 interface MiniSearchBarProps {
   onFocus: () => void;
@@ -34,6 +35,8 @@ export default function MiniSearchBar({
     useSavedLocations();
   const searchTimeout = useRef<number | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
+  const searchBarRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLInputElement>(null);
 
   // Use current location name as placeholder
   const locationName = weatherData?.location?.name || "Search location...";
@@ -223,179 +226,75 @@ export default function MiniSearchBar({
     },
   };
 
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setQuery(e.target.value);
+  };
+
+  const handleFocus = () => {
+    setIsDropdownOpen(true);
+    onFocus();
+  };
+
+  const handleClear = () => {
+    setQuery("");
+    setIsDropdownOpen(false);
+    onSelect();
+  };
+
   return (
-    <motion.div
-      className="relative w-full max-w-md mx-auto"
-      ref={dropdownRef}
-      initial="inactive"
-      animate={isActive ? "active" : isHovered ? "hovered" : "inactive"}
-      variants={searchBarVariants}
-      transition={{
-        duration: 0.3,
-        type: "spring",
-        stiffness: 400,
-        damping: 25,
-      }}
-      onHoverStart={() => setIsHovered(true)}
-      onHoverEnd={() => setIsHovered(false)}
-    >
+    <div className={styles.searchContainer} ref={searchBarRef}>
       <motion.div
-        className={`flex items-center bg-gradient-to-r from-white/20 via-white/15 to-white/10 backdrop-blur-md 
-                  rounded-full pl-3 pr-2 py-1.5 border border-white/20 transition-all overflow-hidden`}
+        className={styles.searchBar}
         animate={{
-          borderColor: isActive
-            ? "rgba(255, 255, 255, 0.3)"
-            : "rgba(255, 255, 255, 0.2)",
+          scale: isActive ? 1.02 : 1,
+          boxShadow: isActive ? "0 0 0 3px rgba(255,255,255,0.3)" : "none",
         }}
       >
-        <motion.div
-          className="text-white/80 mr-2 shrink-0"
-          animate={{ scale: isActive ? 1.1 : 1 }}
-          transition={{ duration: 0.2 }}
+        <svg
+          className={styles.searchIcon}
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 24 24"
+          fill="currentColor"
         >
-          {isSearching && query.trim().length >= 2 ? (
-            <LoadingSpinner size="small" />
-          ) : (
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              className="w-4 h-4"
-            >
-              <path
-                fillRule="evenodd"
-                d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
-                clipRule="evenodd"
-              />
-            </svg>
-          )}
-        </motion.div>
+          <path
+            fillRule="evenodd"
+            d="M9 3.5a5.5 5.5 0 100 11 5.5 5.5 0 000-11zM2 9a7 7 0 1112.452 4.391l3.328 3.329a.75.75 0 11-1.06 1.06l-3.329-3.328A7 7 0 012 9z"
+            clipRule="evenodd"
+          />
+        </svg>
 
         <input
+          ref={inputRef}
           type="text"
-          className="bg-transparent border-none outline-none text-white flex-grow placeholder-white/70 text-sm w-full"
-          placeholder={isActive ? "Search for a location..." : locationName}
+          placeholder="Search location..."
           value={query}
-          onChange={(e) => setQuery(e.target.value)}
-          onFocus={() => {
-            setIsDropdownOpen(true);
-            onFocus();
-          }}
+          onChange={handleInputChange}
+          onFocus={handleFocus}
+          className={styles.searchInput}
+          aria-label="Search for a location"
         />
 
-        <AnimatePresence mode="wait">
-          {isActive ? (
+        <AnimatePresence>
+          {query && (
             <motion.button
-              onClick={() => {
-                setQuery("");
-                setIsDropdownOpen(false);
-                onSelect();
-              }}
-              className="ml-1 p-1 rounded-full hover:bg-white/10 transition-colors shrink-0"
-              initial={{ opacity: 0, rotate: -90, scale: 0.8 }}
-              animate={{ opacity: 1, rotate: 0, scale: 1 }}
-              exit={{ opacity: 0, rotate: 90, scale: 0.8 }}
-              transition={{ duration: 0.2 }}
-              whileHover={{ backgroundColor: "rgba(255, 255, 255, 0.1)" }}
-              whileTap={{ scale: 0.9 }}
+              onClick={handleClear}
+              className={styles.clearButton}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              transition={{ duration: 0.15 }}
+              aria-label="Clear search"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                fill="none"
                 viewBox="0 0 24 24"
-                strokeWidth={2.5}
-                stroke="currentColor"
-                className="w-3.5 h-3.5 text-white/90"
+                fill="currentColor"
+                className="w-5 h-5"
               >
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   d="M6 18L18 6M6 6l12 12"
-                />
-              </svg>
-            </motion.button>
-          ) : isLocationLoading ? (
-            <motion.div
-              className="ml-1 p-1 shrink-0"
-              initial={{ opacity: 0, scale: 0.8 }}
-              animate={{ opacity: 1, scale: 1, rotate: 360 }}
-              transition={{
-                opacity: { duration: 0.2 },
-                rotate: { repeat: Infinity, duration: 1, ease: "linear" },
-              }}
-            >
-              <LoadingSpinner size="small" />
-            </motion.div>
-          ) : (
-            <motion.button
-              onClick={() => {
-                setIsLocationLoading(true);
-                navigator.geolocation.getCurrentPosition(
-                  async (position) => {
-                    try {
-                      const locationInfo = await reverseGeocode(
-                        position.coords.latitude,
-                        position.coords.longitude
-                      );
-
-                      if (locationInfo) {
-                        setLocation({
-                          latitude: position.coords.latitude,
-                          longitude: position.coords.longitude,
-                          name: locationInfo.name,
-                          country: locationInfo.country,
-                          admin1: locationInfo.admin1,
-                        });
-                      } else {
-                        setLocation({
-                          latitude: position.coords.latitude,
-                          longitude: position.coords.longitude,
-                        });
-                      }
-                      onSelect();
-                    } catch (error) {
-                      console.error("Reverse geocoding error:", error);
-                      setLocation({
-                        latitude: position.coords.latitude,
-                        longitude: position.coords.longitude,
-                      });
-                      onSelect();
-                    } finally {
-                      setIsLocationLoading(false);
-                    }
-                  },
-                  (error) => {
-                    console.error("Geolocation error:", error);
-                    setIsLocationLoading(false);
-                    if (error.code === error.PERMISSION_DENIED) {
-                      alert(
-                        "Location access denied. Please enable location permissions in your browser settings."
-                      );
-                    }
-                  }
-                );
-              }}
-              className="ml-1 p-1 rounded-full hover:bg-white/20 transition-colors shrink-0"
-              title="Use current location"
-              initial={{ scale: 0.9, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.9, opacity: 0 }}
-              whileHover={{
-                scale: 1.1,
-                backgroundColor: "rgba(255,255,255,0.2)",
-              }}
-              whileTap={{ scale: 0.95 }}
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-                className="w-3.5 h-3.5 text-white/90"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M9.69 18.933l.003.001c.198.087.39.087.588 0l.003-.001.006-.003.018-.008a5.741 5.741 0 00.281-.14 15.551 15.551 0 003.31-2.566C15.855 14.58 18 11.64 18 8.5a6.5 6.5 0 00-13 0c0 3.14 2.144 6.08 4.124 8.007a15.55 15.55 0 003.31 2.566 6.431 6.431 0 00.281.14l.018.008.006.003zM10 15a1 1 0 100-2 1 1 0 000 2z"
-                  clipRule="evenodd"
                 />
               </svg>
             </motion.button>
@@ -407,7 +306,7 @@ export default function MiniSearchBar({
       <AnimatePresence>
         {isDropdownOpen && (
           <motion.div
-            className="absolute z-[100] mt-2 w-full max-w-md shadow-2xl max-h-[50vh] overflow-auto backdrop-blur-xl bg-gradient-to-b from-black/80 to-black/60 border border-white/20 rounded-2xl"
+            className={styles.dropdown}
             initial={{ opacity: 0, y: -10, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.95 }}
@@ -421,17 +320,16 @@ export default function MiniSearchBar({
             {/* Recently used locations section */}
             {recentlyUsed.length > 0 && query.trim().length === 0 && (
               <motion.div
-                className="border-b border-white/10"
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.1 }}
               >
-                <div className="px-4 py-3 text-[11px] uppercase tracking-wider font-semibold text-white/60 flex items-center">
+                <div className={styles.sectionHeader}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 20 20"
                     fill="currentColor"
-                    className="w-3.5 h-3.5 mr-1.5 opacity-70"
+                    className={styles.sectionIcon}
                   >
                     <path
                       fillRule="evenodd"
@@ -441,11 +339,11 @@ export default function MiniSearchBar({
                   </svg>
                   Recent Locations
                 </div>
-                <div className="px-2 pb-3">
+                <div className={styles.resultsContainer}>
                   {recentlyUsed.map((location, index) => (
                     <motion.div
                       key={`recent-${location.id}`}
-                      className="mx-1 px-2.5 py-2.5 cursor-pointer flex justify-between items-center rounded-xl bg-transparent hover:bg-white/10 transition-all duration-200 group"
+                      className={`${styles.locationItem} group`}
                       onClick={(e) => handleSelectLocation(location, e)}
                       initial={{ opacity: 0, y: 5 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -543,12 +441,12 @@ export default function MiniSearchBar({
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.2 }}
               >
-                <div className="px-4 py-3 text-[11px] uppercase tracking-wider font-semibold text-white/60 flex items-center">
+                <div className={styles.sectionHeader}>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 20 20"
                     fill="currentColor"
-                    className="w-3.5 h-3.5 mr-1.5 opacity-70"
+                    className={styles.sectionIcon}
                   >
                     <path
                       fillRule="evenodd"
@@ -558,11 +456,11 @@ export default function MiniSearchBar({
                   </svg>
                   Search Results
                 </div>
-                <div className="px-2 py-1">
+                <div className={styles.resultsContainer}>
                   {results.map((location, index) => (
                     <motion.div
                       key={location.id}
-                      className="mx-1 px-2.5 py-2.5 cursor-pointer flex items-center justify-between rounded-xl bg-transparent hover:bg-white/10 transition-all duration-200"
+                      className={`${styles.locationItem} group`}
                       onClick={(e) => handleSelectLocation(location, e)}
                       initial={{ opacity: 0, y: 5 }}
                       animate={{ opacity: 1, y: 0 }}
@@ -651,6 +549,6 @@ export default function MiniSearchBar({
           </motion.div>
         )}
       </AnimatePresence>
-    </motion.div>
+    </div>
   );
 }

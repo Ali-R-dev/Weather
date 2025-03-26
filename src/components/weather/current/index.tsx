@@ -16,6 +16,7 @@ import MetricsGrid from "./MetricsGrid";
 import DetailPanel from "./DetailPanel";
 import SunriseSunset from "./SunriseSunset";
 import ExpandToggle from "../../ui/ExpandToggle";
+import styles from "./CurrentWeather.module.css";
 
 interface CurrentWeatherProps {
   data: WeatherData;
@@ -101,16 +102,15 @@ const CurrentWeather: React.FC<CurrentWeatherProps> = ({ data }) => {
           />
         )}
 
-        {/* Additional panels can be added here */}
+        {/* Additional weather details in cards */}
         {data.current.pressure && (
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 border border-white/10">
-            <div className="text-xs text-white/70 mb-1">Air Pressure</div>
-            <div className="flex items-center">
+          <div className={styles.detailCard}>
+            <div className={styles.detailLabel}>
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 20 20"
                 fill="currentColor"
-                className="w-4 h-4 mr-1 text-green-300"
+                className={styles.detailIcon}
               >
                 <path
                   fillRule="evenodd"
@@ -118,9 +118,13 @@ const CurrentWeather: React.FC<CurrentWeatherProps> = ({ data }) => {
                   clipRule="evenodd"
                 />
               </svg>
-              <span className="text-base font-medium">
-                {data.current.pressure} hPa
+              Air Pressure
+            </div>
+            <div className="flex items-center">
+              <span className={styles.detailValue}>
+                {data.current.pressure}
               </span>
+              <span className={styles.detailUnit}>hPa</span>
             </div>
             <div className="text-xs text-white/60 mt-1">
               {data.current.pressure > 1013

@@ -7,6 +7,7 @@ import {
 } from "../../../utils/formatting";
 import TemperatureGraph from "./TemperatureGraph";
 import HourlyForecastItem from "./HourlyForecastItem";
+import styles from "./HourlyForecast.module.css";
 
 interface HourlyForecastProps {
   hourlyData: HourlyWeather;
@@ -15,10 +16,6 @@ interface HourlyForecastProps {
 const HourlyForecast: React.FC<HourlyForecastProps> = ({ hourlyData }) => {
   const [expandedView, setExpandedView] = useState<boolean>(false);
   const [currentTimeIndex, setCurrentTimeIndex] = useState<number>(0);
-  // const [showGraph, setShowGraph] = useState(false);
-  // const scrollContainerRefs = useRef<{ [key: string]: HTMLDivElement | null }>(
-  //   {}
-  // );
 
   // Show a variable number of hours based on expandedView state
   const displayHours: string[] = expandedView
@@ -86,42 +83,32 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({ hourlyData }) => {
 
       {/* Day headers and hourly forecast */}
       <div className="mt-4">
-        {Object.entries(groupedHours).map(([day, hours], dayIndex) => (
+        {Object.entries(groupedHours).map(([day, hours]) => (
           <div key={day} className="mb-4">
-            {/* Day header */}
-            <div className="sticky top-0 z-20 mb-2 py-1.5 px-3 bg-gradient-to-r from-gray-900/80 to-transparent backdrop-blur-sm rounded-lg flex items-center">
-              <div className="w-1 h-4 rounded-full bg-white/50 mr-2"></div>
-              <h3 className="text-white font-medium text-sm">
-                {dayIndex === 0 ? "Today" : formatDay(hours[0])}
-              </h3>
-              <span className="text-xs text-white/60 ml-2">
-                {new Date(day).toLocaleDateString("en-US", {
-                  month: "short",
-                  day: "numeric",
+            <h3 className="text-sm font-medium text-white/70 mb-2">
+              {formatDay(day)}
+            </h3>
+            <div className={`${styles.container} ${styles.hideScrollbar}`}>
+              <div className={styles.hourlyList}>
+                {hours.map((time) => {
+                  const index = hourlyData.time.indexOf(time);
+                  const isCurrentHour = index === currentTimeIndex;
+
+                  return (
+                    <div key={time} id={`hour-${index}`}>
+                      <HourlyForecastItem
+                        time={time}
+                        temperature={hourlyData.temperature_2m[index]}
+                        weatherCode={hourlyData.weather_code[index]}
+                        precipitationProbability={
+                          hourlyData.precipitation_probability[index]
+                        }
+                        isCurrentHour={isCurrentHour}
+                      />
+                    </div>
+                  );
                 })}
-              </span>
-            </div>
-
-            {/* Clean, scrollable hours container */}
-            <div className="flex overflow-x-auto py-1 space-x-2 hide-scrollbar">
-              {hours.map((time) => {
-                const index = hourlyData.time.indexOf(time);
-                const isCurrentHour = index === currentTimeIndex;
-
-                return (
-                  <div key={time} id={`hour-${index}`}>
-                    <HourlyForecastItem
-                      time={time}
-                      temperature={hourlyData.temperature_2m[index]}
-                      weatherCode={hourlyData.weather_code[index]}
-                      precipitationProbability={
-                        hourlyData.precipitation_probability[index]
-                      }
-                      isCurrentHour={isCurrentHour}
-                    />
-                  </div>
-                );
-              })}
+              </div>
             </div>
           </div>
         ))}
@@ -136,17 +123,6 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({ hourlyData }) => {
           {expandedView ? "Show 24 Hours" : "Show 48 Hours"}
         </button>
       </div>
-
-      {/* Hide scrollbar styling */}
-      <style>{`
-        .hide-scrollbar::-webkit-scrollbar {
-          display: none;
-        }
-        .hide-scrollbar {
-          -ms-overflow-style: none;
-          scrollbar-width: none;
-        }
-      `}</style>
     </div>
   );
 };

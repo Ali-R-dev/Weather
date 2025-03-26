@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-// import LoadingSpinner from "./LoadingSpinner";
+import styles from "./WeatherLoadingScreen.module.css";
 
 interface WeatherLoadingScreenProps {
   isLoading: boolean;
@@ -24,8 +24,8 @@ export default function WeatherLoadingScreen({
   if (hidden) return null;
 
   return (
-    <div className={`weather-loading-container ${fadeOut ? "fade-out" : ""}`}>
-      <div className="ambient-background">
+    <div className={`${styles.loadingScreen} ${fadeOut ? styles.fadeOut : ""}`}>
+      <div className={styles.ambientBackground}>
         <div className="cloud cloud-1"></div>
         <div className="cloud cloud-2"></div>
         <div className="cloud cloud-3"></div>
@@ -37,27 +37,36 @@ export default function WeatherLoadingScreen({
               style={{
                 left: `${Math.random() * 100}%`,
                 animationDuration: `${0.5 + Math.random() * 0.7}s`,
-                animationDelay: `${Math.random() * 0.5}s`,
+                animationDelay: `${Math.random() * 2}s`,
               }}
             ></div>
           ))}
         </div>
       </div>
 
-      <div className="loading-content">
-        <div className="app-logo">
+      <div className={styles.loadingContent}>
+        <div className="app-logo mb-6">
           <div className="logo-icon">
             <div className="sun-circle"></div>
             <div className="cloud-shape"></div>
           </div>
-          <h1>Weather App</h1>
+          <h1 className="text-2xl font-semibold text-white text-center">
+            Weather App
+          </h1>
         </div>
-        <div className="loading-indicator">
-          <div className="loading-bar">
-            <div className="loading-progress"></div>
-          </div>
-          <p>Loading your forecast...</p>
+
+        <div className={styles.loadingSpinner}>
+          <div className={styles.spinnerRing}></div>
+          <div className={styles.spinnerRing}></div>
+          <div className={styles.spinnerRing}></div>
+          <div className={styles.spinnerRing}></div>
         </div>
+
+        <div className={styles.loadingBar}>
+          <div className={styles.loadingProgress}></div>
+        </div>
+
+        <p className="text-white/80 text-sm mt-2">Loading weather data...</p>
       </div>
     </div>
   );
