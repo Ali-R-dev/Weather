@@ -93,20 +93,17 @@
 }
 
 .locationItem {
-  margin: 0.25rem;
-  padding: 0.625rem;
-  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-radius: 0.75rem;
-  background-color: transparent;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
   transition: all 0.2s ease;
 }
 
-.locationItem:hover, .locationItemActive {
+.locationItem:hover {
   background-color: rgba(255, 255, 255, 0.1);
-  transform: scale(1.02);
 }
 
 .locationItem:active {

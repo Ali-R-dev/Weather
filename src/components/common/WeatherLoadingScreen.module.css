@@ -2,18 +2,20 @@
   position: fixed;
   top: 0;
   left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, #0ea5e9, #2563eb);
+  right: 0;
+  bottom: 0;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  z-index: 9999;
-  transition: opacity 0.5s ease-out;
+  background: linear-gradient(135deg, #0ea5e9, #2563eb);
+  z-index: 50;
+  transition: opacity 0.5s ease-in-out;
 }
 
 .fadeOut {
   opacity: 0;
+  pointer-events: none;
 }
 
 .ambientBackground {
@@ -28,32 +30,32 @@
 
 .loadingContent {
   position: relative;
-  z-index: 10;
+  z-index: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
-  backdrop-filter: blur(10px);
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 1.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 1.5rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  padding: 2rem;
+  text-align: center;
 }
 
 .loadingSpinner {
   position: relative;
-  width: 80px;
-  height: 80px;
+  width: 60px;
+  height: 60px;
+  margin: 1rem auto;
 }
 
 .spinnerRing {
+  box-sizing: border-box;
+  display: block;
   position: absolute;
-  width: 64px;
-  height: 64px;
-  border: 8px solid rgba(255, 255, 255, 0.3);
+  width: 48px;
+  height: 48px;
+  margin: 6px;
+  border: 6px solid #fff;
   border-radius: 50%;
-  animation: spinnerRotation 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
-  border-color: rgba(255, 255, 255, 0.3) transparent transparent transparent;
+  animation: spinner 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  border-color: #fff transparent transparent transparent;
 }
 
 .spinnerRing:nth-child(1) {
@@ -68,24 +70,7 @@
   animation-delay: -0.15s;
 }
 
-.loadingBar {
-  width: 200px;
-  height: 4px;
-  background: rgba(255, 255, 255, 0.2);
-  border-radius: 9999px;
-  overflow: hidden;
-  margin: 1rem 0;
-}
-
-.loadingProgress {
-  height: 100%;
-  width: 30%;
-  background: white;
-  border-radius: 9999px;
-  animation: loadingBarAnimation 1.5s infinite;
-}
-
-@keyframes spinnerRotation {
+@keyframes spinner {
   0% {
     transform: rotate(0deg);
   }
@@ -94,11 +79,36 @@
   }
 }
 
-@keyframes loadingBarAnimation {
+.loadingBar {
+  width: 180px;
+  height: 4px;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 2px;
+  margin: 1rem 0;
+  overflow: hidden;
+  position: relative;
+}
+
+.loadingProgress {
+  height: 100%;
+  width: 100%;
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 0),
+    rgba(255, 255, 255, 0.8),
+    rgba(255, 255, 255, 0)
+  );
+  animation: loadingAnimation 1.5s ease-in-out infinite;
+  position: absolute;
+  top: 0;
+  left: -100%;
+}
+
+@keyframes loadingAnimation {
   0% {
-    transform: translateX(-100%);
+    left: -100%;
   }
   100% {
-    transform: translateX(400%);
+    left: 100%;
   }
 }

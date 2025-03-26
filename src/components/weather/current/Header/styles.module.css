@@ -1,10 +1,9 @@
 .headerTitle {
-  font-size: 2.25rem;
-  font-weight: 700;
-  margin-bottom: 0.25rem;
+  background-gradient: var(--gradient-text);
   background-clip: text;
   text-transform: none;
   color: transparent;
+  font-weight: 700;
 }
 
 .locationInfo {
@@ -32,18 +31,9 @@
   border-radius: 9999px;
   background-color: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
-  transition: all 0.2s ease;
 }
 
 @media (min-width: 640px) {
-  .headerTitle {
-    font-size: 2.5rem;
-  }
-
-  .locationInfo {
-    font-size: 1rem;
-  }
-
   .weatherConditions {
     font-size: 1.5rem;
     margin-top: 0;
