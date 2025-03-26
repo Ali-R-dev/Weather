@@ -77,7 +77,7 @@ body {
   width: 100%;
   transition: all var(--transition-slow);
   overflow-x: hidden;
-  isolation: isolate; /* Creates a new stacking context */
+  isolation: isolate;
   position: relative;
   perspective: 1000px;
   transform-style: preserve-3d;
@@ -145,123 +145,62 @@ body {
 }
 
 /* ========== Global Animations ========== */
+/* These animations are used across multiple components */
 @keyframes fade-in {
-  from {
-    opacity: 0;
-    transform: translateY(-10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes shimmer {
-  0% {
-    background-position: -200% 0;
-  }
-  100% {
-    background-position: 200% 0;
-  }
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
 }
 
 @keyframes pulse {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 0.8;
-  }
-  50% {
-    transform: scale(1.1);
-    opacity: 1;
-  }
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.1); opacity: 1; }
 }
 
 @keyframes float {
-  0%, 100% {
-    transform: translateY(0);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-10px); }
 }
 
-/* Add these common animation keyframes from index.css */
+/* Weather effect animations used by WeatherEffects.tsx */
 @keyframes driftacross {
-  0% {
-    transform: translateX(-100%);
-    opacity: 0.2;
-  }
-  10% {
-    opacity: 0.3;
-  }
-  90% {
-    opacity: 0.3;
-  }
-  100% {
-    transform: translateX(100vw);
-    opacity: 0.2;
-  }
+  0% { transform: translateX(-100%); opacity: 0.2; }
+  10% { opacity: 0.3; }
+  90% { opacity: 0.3; }
+  100% { transform: translateX(100vw); opacity: 0.2; }
 }
 
 @keyframes rainfall {
-  0% {
-    transform: translateY(-100%);
-    opacity: 0;
-  }
-  5% {
-    opacity: 0.7;
-  }
-  95% {
-    opacity: 0.7;
-  }
-  100% {
-    transform: translateY(calc(100vh + 20%));
-    opacity: 0;
-  }
+  0% { transform: translateY(-100%); opacity: 0; }
+  5% { opacity: 0.7; }
+  95% { opacity: 0.7; }
+  100% { transform: translateY(calc(100vh + 20%)); opacity: 0; }
 }
 
 @keyframes snowfall {
-  0% {
-    transform: translateY(-10%) rotate(0deg);
-    opacity: 0;
-  }
-  10% {
-    opacity: 0.8;
-  }
-  80% {
-    opacity: 0.8;
-  }
-  100% {
-    transform: translateY(calc(100vh + 10%)) rotate(360deg);
-    opacity: 0;
-  }
+  0% { transform: translateY(-10%) rotate(0deg); opacity: 0; }
+  10% { opacity: 0.8; }
+  80% { opacity: 0.8; }
+  100% { transform: translateY(calc(100vh + 10%)) rotate(360deg); opacity: 0; }
 }
 
 @keyframes cloud-drift {
-  0% {
-    transform: translateX(-100px);
-  }
-  100% {
-    transform: translateX(calc(100vw + 200px));
-  }
+  0% { transform: translateX(-100px); }
+  100% { transform: translateX(calc(100vw + 200px)); }
 }
 
 @keyframes lightning {
-  0%, 100% {
-    opacity: 0;
-  }
-  48%, 52% {
-    opacity: 0;
-  }
-  50% {
-    opacity: 0.3;
-  }
+  0%, 100% { opacity: 0; }
+  48%, 52% { opacity: 0; }
+  50% { opacity: 0.3; }
 }
 
 /* ========== Utility Classes ========== */
-.animate-fade-in {
-  animation: fade-in 0.5s ease-out forwards;
-}
+.animate-fade-in { animation: fade-in 0.5s ease-out forwards; }
 
 .animate-shimmer {
   background: linear-gradient(90deg, 
@@ -272,57 +211,9 @@ body {
   animation: shimmer 2s infinite;
 }
 
-.animate-float {
-  animation: float 5s ease-in-out infinite;
-}
+.animate-float { animation: float 5s ease-in-out infinite; }
 
-/* Card styles from index.css */
-.weather-card {
-  backdrop-filter: blur(8px);
-  border-radius: 16px;
-  overflow: hidden;
-  transition: all 0.3s ease;
-}
-
-.weather-card-light {
-  background: rgba(255, 255, 255, 0.2);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.3);
-}
-
-.weather-card-dark {
-  background: rgba(0, 0, 0, 0.2);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.2);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-/* Tab styling - important for UI components */
-.forecast-tabs {
-  background: rgba(255, 255, 255, 0.15);
-  backdrop-filter: blur(8px);
-  border-radius: 12px;
-  padding: 4px;
-}
-
-.tab-button {
-  padding: 8px 16px;
-  border-radius: 8px;
-  transition: all 0.2s ease;
-  font-weight: 500;
-  text-align: center;
-}
-
-.tab-active {
-  background: rgba(255, 255, 255, 0.9);
-  color: #333;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-.tab-inactive {
-  color: white;
-}
-
-/* Glass card styling */
+/* Glass styling used across multiple components */
 .glass {
   background: var(--glass-background);
   backdrop-filter: blur(10px);
@@ -348,37 +239,17 @@ body {
 
 /* Hide scrollbar but allow scrolling */
 .hide-scrollbar {
-  scrollbar-width: none; /* Firefox */
-  -ms-overflow-style: none; /* IE/Edge */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
 }
 
 .hide-scrollbar::-webkit-scrollbar {
-  display: none; /* Chrome, Safari, Opera */
+  display: none;
 }
 
-/* Loading animation styles needed by WeatherLoadingScreen */
-.weather-loading-container {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(165deg, #1e40af, #0ea5e9, #7dd3fc);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
-  transition: opacity 0.6s ease-out;
-  overflow: hidden;
-}
-
-.weather-loading-container.fade-out {
-  opacity: 0;
-}
-
-/* Ambient background animations */
+/* Ambient background for loading screen */
 .ambient-background {
   position: absolute;
   top: 0;
@@ -459,7 +330,7 @@ body {
   animation: cloud-drift 30s linear infinite 10s;
 }
 
-/* Accessibility */
+/* ========== Accessibility ========== */
 .sr-only {
   position: absolute;
   width: 1px;
@@ -531,11 +402,6 @@ a:focus-visible {
     --space-8: 1.5rem;
     --space-12: 2rem;
     --space-16: 3rem;
-  }
-  
-  .weather-card-hourly {
-    height: auto;
-    max-height: 180px;
   }
 }
 
