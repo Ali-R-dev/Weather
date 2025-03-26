@@ -6,7 +6,7 @@ import useSavedLocations, {
 } from "../../hooks/useSavedLocations";
 import { GeocodingResult } from "../../services/geocodingService";
 import { useLocationSearch } from "../../hooks/useLocationSearch";
-import LoadingSpinner from "../common/LoadingSpinner";
+// import LoadingSpinner from "../common/LoadingSpinner";
 import SearchInput from "./search/SearchInput";
 import LocationItem from "./search/LocationItem";
 import NoResults from "./search/NoResults";
@@ -29,7 +29,7 @@ export default function MiniSearchBar({
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [recentlyUsed, setRecentlyUsed] = useState<SavedLocation[]>([]);
-  const { weatherData, setLocation } = useWeather();
+  const { setLocation } = useWeather();
   const { saveLocation, setAsDefault, removeLocation, defaultLocation } =
     useSavedLocations();
 
@@ -189,7 +189,7 @@ export default function MiniSearchBar({
           onQueryChange={setQuery}
           onFocus={handleFocus}
           onClear={handleClear}
-          inputRef={inputRef}
+          inputRef={inputRef!}
         />
       </motion.div>
 

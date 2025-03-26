@@ -4,7 +4,6 @@ import { useComponentPerformance } from "../../utils/performanceMonitor";
 interface OptimizedRenderProps {
   children: React.ReactNode;
   name: string;
-  threshold?: number; // Milliseconds
   enableLogging?: boolean;
   skipIfOffscreen?: boolean;
 }
@@ -16,8 +15,7 @@ interface OptimizedRenderProps {
 const OptimizedRender: React.FC<OptimizedRenderProps> = ({
   children,
   name,
-  threshold = 16, // Default to 16ms (1 frame at 60fps)
-  enableLogging = process.env.NODE_ENV === "development",
+  enableLogging = import.meta.env.DEV, // Using Vite's import.meta.env instead of process.env
   skipIfOffscreen = true,
 }) => {
   const ref = useRef<HTMLDivElement>(null);

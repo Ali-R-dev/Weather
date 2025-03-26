@@ -35,7 +35,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
   const generateCalendarDays = () => {
     const today = new Date();
     const days: Date[] = [];
-    const startMonth = new Date(today);
+    // Removed unused startMonth variable
 
     // Generate days for current month and next month
     for (let i = 0; i < maxRange; i++) {

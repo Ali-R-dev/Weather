@@ -1,6 +1,5 @@
 import React from "react";
 import { motion } from "framer-motion";
-import { TemperatureUnit } from "../../../context/SettingsContext";
 
 interface TemperatureMainProps {
   temperature: number;

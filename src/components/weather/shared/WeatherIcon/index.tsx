@@ -1,12 +1,16 @@
 import React from "react";
 import { motion } from "framer-motion";
 import styles from "./styles.module.css";
-// Fix this import path
-import { WeatherIconProps, getGlowColor, getIconColorClass } from "./IconTypes";
+// Fix this import path to point to the correct location
+import {
+  WeatherIconProps,
+  getGlowColor,
+  getIconColorClass,
+} from "../icons/IconTypes";
 
 // Import individual icon components
-import SunIcon from "./icons/SunIcon";
-import MoonIcon from "./icons/MoonIcon";
+import SunIcon from "../icons/SunIcon";
+import MoonIcon from "../icons/MoonIcon";
 // Import additional icons as needed
 
 const WeatherIcon: React.FC<WeatherIconProps> = ({
@@ -67,11 +71,11 @@ const WeatherIcon: React.FC<WeatherIconProps> = ({
     switch (type) {
       case "sun":
       case "clear-day":
-        return <SunIcon className={iconClass} />;
+        return <SunIcon className={iconClass} type={type} />;
 
       case "moon":
       case "clear-night":
-        return <MoonIcon className={iconClass} />;
+        return <MoonIcon className={iconClass} type={type} />;
 
       // Add cases for other icon types
       // case "cloud":

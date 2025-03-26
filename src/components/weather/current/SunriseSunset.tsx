@@ -1,4 +1,4 @@
-import React, { useMemo } from "react";
+import React from "react";
 import { motion } from "framer-motion";
 import { TimeFormat } from "../../../context/SettingsContext";
 import { formatTimeWithFormat } from "../../../utils/formatting";

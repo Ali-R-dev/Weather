@@ -10,7 +10,7 @@ interface PerformanceMarks {
 const marks: PerformanceMarks = {};
 
 // Is performance monitoring enabled
-let isEnabled = process.env.NODE_ENV === "development";
+let isEnabled = import.meta.env.DEV; // Using Vite's import.meta.env instead of process.env
 
 /**
  * Enable or disable performance monitoring
@@ -78,8 +78,10 @@ export const startRecurringMeasurement = (name: string): (() => void) => {
 /**
  * Monitor component render time with React useEffect
  */
-export const useComponentPerformance = (componentName: string): void => {
-  if (!isEnabled || typeof window === "undefined") return;
+export const useComponentPerformance = (
+  componentName: string
+): (() => void) => {
+  if (!isEnabled || typeof window === "undefined") return () => {}; // Return empty function instead of void
 
   mark(`${componentName}-render-start`);
 

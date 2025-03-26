@@ -28,7 +28,7 @@ export default function MiniSearchBar({
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [recentlyUsed, setRecentlyUsed] = useState<SavedLocation[]>([]);
-  const { weatherData, setLocation } = useWeather();
+  const { setLocation } = useWeather();
   const { saveLocation, setAsDefault, removeLocation, defaultLocation } =
     useSavedLocations();
 
@@ -180,7 +180,9 @@ export default function MiniSearchBar({
       <motion.div
         animate={{
           scale: isActive ? 1.02 : 1,
-          boxShadow: isActive ? "0 0 0 3px rgba(255,255,255,0.3)" : "none",
+          boxShadow: isActive
+            ? "0 0 0 3px rgba(255,255,255,0.3)"
+            : "0 0 0 0 rgba(255,255,255,0)",
         }}
       >
         <SearchInput
@@ -188,7 +190,7 @@ export default function MiniSearchBar({
           onQueryChange={setQuery}
           onFocus={handleFocus}
           onClear={handleClear}
-          inputRef={inputRef}
+          inputRef={inputRef as React.RefObject<HTMLInputElement>}
         />
       </motion.div>
 

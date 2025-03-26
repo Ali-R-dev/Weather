@@ -26,37 +26,11 @@ const HourlyForecastItem: React.FC<HourlyForecastItemProps> = ({
   const weatherInfo = getWeatherInfo(weatherCode);
   const hasPrecip = precipitationProbability > 0;
 
-  const tempCelsius = temperature;
+  // const tempCelsius = temperature;
   const displayTemp =
     settings.units.temperature === "celsius"
       ? temperature
       : AppConfig.utils.convertTemperature(temperature, "fahrenheit");
-
-  // Enhanced temperature color logic
-  const getTempColor = () => {
-    if (tempCelsius >= 35) return "text-red-500"; // Extreme heat
-    if (tempCelsius >= 30) return "text-red-400"; // Very hot
-    if (tempCelsius >= 25) return "text-orange-400"; // Hot
-    if (tempCelsius >= 20) return "text-orange-300"; // Warm
-    if (tempCelsius >= 15) return "text-yellow-300"; // Mild
-    if (tempCelsius >= 10) return "text-green-300"; // Cool
-    if (tempCelsius >= 5) return "text-blue-300"; // Cold
-    if (tempCelsius >= 0) return "text-blue-400"; // Very cold
-    if (tempCelsius >= -5) return "text-indigo-400"; // Freezing
-    return "text-indigo-500"; // Extreme cold
-  };
-
-  // Get weather-specific gradient
-  const getWeatherGradient = () => {
-    const icon = weatherInfo.icon;
-    if (icon.includes("sun")) return "from-yellow-400/20 to-orange-500/20";
-    if (icon.includes("cloud")) return "from-blue-300/20 to-gray-400/20";
-    if (icon.includes("rain")) return "from-blue-400/20 to-blue-600/20";
-    if (icon.includes("snow")) return "from-blue-100/20 to-blue-300/20";
-    if (icon.includes("fog")) return "from-gray-300/20 to-gray-500/20";
-    if (icon.includes("thunder")) return "from-yellow-400/20 to-purple-500/20";
-    return "from-blue-400/20 to-indigo-500/20";
-  };
 
   return (
     <motion.div

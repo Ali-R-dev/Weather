@@ -9,7 +9,10 @@ import { useEffect, useRef } from "react";
 export const useFocusTrap = (
   active: boolean
 ): React.RefObject<HTMLDivElement> => {
-  const containerRef = useRef<HTMLDivElement>(null);
+  // Fix the reference type - ensure it's always returned as a proper RefObject<HTMLDivElement>
+  const containerRef = useRef<HTMLDivElement>(
+    null
+  ) as React.RefObject<HTMLDivElement>;
 
   useEffect(() => {
     if (!active) return;
