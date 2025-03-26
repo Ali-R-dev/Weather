@@ -1,13 +1,13 @@
 import React, { useState, useEffect } from "react";
 import { HourlyWeather } from "../../../types/weather.types";
 import {
-  formatDay,
   groupHoursByDay,
   findCurrentTimeIndex,
 } from "../../../utils/formatting";
 import TemperatureGraph from "./TemperatureGraph";
-import HourlyForecastItem from "./HourlyForecastItem";
-import styles from "./HourlyForecast.module.css";
+import HourlySection from "./HourlySection";
+import HourlyForecastSummary from "./HourlyForecastSummary";
+import ViewToggle from "./ViewToggle";
 
 interface HourlyForecastProps {
   hourlyData: HourlyWeather;
@@ -64,65 +64,31 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({ hourlyData }) => {
 
   return (
     <div className="h-full">
-      {/* Section header with forecast info */}
-      <div className="flex items-center justify-between mb-4">
-        <h2 className="text-lg font-semibold text-white">Hourly Forecast</h2>
-        <div className="text-sm text-white/80">
-          <span>
-            {lowTemp}° - {highTemp}°
-          </span>
-        </div>
-      </div>
+      <HourlyForecastSummary highTemp={highTemp} lowTemp={lowTemp} />
 
-      {/* Temperature graph */}
       <TemperatureGraph
         temperatures={displayTemps}
         times={displayHours}
         currentTimeIndex={currentTimeIndex}
       />
 
-      {/* Day headers and hourly forecast */}
+      {/* Day sections */}
       <div className="mt-4">
         {Object.entries(groupedHours).map(([day, hours]) => (
-          <div key={day} className="mb-4">
-            <h3 className="text-sm font-medium text-white/70 mb-2">
-              {formatDay(day)}
-            </h3>
-            <div className={`${styles.container} ${styles.hideScrollbar}`}>
-              <div className={styles.hourlyList}>
-                {hours.map((time) => {
-                  const index = hourlyData.time.indexOf(time);
-                  const isCurrentHour = index === currentTimeIndex;
-
-                  return (
-                    <div key={time} id={`hour-${index}`}>
-                      <HourlyForecastItem
-                        time={time}
-                        temperature={hourlyData.temperature_2m[index]}
-                        weatherCode={hourlyData.weather_code[index]}
-                        precipitationProbability={
-                          hourlyData.precipitation_probability[index]
-                        }
-                        isCurrentHour={isCurrentHour}
-                      />
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
+          <HourlySection
+            key={day}
+            day={day}
+            hours={hours}
+            hourlyData={hourlyData}
+            currentTimeIndex={currentTimeIndex}
+          />
         ))}
       </div>
 
-      {/* Toggle button for expanded view */}
-      <div className="mt-3 flex justify-center">
-        <button
-          onClick={() => setExpandedView(!expandedView)}
-          className="px-4 py-1.5 rounded-full bg-white/10 text-sm font-medium text-white hover:bg-white/15 transition-all"
-        >
-          {expandedView ? "Show 24 Hours" : "Show 48 Hours"}
-        </button>
-      </div>
+      <ViewToggle
+        expandedView={expandedView}
+        toggleView={() => setExpandedView(!expandedView)}
+      />
     </div>
   );
 };
