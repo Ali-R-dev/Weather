@@ -81,7 +81,7 @@ const PrecipitationMetric: React.FC<PrecipitationMetricProps> = ({
   // Enhanced subtitle with probability gauge
   const enhancedSubtitle = (
     <div className="flex items-center justify-between">
-      <div className="text-xs">{precipitationText}</div>
+      <div className="text-xs pe-2">{precipitationText}</div>
 
       {precipitationProbability !== undefined && (
         <div

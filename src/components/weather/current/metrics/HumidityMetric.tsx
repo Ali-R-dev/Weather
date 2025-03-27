@@ -69,7 +69,7 @@ const HumidityMetric: React.FC<HumidityMetricProps> = ({
   // Enhanced subtitle with comfort indicator
   const enhancedSubtitle = (
     <div className="flex items-center justify-between">
-      <div className="text-xs">{getHumidityLevel()}</div>
+      <div className="text-xs pe-2">{getHumidityLevel()}</div>
 
       {/* Humidity comfort gauge */}
       <div className="relative w-12 h-1.5 bg-white/10 rounded-full overflow-hidden">

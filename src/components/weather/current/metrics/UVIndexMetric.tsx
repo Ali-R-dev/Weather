@@ -64,7 +64,7 @@ const UVIndexMetric: React.FC<UVIndexMetricProps> = ({
   // Enhanced subtitle with visual indicator
   const enhancedSubtitle = (
     <div className="flex items-center justify-between">
-      <div className="text-xs">{getUVLevel()}</div>
+      <div className="text-xs pe-2">{getUVLevel()}</div>
 
       {/* UV level gauge */}
       <div className="relative w-12 h-1.5 bg-white/10 rounded-full overflow-hidden">

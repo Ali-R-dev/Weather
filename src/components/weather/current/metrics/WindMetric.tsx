@@ -95,13 +95,13 @@ const WindMetric: React.FC<WindMetricProps> = ({
   // Create a compact, inline subtitle
   const compactSubtitle = (
     <div className="flex items-center justify-between">
-      <div className="flex items-center text-xs">
+      <div className="flex items-center text-xs pe-1">
         <span>From {getWindDirection(windDirection)}</span>
 
         {/* Tiny direction arrow */}
         <svg
           viewBox="0 0 24 24"
-          className="w-3 h-3 ml-1.5"
+          className="w-5 h-5 ml-1.5"
           style={{ transform: `rotate(${windDirection}deg)` }}
         >
           <path d="M12 2L19 9H5L12 2Z" fill="currentColor" />
