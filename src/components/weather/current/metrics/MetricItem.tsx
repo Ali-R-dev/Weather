@@ -25,7 +25,11 @@ const MetricItem: React.FC<MetricItemProps> = ({
       className="bg-white/10 backdrop-blur-md rounded-xl p-3 flex-1 min-w-[140px] border border-white/10 transition-all hover:bg-white/15"
       whileHover={{ y: -3, boxShadow: "0 10px 15px -3px rgba(0, 0, 0, 0.1)" }}
       whileTap={onClick ? { scale: 0.98 } : undefined}
-      initial={{ opacity: 0, y: 20 }}
+      initial={{
+        opacity: 0,
+        y: 20,
+        boxShadow: "0 0px 0px 0px rgba(0, 0, 0, 0)",
+      }}
       animate={{ opacity: 1, y: 0 }}
       transition={{
         delay: animationDelay,

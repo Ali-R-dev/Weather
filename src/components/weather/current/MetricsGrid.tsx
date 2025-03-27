@@ -26,22 +26,22 @@ const MetricsGrid: React.FC<MetricsGridProps> = ({
 }) => {
   return (
     <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
-      <HumidityMetric humidity={humidity} animationDelay={0.2} />
+      <HumidityMetric humidity={humidity} animationDelay={0.05} />
 
       <WindMetric
         windSpeed={windSpeed}
         windDirection={windDirection}
         windUnit={windUnit}
-        animationDelay={0.3}
+        animationDelay={0.05}
       />
 
       <PrecipitationMetric
         precipitation={precipitation}
         precipitationProbability={precipitationProbability}
-        animationDelay={0.4}
+        animationDelay={0.05}
       />
 
-      <UVIndexMetric uvIndex={uvIndex} animationDelay={0.5} />
+      <UVIndexMetric uvIndex={uvIndex} animationDelay={0.05} />
     </div>
   );
 };

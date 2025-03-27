@@ -12,8 +12,20 @@ const DetailPanel: React.FC<DetailPanelProps> = ({ show, children }) => {
       {show && (
         <motion.div
           key="details"
-          initial={{ height: 0, opacity: 0, y: -20 }}
-          animate={{ height: "auto", opacity: 1, y: 0 }}
+          initial={{
+            height: 0,
+            opacity: 0,
+            y: -20,
+            // boxShadow: "0 0px 0px 0px rgba(0, 0, 0, 0)",
+          }}
+          animate={{
+            height: "auto",
+            opacity: 1,
+            y: 0,
+            // boxShadow: show
+            //   ? "0 10px 25px rgba(0, 0, 0, 0.1)"
+            //   : "0 0px 0px 0px rgba(0, 0, 0, 0)",
+          }}
           exit={{ height: 0, opacity: 0, y: -10 }}
           transition={{
             duration: 0.4,
@@ -23,7 +35,10 @@ const DetailPanel: React.FC<DetailPanelProps> = ({ show, children }) => {
           className="mt-6 overflow-hidden"
         >
           <motion.div
-            initial={{ opacity: 0, scale: 0.98 }}
+            initial={{
+              opacity: 0,
+              scale: 0.98,
+            }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.4, delay: 0.1 }}
             className="grid grid-cols-1 sm:grid-cols-2 gap-4"

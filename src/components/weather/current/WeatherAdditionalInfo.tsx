@@ -1,4 +1,5 @@
 import React from "react";
+import { motion } from "framer-motion";
 import styles from "./CurrentWeather.module.css";
 
 interface WeatherAdditionalInfoProps {
@@ -11,7 +12,18 @@ const WeatherAdditionalInfo: React.FC<WeatherAdditionalInfoProps> = ({
   if (!pressure) return null;
 
   return (
-    <div className={styles.detailCard}>
+    <motion.div
+      className={styles.detailCard}
+      initial={{
+        boxShadow: "0 0px 0px 0px rgba(0, 0, 0, 0)", // Explicit initial value
+      }}
+      whileHover={{
+        backgroundColor: "rgba(255, 255, 255, 0.15)",
+        y: -2,
+        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+      }}
+      transition={{ duration: 0.2 }}
+    >
       <div className={styles.detailLabel}>
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -36,7 +48,7 @@ const WeatherAdditionalInfo: React.FC<WeatherAdditionalInfoProps> = ({
           ? "High pressure - Generally fair weather"
           : "Low pressure - Potential for precipitation"}
       </div>
-    </div>
+    </motion.div>
   );
 };
 
