@@ -56,7 +56,7 @@ const TemperatureGraph: React.FC<TemperatureGraphProps> = ({
     return convertedTemps.map((temp, i) => ({
       temp,
       time: times[i],
-      label: formatHour(times[i]),
+      label: formatHour(times[i], settings.timeFormat), // Pass the user's time format preference
       isCurrent: i === currentTimeIndex,
       isPast: i <= currentTimeIndex,
       isKey:
@@ -65,7 +65,7 @@ const TemperatureGraph: React.FC<TemperatureGraphProps> = ({
         i === convertedTemps.length - 1 ||
         i % 4 === 0,
     }));
-  }, [convertedTemps, times, currentTimeIndex]);
+  }, [convertedTemps, times, currentTimeIndex, settings.timeFormat]); // Add settings.timeFormat as dependency
 
   // Find temperature extremes for the day
   const minTemp = Math.floor(Math.min(...convertedTemps)) - 1;
