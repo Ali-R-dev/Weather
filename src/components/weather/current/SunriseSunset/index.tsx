@@ -1,4 +1,4 @@
-import React from "react"; // Removed useMemo since it's unused
+import React from "react";
 import { motion } from "framer-motion";
 import { TimeFormat } from "../../../../context/SettingsContext";
 import { formatTimeWithFormat } from "../../../../utils/formatting";
@@ -41,22 +41,28 @@ const SunriseSunset: React.FC<SunriseSunsetProps> = ({
       transition={{ duration: 0.5 }}
       className={styles.container}
     >
-      <div className="flex justify-between items-center mb-3">
-        <div className="text-xs font-medium text-white/90 uppercase tracking-wide">
-          Day Length
-        </div>
-        <div className="text-sm font-medium">
+      <div className={styles.header}>
+        <h3 className={styles.title}>Day Length</h3>
+        <div className={styles.dayLength}>
           {dayLengthHours}h {dayLengthMinutes}m
         </div>
       </div>
 
-      {/* Day progress bar */}
-      <div className="relative mb-5 mt-2">
+      {/* Day progress bar container */}
+      <div className={styles.progressWrapper}>
         <div className={styles.progressContainer}>
+          {/* Progress track */}
           <div
             className={styles.progressBar}
             style={{ width: `${dayProgress}%` }}
           ></div>
+
+          {/* Time markers */}
+          <div className={styles.timeMarkers}>
+            <div className={styles.sunriseMarker}></div>
+            <div className={styles.noonMarker}></div>
+            <div className={styles.sunsetMarker}></div>
+          </div>
 
           {/* Sunrise indicator */}
           <div className={styles.sunriseIndicator}>
@@ -127,6 +133,20 @@ const SunriseSunset: React.FC<SunriseSunsetProps> = ({
           </svg>
         </div>
       </div>
+
+      {dayProgress > 0 && dayProgress < 100 ? (
+        <div className={styles.statusIndicator}>
+          <div className={styles.sunIsUp}>☀️ Sun is currently up</div>
+        </div>
+      ) : dayProgress === 0 ? (
+        <div className={styles.statusIndicator}>
+          <div className={styles.sunIsDown}>🌙 Before sunrise</div>
+        </div>
+      ) : (
+        <div className={styles.statusIndicator}>
+          <div className={styles.sunIsDown}>🌙 After sunset</div>
+        </div>
+      )}
     </motion.div>
   );
 };

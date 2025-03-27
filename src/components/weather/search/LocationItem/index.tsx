@@ -1,7 +1,6 @@
 import React from "react";
 import { motion } from "framer-motion";
 import { SavedLocation } from "../../../../hooks/useSavedLocations";
-// Fix the import path to get from types instead of service
 import { GeocodingResult } from "../../../../types/geocoding.types";
 import styles from "./styles.module.css";
 
