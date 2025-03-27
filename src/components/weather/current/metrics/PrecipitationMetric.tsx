@@ -21,17 +21,21 @@ const PrecipitationMetric: React.FC<PrecipitationMetricProps> = ({
         : "Heavy"
       : "None";
 
+  // New, clearer precipitation icon
   const precipIcon = (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
-      fill="currentColor"
-      className="w-4 h-4"
+      fill="#60A5FA"
+      className="w-6 h-6" // Slightly larger
     >
+      <path d="M7.75 4.5a5.25 5.25 0 0 1 10.305 1.5H18.5A3.5 3.5 0 0 1 18.5 13H5.5a3.5 3.5 0 0 1 0-7h.445A5.25 5.25 0 0 1 7.75 4.5Z" />
       <path
-        fillRule="evenodd"
-        d="M12 3.75a.75.75 0 01.75.75v6.75h6.75a.75.75 0 010 1.5h-6.75v6.75a.75.75 0 01-1.5 0v-6.75H4.5a.75.75 0 010-1.5h6.75V4.5a.75.75 0 01.75-.75z"
-        clipRule="evenodd"
+        d="M8.5 15l1.5 3M12 14l1.5 3M15.5 15l1.5 3"
+        strokeWidth="1.5"
+        stroke="#60A5FA"
+        fill="none"
+        strokeLinecap="round"
       />
     </svg>
   );

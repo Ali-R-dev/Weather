@@ -19,14 +19,32 @@ const UVIndexMetric: React.FC<UVIndexMetricProps> = ({
     return "Extreme";
   };
 
+  // Get color based on UV Index
+  const getUVColor = () => {
+    if (uvIndex <= 2) return "#10B981"; // green-500
+    if (uvIndex <= 5) return "#FBBF24"; // amber-400
+    if (uvIndex <= 7) return "#F59E0B"; // amber-500
+    if (uvIndex <= 10) return "#EF4444"; // red-500
+    return "#8B5CF6"; // purple-500
+  };
+
+  const uvColor = getUVColor();
+
+  // Simple UV icon - just a basic sun
   const uvIcon = (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
-      fill="currentColor"
-      className="w-4 h-4"
+      fill={uvColor}
+      className="w-5 h-5"
     >
-      <path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06l-1.591 1.59a.75.75 0 001.06 1.061l1.591-1.59zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.697 7.757a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 00-1.061 1.06l1.59 1.591z" />
+      <circle cx="12" cy="12" r="5" />
+      <path
+        d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"
+        stroke={uvColor}
+        strokeWidth="2"
+        strokeLinecap="round"
+      />
     </svg>
   );
 
