@@ -1,21 +1,22 @@
 import React, { useState, useEffect } from "react";
-import { motion } from "framer-motion";
 import { WeatherData } from "../../../types/weather.types";
 import { getWeatherInfo } from "../../../utils/weatherCodeMap";
 import { useWeather } from "../../../context/WeatherContext";
 import { useTheme } from "../../../context/ThemeContext";
 import { useSettings } from "../../../context/SettingsContext";
+import { getThemeFromWeatherCode } from "../../../utils/themeUtils";
 import {
   convertTemperature,
   convertWindSpeed,
 } from "../../../utils/unitConversion";
 
-import WeatherHeader from "./WeatherHeader";
+import WeatherHeader from "./Header";
 import TemperatureDisplay from "./TemperatureDisplay";
 import MetricsGrid from "./MetricsGrid";
 import DetailPanel from "./DetailPanel";
 import SunriseSunset from "./SunriseSunset";
-import ExpandToggle from "../../ui/ExpandToggle";
+import WeatherAdditionalInfo from "./WeatherAdditionalInfo";
+import WeatherDetailsToggle from "./WeatherDetailsToggle";
 
 interface CurrentWeatherProps {
   data: WeatherData;
@@ -47,7 +48,12 @@ const CurrentWeather: React.FC<CurrentWeatherProps> = ({ data }) => {
 
   // Apply theme based on current weather and time of day
   useEffect(() => {
-    applyTheme(data.current.weather_code, data.current.is_day === 1);
+    // Fix: Use getThemeFromWeatherCode to convert weather code to theme name first
+    const theme = getThemeFromWeatherCode(
+      data.current.weather_code,
+      data.current.is_day === 1
+    );
+    applyTheme(theme);
   }, [data.current.weather_code, data.current.is_day, applyTheme]);
 
   return (
@@ -78,18 +84,10 @@ const CurrentWeather: React.FC<CurrentWeatherProps> = ({ data }) => {
         windUnit={settings.units.wind}
       />
 
-      {/* Toggle for extended details */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ delay: 0.7 }}
-        className="mt-3 flex justify-center"
-      >
-        <ExpandToggle
-          expanded={showDetails}
-          onToggle={() => setShowDetails(!showDetails)}
-        />
-      </motion.div>
+      <WeatherDetailsToggle
+        expanded={showDetails}
+        onToggle={() => setShowDetails(!showDetails)}
+      />
 
       <DetailPanel show={showDetails}>
         {/* Sunrise/Sunset (if available) */}
@@ -101,34 +99,8 @@ const CurrentWeather: React.FC<CurrentWeatherProps> = ({ data }) => {
           />
         )}
 
-        {/* Additional panels can be added here */}
-        {data.current.pressure && (
-          <div className="bg-white/10 backdrop-blur-sm rounded-xl p-3 border border-white/10">
-            <div className="text-xs text-white/70 mb-1">Air Pressure</div>
-            <div className="flex items-center">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-                className="w-4 h-4 mr-1 text-green-300"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-13a.75.75 0 00-1.5 0v5.5a.75.75 0 001.5 0V5z"
-                  clipRule="evenodd"
-                />
-              </svg>
-              <span className="text-base font-medium">
-                {data.current.pressure} hPa
-              </span>
-            </div>
-            <div className="text-xs text-white/60 mt-1">
-              {data.current.pressure > 1013
-                ? "High pressure - Generally fair weather"
-                : "Low pressure - Potential for precipitation"}
-            </div>
-          </div>
-        )}
+        {/* Additional weather details */}
+        <WeatherAdditionalInfo pressure={data.current.pressure} />
       </DetailPanel>
     </div>
   );

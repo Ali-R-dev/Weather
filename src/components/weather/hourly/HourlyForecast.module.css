@@ -1,0 +1,98 @@
+.container {
+  overflow-x: auto;
+  white-space: nowrap;
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+  margin-bottom: 1rem;
+  padding-bottom: 0.5rem;
+}
+
+.container::-webkit-scrollbar {
+  display: none;
+}
+
+.hideScrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.hideScrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.hourlyList {
+  display: inline-flex;
+  gap: 0.75rem;
+  padding: 0.5rem 0;
+}
+
+.hourlyItem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  border-radius: 0.75rem;
+  padding: 0.75rem;
+  min-width: 5rem;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  transition: all 0.2s ease;
+}
+
+.hourlyItem:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-2px);
+}
+
+.current {
+  background-color: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 0 15px rgba(255, 255, 255, 0.2);
+}
+
+.current:hover {
+  background-color: rgba(255, 255, 255, 0.25);
+}
+
+.timeText {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.8);
+  margin-bottom: 0.25rem;
+}
+
+.temperature {
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin: 0.25rem 0;
+}
+
+.precipChance {
+  display: flex;
+  align-items: center;
+  font-size: 0.75rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-top: 0.25rem;
+}
+
+.precipIcon {
+  width: 0.75rem;
+  height: 0.75rem;
+  margin-right: 0.125rem;
+  color: rgba(96, 165, 250, 0.8);
+}
+
+.tempGraph {
+  position: relative;
+  height: 100px;
+  width: 100%;
+  margin: 1.5rem 0;
+}
+
+.graphContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+}

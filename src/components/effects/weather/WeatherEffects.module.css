@@ -1,0 +1,144 @@
+/* This file contains only the basic selectors needed for the React components.
+   The actual animations remain in WeatherEffects.css to avoid duplication. */
+
+.weatherScene {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  pointer-events: none;
+}
+
+/* Rain effect */
+.rainContainer {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.rain {
+  position: absolute;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+}
+
+.backRow {
+  z-index: 1;
+  bottom: 60px;
+  opacity: 0.5;
+}
+
+/* Snow effect */
+.snowflakes {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.snowflake {
+  position: fixed;
+  top: -10%;
+  z-index: 9999;
+  user-select: none;
+  pointer-events: none;
+}
+
+/* Fog effect */
+.fogContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+}
+
+.fogLayer {
+  position: absolute;
+  width: 200%;
+  height: 40%;
+  border-radius: 50%;
+}
+
+/* Sunny effect */
+.sunnyContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+}
+
+.sunRays {
+  position: absolute;
+  top: 10%;
+  left: 40%;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+}
+
+/* Night clear effect */
+.nightClearContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+}
+
+.star {
+  position: absolute;
+  border-radius: 50%;
+}
+
+/* Cloudy effect */
+.cloudyContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+}
+
+.cloud {
+  position: absolute;
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 50%;
+  transform: scale(1);
+  filter: blur(5px);
+}
+
+/* Stormy effect */
+.stormyContainer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+}
+
+.lightningFlash {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.3);
+  opacity: 0;
+}
+
+/* Hardware acceleration for animations */
+.optimizedAnimation {
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}

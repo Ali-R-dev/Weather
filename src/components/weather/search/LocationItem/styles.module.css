@@ -1,0 +1,13 @@
+.locationItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.locationItem:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}

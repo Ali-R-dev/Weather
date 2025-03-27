@@ -78,19 +78,22 @@ const DayItem: React.FC<DayItemProps> = ({
       </div>
 
       {/* Weather info and precipitation */}
-      <div className="flex-grow flex items-center gap-3">
-        <span className="text-sm font-medium text-white/90 flex-grow">
+      <div className="flex-grow flex flex-col md:flex-row md:items-center md:gap-2">
+        {/* Weather description */}
+        <span className="text-sm font-medium text-white/90 md:flex-grow">
           {weatherInfo.label}
         </span>
+
+        {/* Precipitation indicator - below on mobile, inline on larger screens */}
         {hasPrecip && (
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1 mt-1 md:mt-0 md:ml-auto md:mr-2">
             <div className="h-1 w-12 bg-blue-900/20 rounded-full overflow-hidden">
               <div
                 className="h-full bg-blue-400/70 rounded-full"
                 style={{ width: `${precipProbability}%` }}
               />
             </div>
-            <span className="text-xs font-medium text-blue-200 min-w-[28px]">
+            <span className="text-xs font-medium text-blue-200 whitespace-nowrap">
               {precipProbability}%
             </span>
           </div>
@@ -98,11 +101,15 @@ const DayItem: React.FC<DayItemProps> = ({
       </div>
 
       {/* Temperature */}
-      <div className="flex items-center gap-2 min-w-[80px] justify-end">
-        <span className={`font-bold text-sm ${getTempColor(maxTempCelsius)}`}>
+      <div className="flex items-center gap-1.5 min-w-[70px] shrink-0 justify-end ml-1">
+        <span
+          className={`font-bold text-sm whitespace-nowrap ${getTempColor(
+            maxTempCelsius
+          )}`}
+        >
           {Math.round(displayMaxTemp)}°
         </span>
-        <span className="text-sm text-white/60">
+        <span className="text-sm text-white/60 whitespace-nowrap">
           {Math.round(displayMinTemp)}°
         </span>
       </div>

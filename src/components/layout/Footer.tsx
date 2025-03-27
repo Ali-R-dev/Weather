@@ -1,39 +1,31 @@
 import React from "react";
+import styles from "./Footer.module.css";
 
 interface FooterProps {
   onShowPrivacyModal: () => void;
 }
 
 const Footer: React.FC<FooterProps> = ({ onShowPrivacyModal }) => {
+  const currentYear = new Date().getFullYear();
+
   return (
-    <footer className="w-full py-4 px-6 bg-white/5 backdrop-blur-sm mt-auto border-t border-white/10">
-      <div className="container mx-auto flex flex-col md:flex-row justify-between items-center gap-3 text-sm text-white/70">
-        <div className="flex items-center space-x-2">
-          <span>© 2025 Weather App</span>
-          <span className="hidden md:inline">•</span>
-          <a
-            href="https://araza.me"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-white transition-colors hover:underline"
-          >
-            Created by Ali Raza
-          </a>
+    <footer className={styles.footer}>
+      <div className={styles.container}>
+        <div className={styles.copyright}>
+          &copy; {currentYear} Weather App. All rights reserved.
         </div>
-        <div className="flex items-center space-x-4">
+
+        <div className={styles.links}>
           <a
             href="https://open-meteo.com/"
             target="_blank"
             rel="noopener noreferrer"
-            className="hover:text-white transition-colors hover:underline"
+            className={styles.link}
           >
             Powered by Open-Meteo
           </a>
-          <span>•</span>
-          <button
-            onClick={onShowPrivacyModal}
-            className="hover:text-white transition-colors hover:underline"
-          >
+          <span className={styles.divider}>•</span>
+          <button onClick={onShowPrivacyModal} className={styles.link}>
             Privacy Policy
           </button>
         </div>

@@ -1,39 +1,43 @@
 import React from "react";
+import { motion } from "framer-motion";
 
 interface ExpandToggleProps {
   expanded: boolean;
   onToggle: () => void;
-  showLabel?: string;
-  hideLabel?: string;
+  label?: string;
 }
 
 const ExpandToggle: React.FC<ExpandToggleProps> = ({
   expanded,
   onToggle,
-  showLabel = "More details",
-  hideLabel = "Hide details",
+  label,
 }) => {
   return (
-    <button
+    <motion.button
       onClick={onToggle}
-      className="text-xs text-white/70 flex items-center hover:text-white transition-colors"
+      className="px-4 py-1.5 rounded-full bg-white/10 text-sm font-medium text-white hover:bg-white/15 transition-all flex items-center"
+      whileHover={{ scale: 1.03 }}
+      whileTap={{ scale: 0.97 }}
     >
-      {expanded ? hideLabel : showLabel}
+      <span className="mr-1">{expanded ? "Hide" : "Show"}</span>
+      {label ? label : "Details"}
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        className={`h-3 w-3 ml-1 transition-transform ${
+        className={`w-4 h-4 ml-1 transition-transform ${
           expanded ? "rotate-180" : ""
         }`}
-        viewBox="0 0 20 20"
-        fill="currentColor"
+        fill="none"
+        viewBox="0 0 24 24"
+        stroke="currentColor"
       >
         <path
-          fillRule="evenodd"
-          d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-          clipRule="evenodd"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          strokeWidth={2}
+          d={expanded ? "M5 15l7-7 7 7" : "M19 9l-7 7-7-7"}
         />
       </svg>
-    </button>
+    </motion.button>
   );
 };
 

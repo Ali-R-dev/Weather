@@ -4,10 +4,8 @@ import {
   searchLocations,
   GeocodingResult,
 } from "../../services/geocodingService";
-import { useWeather } from "../../context/WeatherContext";
-import useSavedLocations, {
-  SavedLocation,
-} from "../../hooks/useSavedLocations";
+import { useLocation } from "../../context/LocationContext"; // Use location context
+import { SavedLocation } from "../../hooks/useSavedLocations";
 import LoadingSpinner from "../common/LoadingSpinner";
 
 interface LocationSearchProps {
@@ -25,14 +23,14 @@ export default function LocationSearch({
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [searchFocused, setSearchFocused] = useState(false);
   const [recentlyUsed, setRecentlyUsed] = useState<SavedLocation[]>([]);
-  const { setLocation } = useWeather();
   const {
-    savedLocations,
     defaultLocation,
+    savedLocations,
+    setLocation,
+    setDefaultLocation,
     saveLocation,
-    setAsDefault,
     removeLocation,
-  } = useSavedLocations();
+  } = useLocation();
   const searchTimeout = useRef<number | null>(null);
   const dropdownRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
@@ -155,7 +153,7 @@ export default function LocationSearch({
   // Set location as default
   const handleSetAsDefault = (e: React.MouseEvent, locationId: number) => {
     e.stopPropagation();
-    setAsDefault(locationId);
+    setDefaultLocation(locationId); // Was setAsDefault
   };
 
   // Remove a location
