@@ -3,17 +3,20 @@ import { WeatherProvider } from "./context/WeatherContext";
 import { ThemeProvider } from "./context/ThemeContext";
 import { SettingsProvider } from "./context/SettingsContext";
 import WeatherLoadingScreen from "./components/common/WeatherLoadingScreen";
-import PrivacyPolicyModal from "./components/PrivacyPolicyModal";
 import ErrorBoundary from "./components/common/ErrorBoundary";
-import Footer from "./components/layout/Footer";
+
 import {
   initializeAllMonitoring,
   markPerformance,
   measureBetweenMarks,
 } from "./utils/performance";
 
-// Lazy load heavyweight components
+// Lazy load components
 const HomePage = lazy(() => import("./pages/HomePage"));
+const Footer = lazy(() => import("./components/layout/Footer"));
+const PrivacyPolicyModal = lazy(
+  () => import("./components/PrivacyPolicyModal")
+);
 
 interface AppContentProps {
   initialLoading: boolean;
