@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useLocation } from "../../../../context/LocationContext"; // Use location context
+import { useLocation } from "../../../../context/LocationContext";
 import { SavedLocation } from "../../../../hooks/useSavedLocations";
 import { GeocodingResult } from "../../../../types/geocoding.types";
 import { useLocationSearch } from "../../../../hooks/useLocationSearch";
@@ -21,13 +21,11 @@ export default function MiniSearchBar({
   onSelect,
   isActive,
 }: MiniSearchBarProps) {
-  // Use our custom hook for search functionality
   const { query, setQuery, results, isSearching, clearSearch } =
     useLocationSearch(2, 300); // minChars=2, debounceTime=300
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  // Use location context instead of service directly
   const {
     defaultLocation,
     recentLocations,
@@ -135,9 +133,9 @@ export default function MiniSearchBar({
       <motion.div
         animate={{
           scale: isActive ? 1.02 : 1,
-          boxShadow: isActive
-            ? "0 0 0 3px rgba(255,255,255,0.3)"
-            : "0 0 0 0 rgba(255,255,255,0)",
+          // boxShadow: isActive
+          //   ? "0 0 0 3px rgba(255,255,255,0.3)"
+          //   : "0 0 0 0 rgba(255,255,255,0)",
         }}
       >
         <SearchInput

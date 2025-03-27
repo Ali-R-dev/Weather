@@ -69,6 +69,7 @@ export default function HomePage() {
             className="flex items-center justify-between mb-2"
             ref={searchContainerRef}
           >
+            <div className="ml-3 p-2 text-3xl font-bold text-white">AR</div>
             <MiniSearchBar
               onFocus={() => setShowSearchResults(true)}
               onSelect={() => setShowSearchResults(false)}
