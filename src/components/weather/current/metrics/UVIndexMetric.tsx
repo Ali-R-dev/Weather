@@ -1,5 +1,6 @@
 import React from "react";
 import MetricItem from "./MetricItem";
+import { motion } from "framer-motion";
 
 interface UVIndexMetricProps {
   uvIndex: number;
@@ -28,24 +29,57 @@ const UVIndexMetric: React.FC<UVIndexMetricProps> = ({
     return "#8B5CF6"; // purple-500
   };
 
-  const uvColor = getUVColor();
-
-  // Simple UV icon - just a basic sun
+  // Enhanced creative UV icon
   const uvIcon = (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill={uvColor}
-      className="w-5 h-5"
-    >
-      <circle cx="12" cy="12" r="5" />
-      <path
-        d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4M4.93 19.07l2.83-2.83M16.24 7.76l2.83-2.83"
-        stroke={uvColor}
-        strokeWidth="2"
-        strokeLinecap="round"
-      />
-    </svg>
+    <div className="relative w-8 h-8">
+      {/* Base sun shape */}
+      <motion.div
+        className="absolute inset-0 rounded-full flex items-center justify-center"
+        style={{
+          background: `conic-gradient(${getUVColor()}80 0%, ${getUVColor()}10 ${Math.min(
+            uvIndex * 9,
+            100
+          )}%, transparent ${Math.min(uvIndex * 9, 100)}%)`,
+          border: `1.5px solid ${getUVColor()}60`,
+        }}
+        animate={{ rotate: 360 }}
+        transition={{
+          duration: 20,
+          repeat: Infinity,
+          ease: "linear",
+        }}
+      >
+        <div
+          className="w-5 h-5 rounded-full flex items-center justify-center"
+          style={{ background: getUVColor() }}
+        >
+          <span className="text-[10px] font-semibold text-white">
+            {Math.round(uvIndex)}
+          </span>
+        </div>
+      </motion.div>
+    </div>
+  );
+
+  // Enhanced subtitle with visual indicator
+  const enhancedSubtitle = (
+    <div className="flex items-center justify-between">
+      <div className="text-xs">{getUVLevel()}</div>
+
+      {/* UV level gauge */}
+      <div className="relative w-12 h-1.5 bg-white/10 rounded-full overflow-hidden">
+        <motion.div
+          className="absolute top-0 left-0 h-full rounded-full"
+          style={{
+            width: `${Math.min((uvIndex / 12) * 100, 100)}%`,
+            background: `linear-gradient(to right, #10B981, #FBBF24, #F59E0B, #EF4444, #8B5CF6)`,
+          }}
+          initial={{ width: 0 }}
+          animate={{ width: `${Math.min((uvIndex / 12) * 100, 100)}%` }}
+          transition={{ duration: 1 }}
+        />
+      </div>
+    </div>
   );
 
   return (
@@ -53,7 +87,7 @@ const UVIndexMetric: React.FC<UVIndexMetricProps> = ({
       icon={uvIcon}
       title="UV Index"
       value={uvIndex.toFixed(1)}
-      subtitle={getUVLevel()}
+      subtitle={enhancedSubtitle}
       animationDelay={animationDelay}
     />
   );

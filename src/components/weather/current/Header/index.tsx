@@ -29,24 +29,24 @@ const WeatherHeader: React.FC<WeatherHeaderProps> = ({
       <div className="flex flex-col sm:flex-row sm:items-baseline sm:justify-between">
         <div className="flex-1">
           <motion.h1
-            className={styles.headerTitle}
-            initial={{ opacity: 0, y: 10 }}
+            className="text-3xl sm:text-4xl md:text-5xl font-bold mb-1"
+            initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
           >
-            <span className="bg-gradient-to-r from-white via-white to-white/60 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-white via-white to-white/70 bg-clip-text text-transparent">
               {locationName}
             </span>
           </motion.h1>
 
           <motion.div
-            className={styles.locationInfo}
+            className="text-base sm:text-lg text-white/80"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.6, delay: 0.3 }}
           >
             {(region || country) && (
-              <span className={styles.locationDetails}>
+              <span className="font-medium">
                 {region && country
                   ? `${region}, ${country}`
                   : country || region}
