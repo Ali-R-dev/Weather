@@ -185,7 +185,7 @@ export default function HomePage() {
               {/* Forecast tabs */}
               <div className="relative mb-8 mt-4">
                 <div className="flex justify-center">
-                  <div className="relative p-1.5 rounded-full">
+                  <div className="relative rounded-full">
                     <div className="flex  rounded-full p-1">
                       <button
                         onClick={() => setActiveTab("hourly")}

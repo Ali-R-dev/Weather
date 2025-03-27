@@ -29,11 +29,11 @@ const UVIndexMetric: React.FC<UVIndexMetricProps> = ({
     return "#8B5CF6"; // purple-500
   };
 
-  // Enhanced creative UV icon
+  // Enhanced creative UV icon - without rotation
   const uvIcon = (
     <div className="relative w-8 h-8">
-      {/* Base sun shape */}
-      <motion.div
+      {/* Base sun shape - static, no rotation */}
+      <div
         className="absolute inset-0 rounded-full flex items-center justify-center"
         style={{
           background: `conic-gradient(${getUVColor()}80 0%, ${getUVColor()}10 ${Math.min(
@@ -41,12 +41,6 @@ const UVIndexMetric: React.FC<UVIndexMetricProps> = ({
             100
           )}%, transparent ${Math.min(uvIndex * 9, 100)}%)`,
           border: `1.5px solid ${getUVColor()}60`,
-        }}
-        animate={{ rotate: 360 }}
-        transition={{
-          duration: 20,
-          repeat: Infinity,
-          ease: "linear",
         }}
       >
         <div
@@ -57,7 +51,7 @@ const UVIndexMetric: React.FC<UVIndexMetricProps> = ({
             {Math.round(uvIndex)}
           </span>
         </div>
-      </motion.div>
+      </div>
     </div>
   );
 
