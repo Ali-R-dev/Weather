@@ -1,3 +1,6 @@
+import { WeatherData } from "../types/weather.types";
+import { LocationInfo } from "../services/LocationService"; // Import LocationInfo
+
 const BASE_URL = "https://api.open-meteo.com/v1/forecast";
 
 export interface WeatherParams {
@@ -21,7 +24,7 @@ export async function fetchWeatherData({
   // Set weather data we want to retrieve
   url.searchParams.append(
     "current",
-    "temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,wind_direction_10m,is_day"
+    "temperature_2m,relative_humidity_2m,apparent_temperature,precipitation,weather_code,wind_speed_10m,wind_direction_10m,is_day,uv_index"
   );
   url.searchParams.append(
     "hourly",
@@ -29,7 +32,7 @@ export async function fetchWeatherData({
   );
   url.searchParams.append(
     "daily",
-    "weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max,wind_speed_10m_max"
+    "weather_code,temperature_2m_max,temperature_2m_min,precipitation_sum,precipitation_probability_max,wind_speed_10m_max,sunrise,sunset"
   );
 
   try {
@@ -46,3 +49,35 @@ export async function fetchWeatherData({
     throw error;
   }
 }
+
+export const WeatherCacheService = {
+  saveToCache(data: WeatherData, location: LocationInfo) {
+    try {
+      localStorage.setItem("weatherCache", JSON.stringify(data));
+      localStorage.setItem("cachedLocation", JSON.stringify(location));
+      localStorage.setItem(
+        "cacheTimestamp",
+        JSON.stringify(new Date().toISOString())
+      );
+    } catch (e) {
+      console.warn("Failed to cache weather data:", e);
+    }
+  },
+
+  getFromCache() {
+    try {
+      const cachedData = localStorage.getItem("weatherCache");
+      const cachedLocation = localStorage.getItem("cachedLocation");
+      const cacheTimestamp = localStorage.getItem("cacheTimestamp");
+
+      return {
+        data: cachedData ? JSON.parse(cachedData) : null,
+        location: cachedLocation ? JSON.parse(cachedLocation) : null,
+        timestamp: cacheTimestamp ? new Date(JSON.parse(cacheTimestamp)) : null,
+      };
+    } catch (e) {
+      console.error("Failed to load cached weather data:", e);
+      return { data: null, location: null, timestamp: null };
+    }
+  },
+};

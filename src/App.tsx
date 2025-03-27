@@ -2,14 +2,16 @@ import { useEffect, useState, Suspense, lazy } from "react";
 import { WeatherProvider } from "./context/WeatherContext";
 import { ThemeProvider } from "./context/ThemeContext";
 import { SettingsProvider } from "./context/SettingsContext";
+import { LocationProvider } from "./context/LocationContext";
+import { UIProvider } from "./context/UIContext";
 import WeatherLoadingScreen from "./components/common/WeatherLoadingScreen";
 import ErrorBoundary from "./components/common/ErrorBoundary";
 
-import {
-  initializeAllMonitoring,
-  markPerformance,
-  measureBetweenMarks,
-} from "./utils/performance";
+// import {
+//   initializeAllMonitoring,
+//   markPerformance,
+//   measureBetweenMarks,
+// } from "./utils/performance";
 
 // Lazy load components
 const HomePage = lazy(() => import("./pages/HomePage"));
@@ -30,10 +32,10 @@ function App() {
 
   useEffect(() => {
     // Initialize performance monitoring
-    initializeAllMonitoring();
+    // initializeAllMonitoring();
 
     // Mark the start of app initialization
-    markPerformance("app-mount-start");
+    // markPerformance("app-mount-start");
 
     // Check if it's the first visit
     const hasAcceptedPrivacy = localStorage.getItem("privacyPolicyAccepted");
@@ -59,12 +61,12 @@ function App() {
 
     return () => {
       // Measure total mount time when component unmounts
-      markPerformance("app-mount-end");
-      measureBetweenMarks(
-        "app-mount-start",
-        "app-mount-end",
-        "Total App Mount Time"
-      );
+      // markPerformance("app-mount-end");
+      // measureBetweenMarks(
+      //   "app-mount-start",
+      //   "app-mount-end",
+      //   "Total App Mount Time"
+      // );
       clearTimeout(timer);
     };
   }, []);
@@ -73,13 +75,17 @@ function App() {
     <ErrorBoundary>
       <ThemeProvider>
         <SettingsProvider>
-          <WeatherProvider>
-            <AppContent
-              initialLoading={initialLoading}
-              privacyModalVisible={privacyModalVisible}
-              setPrivacyModalVisible={setPrivacyModalVisible}
-            />
-          </WeatherProvider>
+          <LocationProvider>
+            <WeatherProvider>
+              <UIProvider>
+                <AppContent
+                  initialLoading={initialLoading}
+                  privacyModalVisible={privacyModalVisible}
+                  setPrivacyModalVisible={setPrivacyModalVisible}
+                />
+              </UIProvider>
+            </WeatherProvider>
+          </LocationProvider>
         </SettingsProvider>
       </ThemeProvider>
     </ErrorBoundary>

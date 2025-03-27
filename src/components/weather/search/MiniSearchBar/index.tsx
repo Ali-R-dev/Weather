@@ -1,15 +1,14 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useWeather } from "../../../../context/WeatherContext";
-import useSavedLocations, {
-  SavedLocation,
-} from "../../../../hooks/useSavedLocations";
+import { useLocation } from "../../../../context/LocationContext"; // Use location context
+import { SavedLocation } from "../../../../hooks/useSavedLocations";
 import { GeocodingResult } from "../../../../types/geocoding.types";
 import { useLocationSearch } from "../../../../hooks/useLocationSearch";
 import SearchInput from "../SearchInput";
 import LocationItem from "../LocationItem";
 import NoResults from "../NoResults";
 import styles from "./styles.module.css";
+import { LocationSource } from "../../../../services/LocationService";
 
 interface MiniSearchBarProps {
   onFocus: () => void;
@@ -22,31 +21,26 @@ export default function MiniSearchBar({
   onSelect,
   isActive,
 }: MiniSearchBarProps) {
-  // Use our custom hook for search functionality with the same parameters
+  // Use our custom hook for search functionality
   const { query, setQuery, results, isSearching, clearSearch } =
     useLocationSearch(2, 300); // minChars=2, debounceTime=300
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [recentlyUsed, setRecentlyUsed] = useState<SavedLocation[]>([]);
-  const { setLocation } = useWeather();
-  const { saveLocation, setAsDefault, removeLocation, defaultLocation } =
-    useSavedLocations();
+
+  // Use location context instead of service directly
+  const {
+    defaultLocation,
+    recentLocations,
+    setLocation,
+    setDefaultLocation,
+    saveLocation,
+    removeLocation,
+    removeFromRecentLocations,
+  } = useLocation();
 
   const dropdownRef = useRef<HTMLDivElement>(null);
   const searchBarRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-
-  // Load recently used locations from localStorage
-  useEffect(() => {
-    const recentLocations = localStorage.getItem("recentLocations");
-    if (recentLocations) {
-      try {
-        setRecentlyUsed(JSON.parse(recentLocations));
-      } catch (e) {
-        console.error("Error parsing recent locations", e);
-      }
-    }
-  }, []);
 
   // Close dropdown when clicking outside
   useEffect(() => {
@@ -65,46 +59,17 @@ export default function MiniSearchBar({
     };
   }, []);
 
-  // Add to recently used locations
-  const addToRecentlyUsed = (location: SavedLocation) => {
-    const updatedRecent = [
-      location,
-      ...recentlyUsed.filter((loc) => loc.id !== location.id),
-    ].slice(0, 3);
-    setRecentlyUsed(updatedRecent);
-    localStorage.setItem("recentLocations", JSON.stringify(updatedRecent));
-  };
-
   // Handle removing a location
   const handleRemoveLocation = (e: React.MouseEvent, locationId: number) => {
     e.stopPropagation();
-    // Remove from recent locations
-    const updatedRecent = recentlyUsed.filter((loc) => loc.id !== locationId);
-    setRecentlyUsed(updatedRecent);
-    localStorage.setItem("recentLocations", JSON.stringify(updatedRecent));
-    // Remove from saved locations
     removeLocation(locationId);
+    removeFromRecentLocations(locationId);
   };
 
   // Handle setting default location
-  const handleSetDefault = async (e: React.MouseEvent, locationId: number) => {
+  const handleSetDefault = (e: React.MouseEvent, locationId: number) => {
     e.stopPropagation();
-    setAsDefault(locationId);
-
-    // Find the location in recently used
-    const location = recentlyUsed.find((loc) => loc.id === locationId);
-    if (location) {
-      setLocation(
-        {
-          latitude: location.latitude,
-          longitude: location.longitude,
-          name: location.name,
-          country: location.country,
-          admin1: location.admin1,
-        },
-        true
-      );
-    }
+    setDefaultLocation(locationId);
   };
 
   // Select a location from search results
@@ -120,9 +85,10 @@ export default function MiniSearchBar({
       return;
     }
 
-    // Update location and fetch weather data
+    // Use the location context to set location
     setLocation(
       {
+        id: location.id,
         latitude: location.latitude,
         longitude: location.longitude,
         name: location.name,
@@ -130,39 +96,28 @@ export default function MiniSearchBar({
         admin1: location.admin1,
         admin2: "admin2" in location ? location.admin2 : undefined,
       },
-      true
+      LocationSource.SEARCH
     );
 
-    // Save to localStorage
-    const savedLocation: SavedLocation = {
-      id: location.id,
-      name: location.name,
-      latitude: location.latitude,
-      longitude: location.longitude,
-      country: location.country,
-      admin1: location.admin1,
-      isDefault: defaultLocation?.id === location.id,
-    };
+    // Convert to SavedLocation if from search results
+    if (!("isDefault" in location)) {
+      const savedLocation: SavedLocation = {
+        id: location.id,
+        name: location.name,
+        latitude: location.latitude,
+        longitude: location.longitude,
+        country: location.country,
+        admin1: location.admin1,
+      };
 
-    saveLocation(savedLocation);
-    addToRecentlyUsed(savedLocation);
+      // Save the location
+      saveLocation(savedLocation);
+    }
+
     clearSearch();
     setIsDropdownOpen(false);
     onSelect();
   };
-
-  // Load default location on mount
-  useEffect(() => {
-    if (defaultLocation) {
-      setLocation({
-        latitude: defaultLocation.latitude,
-        longitude: defaultLocation.longitude,
-        name: defaultLocation.name,
-        country: defaultLocation.country,
-        admin1: defaultLocation.admin1,
-      });
-    }
-  }, [defaultLocation, setLocation]);
 
   const handleFocus = () => {
     setIsDropdownOpen(true);
@@ -211,7 +166,7 @@ export default function MiniSearchBar({
             ref={dropdownRef}
           >
             {/* Recently used locations section */}
-            {recentlyUsed.length > 0 && query.trim().length === 0 && (
+            {recentLocations.length > 0 && query.trim().length === 0 && (
               <motion.div
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
@@ -233,7 +188,7 @@ export default function MiniSearchBar({
                   Recent Locations
                 </div>
                 <div className={styles.resultsContainer}>
-                  {recentlyUsed.map((location, index) => (
+                  {recentLocations.map((location, index) => (
                     <LocationItem
                       key={`recent-${location.id}`}
                       location={location}

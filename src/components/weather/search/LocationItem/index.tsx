@@ -73,7 +73,7 @@ const LocationItem: React.FC<LocationItemProps> = ({
         <div className="flex items-center space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
           <motion.button
             onClick={(e) => onSetDefault(e, location.id)}
-            className={`p-1 rounded-full hover:bg-white/10 transition-colors ${
+            className={`p-1 rounded-full hover:bg-white/10 transition-colors action-button ${
               isDefault
                 ? "text-yellow-300"
                 : "text-white/70 hover:text-white/90"

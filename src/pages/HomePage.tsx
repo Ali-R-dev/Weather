@@ -1,57 +1,27 @@
-import { useEffect, useRef, useState, Suspense } from "react";
+import { useState, useRef, useEffect, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useWeather } from "../context/WeatherContext";
-import useGeolocation from "../hooks/useGeolocation";
-import useSavedLocations from "../hooks/useSavedLocations";
+// import { useLocation } from "../context/LocationContext"; // Use location context
+import { timeAgo } from "../utils/dateUtils";
+import BackgroundEffect from "../components/effects/BackgroundEffect";
 import CurrentWeather from "../components/weather/current";
 import HourlyForecast from "../components/weather/hourly";
 import DailyForecast from "../components/weather/daily";
 import { MiniSearchBar } from "../components/weather/search";
 import SettingsPanel from "../components/settings/SettingsPanel";
-import { timeAgo } from "../utils/dateUtils";
-import BackgroundEffect from "../components/effects/BackgroundEffect";
 
 export default function HomePage() {
-  const { loading, error, weatherData, setLocation, lastUpdated } =
-    useWeather();
-  const { location } = useGeolocation();
-  const { defaultLocation } = useSavedLocations();
-  const initialLoadCompleted = useRef(false);
-  const geoLocationUsed = useRef(false);
+  // Get weather data but not location setting
+  const { loading, error, weatherData, lastUpdated } = useWeather();
+
+  // Get location from the context
+  // const { currentLocation } = useLocation();
+
+  // Remove location-related refs that were handling initialization
   const [activeTab, setActiveTab] = useState<"hourly" | "daily">("hourly");
   const [showSearchResults, setShowSearchResults] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const searchContainerRef = useRef<HTMLDivElement>(null);
-
-  // Location loading logic
-  useEffect(() => {
-    if (initialLoadCompleted.current) {
-      return;
-    }
-
-    if (weatherData) {
-      initialLoadCompleted.current = true;
-      return;
-    }
-
-    if (defaultLocation && !loading) {
-      setLocation({
-        latitude: defaultLocation.latitude,
-        longitude: defaultLocation.longitude,
-        name: defaultLocation.name,
-        country: defaultLocation.country,
-      });
-      return;
-    }
-
-    if (location && !geoLocationUsed.current && !loading) {
-      geoLocationUsed.current = true;
-      setLocation({
-        latitude: location.latitude,
-        longitude: location.longitude,
-      });
-    }
-  }, [weatherData, defaultLocation, location, loading, setLocation]);
 
   // Handle click outside search
   useEffect(() => {
@@ -64,10 +34,7 @@ export default function HomePage() {
       }
     }
 
-    if (showSearchResults) {
-      document.addEventListener("mousedown", handleClickOutside);
-    }
-
+    document.addEventListener("mousedown", handleClickOutside);
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
