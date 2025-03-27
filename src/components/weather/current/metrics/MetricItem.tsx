@@ -5,7 +5,7 @@ interface MetricItemProps {
   icon: React.ReactNode;
   title: string;
   value: string;
-  subtitle?: string;
+  subtitle?: React.ReactNode;
   trendIndicator?: React.ReactNode;
   onClick?: () => void;
   animationDelay?: number;

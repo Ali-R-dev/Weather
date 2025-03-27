@@ -1,5 +1,6 @@
 import React from "react";
 import MetricItem from "./MetricItem";
+import { motion } from "framer-motion";
 
 interface UVIndexMetricProps {
   uvIndex: number;
@@ -19,15 +20,60 @@ const UVIndexMetric: React.FC<UVIndexMetricProps> = ({
     return "Extreme";
   };
 
+  // Get color based on UV Index
+  const getUVColor = () => {
+    if (uvIndex <= 2) return "#10B981"; // green-500
+    if (uvIndex <= 5) return "#FBBF24"; // amber-400
+    if (uvIndex <= 7) return "#F59E0B"; // amber-500
+    if (uvIndex <= 10) return "#EF4444"; // red-500
+    return "#8B5CF6"; // purple-500
+  };
+
+  // Enhanced creative UV icon - without rotation
   const uvIcon = (
-    <svg
-      xmlns="http://www.w3.org/2000/svg"
-      viewBox="0 0 24 24"
-      fill="currentColor"
-      className="w-4 h-4"
-    >
-      <path d="M12 2.25a.75.75 0 01.75.75v2.25a.75.75 0 01-1.5 0V3a.75.75 0 01.75-.75zM7.5 12a4.5 4.5 0 119 0 4.5 4.5 0 01-9 0zM18.894 6.166a.75.75 0 00-1.06-1.06l-1.591 1.59a.75.75 0 101.06 1.061l1.591-1.59zM21.75 12a.75.75 0 01-.75.75h-2.25a.75.75 0 010-1.5H21a.75.75 0 01.75.75zM17.834 18.894a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 10-1.061 1.06l1.59 1.591zM12 18a.75.75 0 01.75.75V21a.75.75 0 01-1.5 0v-2.25A.75.75 0 0112 18zM7.758 17.303a.75.75 0 00-1.061-1.06l-1.591 1.59a.75.75 0 001.06 1.061l1.591-1.59zM6 12a.75.75 0 01-.75.75H3a.75.75 0 010-1.5h2.25A.75.75 0 016 12zM6.697 7.757a.75.75 0 001.06-1.06l-1.59-1.591a.75.75 0 00-1.061 1.06l1.59 1.591z" />
-    </svg>
+    <div className="relative w-8 h-8">
+      {/* Base sun shape - static, no rotation */}
+      <div
+        className="absolute inset-0 rounded-full flex items-center justify-center"
+        style={{
+          background: `conic-gradient(${getUVColor()}80 0%, ${getUVColor()}10 ${Math.min(
+            uvIndex * 9,
+            100
+          )}%, transparent ${Math.min(uvIndex * 9, 100)}%)`,
+          border: `1.5px solid ${getUVColor()}60`,
+        }}
+      >
+        <div
+          className="w-5 h-5 rounded-full flex items-center justify-center"
+          style={{ background: getUVColor() }}
+        >
+          <span className="text-[10px] font-semibold text-white">
+            {Math.round(uvIndex)}
+          </span>
+        </div>
+      </div>
+    </div>
+  );
+
+  // Enhanced subtitle with visual indicator
+  const enhancedSubtitle = (
+    <div className="flex items-center justify-between">
+      <div className="text-xs pe-2">{getUVLevel()}</div>
+
+      {/* UV level gauge */}
+      <div className="relative w-12 h-1.5 bg-white/10 rounded-full overflow-hidden">
+        <motion.div
+          className="absolute top-0 left-0 h-full rounded-full"
+          style={{
+            width: `${Math.min((uvIndex / 12) * 100, 100)}%`,
+            background: `linear-gradient(to right, #10B981, #FBBF24, #F59E0B, #EF4444, #8B5CF6)`,
+          }}
+          initial={{ width: 0 }}
+          animate={{ width: `${Math.min((uvIndex / 12) * 100, 100)}%` }}
+          transition={{ duration: 1 }}
+        />
+      </div>
+    </div>
   );
 
   return (
@@ -35,7 +81,7 @@ const UVIndexMetric: React.FC<UVIndexMetricProps> = ({
       icon={uvIcon}
       title="UV Index"
       value={uvIndex.toFixed(1)}
-      subtitle={getUVLevel()}
+      subtitle={enhancedSubtitle}
       animationDelay={animationDelay}
     />
   );
