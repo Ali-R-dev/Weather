@@ -199,6 +199,26 @@ body {
   50% { opacity: 0.3; }
 }
 
+@keyframes pulse {
+  0%, 100% {
+    opacity: 0.85;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateX(0);
+    animation-timing-function: cubic-bezier(0.8, 0, 1, 1);
+  }
+  50% {
+    transform: translateX(-25%);
+    animation-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  }
+}
+
 /* ========== Utility Classes ========== */
 .animate-fade-in { animation: fade-in 0.5s ease-out forwards; }
 
@@ -212,6 +232,14 @@ body {
 }
 
 .animate-float { animation: float 5s ease-in-out infinite; }
+
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.animate-bounce {
+  animation: bounce 1.5s infinite;
+}
 
 /* Glass styling used across multiple components */
 .glass {

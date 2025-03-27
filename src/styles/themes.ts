@@ -81,16 +81,48 @@ export const weatherThemes: Record<WeatherTheme, ThemeConfig> = {
   },
 };
 
-export const applyTheme = (theme: WeatherTheme): void => {
+import { getThemeFromWeatherCode } from "../utils/themeUtils";
+
+export const applyTheme = (
+  themeOrCode: WeatherTheme | number,
+  isDay?: boolean
+): void => {
+  let theme: WeatherTheme;
+
+  // Handle being called with a weather code + isDay
+  if (typeof themeOrCode === "number") {
+    if (isDay === undefined) {
+      console.error("isDay parameter required with weather code");
+      isDay = true; // Default to day if missing
+    }
+    theme = getThemeFromWeatherCode(themeOrCode, isDay);
+  } else {
+    theme = themeOrCode as WeatherTheme;
+  }
+
+  // Add safety check to prevent the error
   const themeConfig = weatherThemes[theme];
 
+  if (!themeConfig) {
+    console.error(
+      `Theme "${theme}" not found in weatherThemes, using sunny as fallback`
+    );
+    // Fallback to default theme
+    theme = "sunny";
+  }
+
+  // Get the theme config (using the possible fallback)
+  const finalThemeConfig = weatherThemes[theme];
+
+  // Apply theme settings
   document.documentElement.style.setProperty(
     "--current-theme-gradient",
-    themeConfig.gradient
+    finalThemeConfig.gradient
   );
+
   document.documentElement.style.setProperty(
     "--current-theme-text-color",
-    themeConfig.textColor
+    finalThemeConfig.textColor
   );
 
   // Remove all theme classes

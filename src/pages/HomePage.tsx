@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect, Suspense } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useWeather } from "../context/WeatherContext";
+import { useTheme } from "../context/ThemeContext";
 // import { useLocation } from "../context/LocationContext"; // Use location context
 import { timeAgo } from "../utils/dateUtils";
 import BackgroundEffect from "../components/effects/BackgroundEffect";
@@ -22,6 +23,64 @@ export default function HomePage() {
   const [showSearchResults, setShowSearchResults] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const searchContainerRef = useRef<HTMLDivElement>(null);
+
+  const { currentTheme } = useTheme();
+
+  // Function to get theme colors for tab buttons
+  const getThemeColors = () => {
+    switch (currentTheme) {
+      case "sunny":
+        return {
+          active: "text-amber-900",
+          color: "bg-amber-400",
+          glow: "bg-amber-300",
+        };
+      case "night-clear":
+        return {
+          active: "text-indigo-900",
+          color: "bg-indigo-400",
+          glow: "bg-indigo-300",
+        };
+      case "cloudy":
+        return {
+          active: "text-slate-900",
+          color: "bg-slate-400",
+          glow: "bg-slate-300",
+        };
+      case "night-cloudy":
+        return {
+          active: "text-gray-900",
+          color: "bg-gray-400",
+          glow: "bg-gray-300",
+        };
+      case "rainy":
+        return {
+          active: "text-blue-900",
+          color: "bg-blue-400",
+          glow: "bg-blue-300",
+        };
+      case "stormy":
+        return {
+          active: "text-slate-900",
+          color: "bg-slate-400",
+          glow: "bg-slate-300",
+        };
+      case "snowy":
+        return {
+          active: "text-sky-900",
+          color: "bg-sky-200",
+          glow: "bg-sky-100",
+        };
+      default:
+        return {
+          active: "text-blue-900",
+          color: "bg-white",
+          glow: "bg-blue-300",
+        };
+    }
+  };
+
+  const themeColors = getThemeColors();
 
   // Handle click outside search
   useEffect(() => {
@@ -124,56 +183,91 @@ export default function HomePage() {
               <CurrentWeather data={weatherData} />
 
               {/* Forecast tabs */}
-              <div className="mt-8">
-                <div className="flex justify-center space-x-4 mb-6">
-                  <button
-                    onClick={() => setActiveTab("hourly")}
-                    className={`px-4 py-2 rounded-lg transition-colors ${
-                      activeTab === "hourly"
-                        ? "bg-white/20 text-white"
-                        : "text-white/60 hover:text-white"
-                    }`}
-                  >
-                    Hourly
-                  </button>
-                  <button
-                    onClick={() => setActiveTab("daily")}
-                    className={`px-4 py-2 rounded-lg transition-colors ${
-                      activeTab === "daily"
-                        ? "bg-white/20 text-white"
-                        : "text-white/60 hover:text-white"
-                    }`}
-                  >
-                    Daily
-                  </button>
-                </div>
+              <div className="relative mb-8 mt-4">
+                <div className="flex justify-center">
+                  <div className="relative p-1.5 rounded-full">
+                    <div className="flex  rounded-full p-1">
+                      <button
+                        onClick={() => setActiveTab("hourly")}
+                        className={`relative px-6 py-2.5 rounded-full transition-all duration-300 flex items-center ${
+                          activeTab === "hourly"
+                            ? `${themeColors.color} ${themeColors.active} font-semibold`
+                            : "text-white/80 hover:bg-white/10"
+                        }`}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                          className="w-4 h-4 mr-1.5"
+                        >
+                          <path
+                            fillRule="evenodd"
+                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm.75-13a.75.75 0 00-1.5 0v5c0 .414.336.75.75.75h4a.75.75 0 000-1.5h-3.25V5z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                        Hourly
+                      </button>
 
-                <AnimatePresence mode="wait">
-                  {activeTab === "hourly" ? (
-                    <motion.div
-                      key="hourly"
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: 20 }}
-                      transition={{ duration: 0.2 }}
-                      style={{ willChange: "transform" }}
-                    >
-                      <HourlyForecast hourlyData={weatherData.hourly} />
-                    </motion.div>
-                  ) : (
-                    <motion.div
-                      key="daily"
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      exit={{ opacity: 0, x: 20 }}
-                      transition={{ duration: 0.2 }}
-                      style={{ willChange: "transform" }}
-                    >
-                      <DailyForecast dailyData={weatherData.daily} />
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                      <button
+                        onClick={() => setActiveTab("daily")}
+                        className={`relative px-6 py-2.5 rounded-full transition-all duration-300 flex items-center ${
+                          activeTab === "daily"
+                            ? `${themeColors.color} ${themeColors.active} font-semibold shadow-md`
+                            : "text-white/80 hover:bg-white/10"
+                        }`}
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                          className="w-4 h-4 mr-1.5"
+                        >
+                          <path d="M5.25 12a.75.75 0 01.75-.75h.01a.75.75 0 01.75.75v.01a.75.75 0 01-.75.75H6a.75.75 0 01-.75-.75V12zM6 13.25a.75.75 0 00-.75.75v.01c0 .414.336.75.75.75h.01a.75.75 0 00.75-.75V14a.75.75 0 00-.75-.75H6zM7.25 12a.75.75 0 01.75-.75h.01a.75.75 0 01.75.75v.01a.75.75 0 01-.75.75H8a.75.75 0 01-.75-.75V12zM8 13.25a.75.75 0 00-.75.75v.01c0 .414.336.75.75.75h.01a.75.75 0 00.75-.75V14a.75.75 0 00-.75-.75H8z" />
+                          <path
+                            fillRule="evenodd"
+                            d="M6.75 2.25A.75.75 0 017.5 3v1.5h9V3A.75.75 0 0118 3v1.5h.75a3 3 0 013 3v11.25a3 3 0 01-3 3H5.25a3 3 0 01-3-3V7.5a3 3 0 013-3H6V3a.75.75 0 01.75-.75zm13.5 9a1.5 1.5 0 00-1.5-1.5H5.25a1.5 1.5 0 00-1.5 1.5v7.5a1.5 1.5 0 001.5 1.5h13.5a1.5 1.5 0 001.5-1.5v-7.5z"
+                            clipRule="evenodd"
+                          />
+                        </svg>
+                        Daily
+                      </button>
+                    </div>
+
+                    {/* Optional: Add a subtle glow effect */}
+                    <div
+                      className={`absolute inset-0 -z-10 opacity-30 ${themeColors.glow} rounded-full`}
+                    ></div>
+                  </div>
+                </div>
               </div>
+
+              <AnimatePresence mode="wait">
+                {activeTab === "hourly" ? (
+                  <motion.div
+                    key="hourly"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 20 }}
+                    transition={{ duration: 0.2 }}
+                    style={{ willChange: "transform" }}
+                  >
+                    <HourlyForecast hourlyData={weatherData.hourly} />
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="daily"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: 20 }}
+                    transition={{ duration: 0.2 }}
+                    style={{ willChange: "transform" }}
+                  >
+                    <DailyForecast dailyData={weatherData.daily} />
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </motion.div>
           )}
 

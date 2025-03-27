@@ -4,6 +4,7 @@ import { getWeatherInfo } from "../../../utils/weatherCodeMap";
 import { useWeather } from "../../../context/WeatherContext";
 import { useTheme } from "../../../context/ThemeContext";
 import { useSettings } from "../../../context/SettingsContext";
+import { getThemeFromWeatherCode } from "../../../utils/themeUtils";
 import {
   convertTemperature,
   convertWindSpeed,
@@ -47,7 +48,12 @@ const CurrentWeather: React.FC<CurrentWeatherProps> = ({ data }) => {
 
   // Apply theme based on current weather and time of day
   useEffect(() => {
-    applyTheme(data.current.weather_code, data.current.is_day === 1);
+    // Fix: Use getThemeFromWeatherCode to convert weather code to theme name first
+    const theme = getThemeFromWeatherCode(
+      data.current.weather_code,
+      data.current.is_day === 1
+    );
+    applyTheme(theme);
   }, [data.current.weather_code, data.current.is_day, applyTheme]);
 
   return (
