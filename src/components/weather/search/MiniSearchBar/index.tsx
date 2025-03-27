@@ -22,9 +22,9 @@ export default function MiniSearchBar({
   onSelect,
   isActive,
 }: MiniSearchBarProps) {
-  // Use our custom hook for search functionality
+  // Use our custom hook for search functionality with the same parameters
   const { query, setQuery, results, isSearching, clearSearch } =
-    useLocationSearch();
+    useLocationSearch(2, 300); // minChars=2, debounceTime=300
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const [recentlyUsed, setRecentlyUsed] = useState<SavedLocation[]>([]);
