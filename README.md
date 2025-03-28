@@ -17,10 +17,9 @@ A modern, responsive weather application built with React, TypeScript, and Tailw
 - 🌍 Location-based weather information
 - 📱 Responsive design for all devices
 - 🎨 Beautiful animations and transitions
-- 🌓 Dark/Light mode support
+- 🌓 Theme change based on weather condition
 - 🔍 Search for any location worldwide
 - 📍 Save favorite locations
-- ⚡ Weather alerts and warnings
 - 🕒 12/24 hour time format support
 - 🌡️ Temperature unit conversion (°C/°F)
 
