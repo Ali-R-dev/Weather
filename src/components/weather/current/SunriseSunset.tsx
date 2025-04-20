@@ -3,6 +3,8 @@ import { motion } from "framer-motion";
 import { TimeFormat } from "../../../context/SettingsContext";
 import { formatTimeWithFormat } from "../../../utils/formatting";
 import styles from "./SunriseSunset.module.css";
+import SunIcon from "../shared/WeatherIcon/icons/SunIcon";
+import MoonIcon from "../shared/WeatherIcon/icons/MoonIcon";
 
 interface SunriseSunsetProps {
   sunrise: string;
@@ -27,8 +29,9 @@ const SunriseSunset: React.FC<SunriseSunsetProps> = ({
   // Calculate current progress through the day
   const now = new Date();
   let dayProgress = 0;
+  const isDay = now >= sunriseDate && now <= sunsetDate;
 
-  if (now >= sunriseDate && now <= sunsetDate) {
+  if (isDay) {
     dayProgress = ((now.getTime() - sunriseDate.getTime()) / dayLengthMs) * 100;
   } else if (now > sunsetDate) {
     dayProgress = 100;
@@ -45,12 +48,12 @@ const SunriseSunset: React.FC<SunriseSunsetProps> = ({
         <div className="text-xs font-medium text-white/90 uppercase tracking-wide">
           Day Length
         </div>
-        <div className="text-sm font-medium">
+        <div className="text-sm font-semibold bg-white/10 px-3 py-1 rounded-full border border-yellow-200/30 text-yellow-100 shadow">
           {dayLengthHours}h {dayLengthMinutes}m
         </div>
       </div>
 
-      {/* Day progress bar */}
+      {/* Day/Night progress bar with sun/moon indicator */}
       <div className="relative mb-5 mt-2 max-w-lg mx-auto" style={{minHeight: '3.5rem'}}>
         {/* Night background */}
         <div className={styles.nightBar}></div>
@@ -67,55 +70,46 @@ const SunriseSunset: React.FC<SunriseSunsetProps> = ({
               className={styles.dayBar}
               style={{
                 left: `${sunrisePercent}%`,
-                width: `${dayWidthPercent}%`
+                width: `${dayWidthPercent}%`,
+                boxShadow: '0 0 24px 6px #fde68a88, 0 0 0px 0px #fff0',
+                border: '2px solid #fde68a88'
               }}
             ></div>
           );
         })()}
-        {/* Sun indicator only when sun is up */}
-        {(now >= sunriseDate && now <= sunsetDate) && (
-          <div
-            className="absolute top-1/2 z-20 -translate-y-1/2"
-            style={{ left: `calc(${dayProgress}% - 0.75rem)` }}
-          >
-            <span className={styles.sunPulse + " block w-6 h-6 rounded-full bg-gradient-to-br from-yellow-300 via-yellow-200 to-yellow-400 border-2 border-yellow-400"} aria-label="Current sun position" role="img"></span>
-          </div>
-        )}
+        {/* Sun or Moon indicator */}
+        <div
+          className="absolute top-1/2 z-30 -translate-y-1/2"
+          style={{ left: `calc(${dayProgress}% - 1.2rem)` }}
+        >
+          {isDay ? (
+            <span className={styles.sunPulse + " flex items-center justify-center w-9 h-9 rounded-full bg-gradient-to-br from-yellow-300 via-yellow-200 to-yellow-400 border-2 border-yellow-400 shadow-lg"} aria-label="Current sun position" role="img">
+              <SunIcon className="w-6 h-6 text-yellow-400" type="sun" />
+            </span>
+          ) : (
+            <span className={styles.moonPulse + " flex items-center justify-center w-9 h-9 rounded-full bg-gradient-to-br from-indigo-300 via-indigo-400 to-blue-400 border-2 border-indigo-300 shadow-lg"} aria-label="Current moon position" role="img">
+              <MoonIcon className="w-6 h-6 text-indigo-200" type="moon" />
+            </span>
+          )}
+        </div>
         {/* Sunrise icon */}
-        <div className="absolute left-0 top-1/2 -translate-y-1/2 flex flex-col items-center z-30" style={{transform: 'translateY(-130%)'}}>
-          <span role="img" aria-label="Sunrise" className="text-yellow-300 text-xl">🌅</span>
-          <span className="text-xs text-yellow-100 mt-1">{formatTimeWithFormat(sunrise, timeFormat)}</span>
+        <div className="absolute left-0 top-1/2 flex flex-col items-center z-30" style={{transform: 'translateY(-135%)'}}>
+          <SunIcon className="w-6 h-6 text-yellow-200 drop-shadow" type="sun" />
+          <span className="text-xs text-yellow-100 mt-1 font-semibold tracking-wide">{formatTimeWithFormat(sunrise, timeFormat)}</span>
         </div>
         {/* Sunset icon */}
-        <div className="absolute right-0 top-1/2 -translate-y-1/2 flex flex-col items-center z-30" style={{transform: 'translateY(-130%)'}}>
-          <span role="img" aria-label="Sunset" className="text-indigo-200 text-xl">🌇</span>
-          <span className="text-xs text-indigo-100 mt-1">{formatTimeWithFormat(sunset, timeFormat)}</span>
+        <div className="absolute right-0 top-1/2 flex flex-col items-center z-30" style={{transform: 'translateY(-135%)'}}>
+          <SunIcon className="w-6 h-6 text-indigo-200 drop-shadow rotate-180" type="sun" />
+          <span className="text-xs text-indigo-100 mt-1 font-semibold tracking-wide">{formatTimeWithFormat(sunset, timeFormat)}</span>
         </div>
       </div>
-
-      <div className={styles.timeLabels + ' max-w-lg mx-auto'}>
-        <div className={styles.sunriseLabel}>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-            className={styles.sunriseIcon}
-          >
-            <path d="M10 2a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 0110 2zM10 15a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 0110 15zM10 7a3 3 0 100 6 3 3 0 000-6zM15.657 5.404a.75.75 0 10-1.06-1.06l-1.061 1.06a.75.75 0 001.06 1.06l1.06-1.06zM6.464 14.596a.75.75 0 10-1.06-1.06l-1.06 1.06a.75.75 0 001.06 1.06l1.06-1.06zM18 10a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0118 10zM5 10a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 015 10zM14.596 15.657a.75.75 0 001.06-1.06l-1.06-1.061a.75.75 0 10-1.06 1.06l1.06 1.06zM5.404 6.464a.75.75 0 001.06-1.06l-1.06-1.06a.75.75 0 10-1.061 1.06l1.06 1.06z" />
-          </svg>
-          <span className={styles.timeLabel}>Sunrise</span>
+      {/* Labels */}
+      <div className={styles.timeLabels + ' max-w-lg mx-auto flex justify-between mt-2 w-full'}>
+        <div className={styles.sunriseLabel + " flex flex-col items-center"}>
+          <span className={styles.timeLabel + " text-yellow-200 font-semibold"}>Sunrise</span>
         </div>
-
-        <div className={styles.sunsetLabel}>
-          <span className={styles.timeLabel}>Sunset</span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 20 20"
-            fill="currentColor"
-            className={styles.sunsetIcon}
-          >
-            <path d="M10 2a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 0110 2zM10 15a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5A.75.75 0 0110 15zM10 7a3 3 0 100 6 3 3 0 000-6zM15.657 5.404a.75.75 0 10-1.06-1.06l-1.061 1.06a.75.75 0 001.06 1.06l1.06-1.06zM6.464 14.596a.75.75 0 10-1.06-1.06l-1.06 1.06a.75.75 0 001.06 1.06l1.06-1.06zM18 10a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 0118 10zM5 10a.75.75 0 01-.75.75h-1.5a.75.75 0 010-1.5h1.5A.75.75 0 015 10zM14.596 15.657a.75.75 0 001.06-1.06l-1.06-1.061a.75.75 0 10-1.06 1.06l1.06 1.06zM5.404 6.464a.75.75 0 001.06-1.06l-1.06-1.06a.75.75 0 10-1.061 1.06l1.06 1.06z" />
-          </svg>
+        <div className={styles.sunsetLabel + " flex flex-col items-center"}>
+          <span className={styles.timeLabel + " text-indigo-200 font-semibold"}>Sunset</span>
         </div>
       </div>
     </motion.div>

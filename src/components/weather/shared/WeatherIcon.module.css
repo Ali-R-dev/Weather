@@ -60,6 +60,11 @@
   color: #a5b4fc;
 }
 
+.moonNight {
+  color: #a5b4fc;
+  filter: drop-shadow(0 0 4px #a5b4fc) drop-shadow(0 0 8px #a5b4fc99);
+}
+
 /* Animation for weather icons */
 .animated {
   animation: weatherIconPulse 3s ease-in-out infinite;

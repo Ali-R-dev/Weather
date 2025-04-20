@@ -104,7 +104,7 @@ const WeatherIcon: React.FC<WeatherIconProps> = ({
         return <SunIcon className={iconClass} type={iconType} aria-label={ariaLabel} role="img" />;
       case "moon":
       case "clear-night":
-        return <MoonIcon className={iconClass} type={iconType} aria-label={ariaLabel} role="img" />;
+        return <MoonIcon className={clsx(baseClass, styles.clearNight, styles.moonNight)} type={iconType} aria-label={ariaLabel} role="img" />;
       case "cloud":
       case "cloudy":
         return (
@@ -197,10 +197,10 @@ const WeatherIcon: React.FC<WeatherIconProps> = ({
       case "cloud-moon": {
         // Improved composite icon sizing and overlap for best UI/UX
         const sizeMap = {
-          small: { container: '1.75rem', moon: '0.8rem', cloud: '1.25rem', moonLeft: '2%', moonTop: '18%', cloudLeft: '28%', cloudTop: '8%' },
-          medium: { container: '2.75rem', moon: '1.1rem', cloud: '2rem', moonLeft: '4%', moonTop: '20%', cloudLeft: '32%', cloudTop: '8%' },
-          large: { container: '3.5rem', moon: '1.5rem', cloud: '2.7rem', moonLeft: '6%', moonTop: '22%', cloudLeft: '34%', cloudTop: '10%' },
-          xlarge: { container: '5rem', moon: '2.1rem', cloud: '3.8rem', moonLeft: '8%', moonTop: '24%', cloudLeft: '36%', cloudTop: '12%' }
+          small: { container: '1.75rem', moon: '0.9rem', cloud: '1.25rem', moonLeft: '10%', moonTop: '28%', cloudLeft: '32%', cloudTop: '8%' },
+          medium: { container: '2.75rem', moon: '1.3rem', cloud: '2rem', moonLeft: '14%', moonTop: '32%', cloudLeft: '39%', cloudTop: '8%' },
+          large: { container: '3.5rem', moon: '1.8rem', cloud: '2.7rem', moonLeft: '18%', moonTop: '36%', cloudLeft: '44%', cloudTop: '10%' },
+          xlarge: { container: '5rem', moon: '2.6rem', cloud: '3.8rem', moonLeft: '22%', moonTop: '40%', cloudLeft: '50%', cloudTop: '12%' }
         };
         let key: keyof typeof sizeMap = 'medium';
         if (getIconSizeClass() === styles.small) key = 'small';
@@ -214,6 +214,7 @@ const WeatherIcon: React.FC<WeatherIconProps> = ({
             aria-label={ariaLabel}
             style={{ width: compositeSize.container, height: compositeSize.container, display: 'inline-block' }}
           >
+            {/* Moon peeking out from behind cloud, visually balanced, slightly offset and with color contrast */}
             <span
               style={{
                 position: 'absolute',
@@ -225,12 +226,14 @@ const WeatherIcon: React.FC<WeatherIconProps> = ({
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                opacity: 0.93
+                opacity: 0.95,
+                filter: 'drop-shadow(0 0 4px #a5b4fc) drop-shadow(0 0 8px #a5b4fc99)'
               }}
             >
-              <MoonIcon className={clsx(baseClass, styles.clearNight)} type="moon" />
+              <MoonIcon className={clsx(baseClass, styles.clearNight, styles.moonNight)} type="moon" />
             </span>
-            <span
+            {/* Animated drifting cloud */}
+            <motion.span
               style={{
                 position: 'absolute',
                 left: compositeSize.cloudLeft,
@@ -241,8 +244,11 @@ const WeatherIcon: React.FC<WeatherIconProps> = ({
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'center',
-                filter: 'drop-shadow(0 1px 2px #d1d5db66)'
+                filter: 'drop-shadow(0 1px 2px #d1d5dbcc)'
               }}
+              initial={{ x: 0 }}
+              animate={{ x: [0, 4, 0, -4, 0] }}
+              transition={{ duration: 5, repeat: Infinity, repeatType: 'reverse', ease: 'easeInOut' }}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -254,7 +260,7 @@ const WeatherIcon: React.FC<WeatherIconProps> = ({
               >
                 <path d="M19 18a4 4 0 100-8 5.5 5.5 0 00-10.9 1.5A4.5 4.5 0 006 21h13a3 3 0 000-6z" />
               </svg>
-            </span>
+            </motion.span>
           </span>
         );
       }

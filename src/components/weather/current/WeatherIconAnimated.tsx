@@ -17,19 +17,22 @@ const WeatherIconAnimated: React.FC<WeatherIconAnimatedProps> = ({ icon, sunrise
     return "#F3F4F6";
   };
 
-  // Only show sun when it's daytime, otherwise show moon if available
+  // Only show sun or moon when appropriate for time of day, including partial cloudy logic
   let displayIcon = icon;
   if (sunrise && sunset) {
     const now = new Date();
     const sunriseDate = new Date(sunrise);
     const sunsetDate = new Date(sunset);
-    if (now < sunriseDate || now > sunsetDate) {
-      // If it's night, prefer moon icon if available
-      if (icon.includes('sun')) {
-        displayIcon = 'moon';
-      } else if (icon.includes('clear-day')) {
-        displayIcon = 'clear-night';
-      }
+    const isNight = now < sunriseDate || now > sunsetDate;
+    // Handle all partly cloudy cases
+    if (icon === 'partly-cloudy' || icon === 'partly-cloudy-day' || icon === 'cloud-sun') {
+      displayIcon = isNight ? 'partly-cloudy-night' : 'partly-cloudy-day';
+    } else if (icon === 'partly-cloudy-night' || icon === 'cloud-moon') {
+      displayIcon = 'partly-cloudy-night';
+    } else if (icon.includes('sun')) {
+      displayIcon = isNight ? 'moon' : icon;
+    } else if (icon.includes('clear-day')) {
+      displayIcon = isNight ? 'clear-night' : icon;
     }
   }
 

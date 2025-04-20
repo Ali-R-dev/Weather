@@ -1,11 +1,6 @@
 import React from "react";
 import { useTheme } from "../../context/ThemeContext";
 
-const THEME_OPTIONS = [
-  { key: "sunny", label: "Light" },
-  { key: "night-clear", label: "Dark" },
-];
-
 const ThemeToggle: React.FC = () => {
   const { currentTheme, applyTheme } = useTheme();
   const isDark = currentTheme === "night-clear";

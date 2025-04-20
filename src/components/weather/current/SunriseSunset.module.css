@@ -83,10 +83,35 @@
 }
 
 .sunPulse {
-  box-shadow: 0 0 32px 10px #fde04777, 0 0 0 4px #fef9c344;
-  animation: pulse 2.2s cubic-bezier(.4,0,.2,1) infinite alternate;
-  background: radial-gradient(circle at 60% 40%, #fffbe7 0%, #fde047 70%, #fbbf24 100%);
-  filter: brightness(1.06) saturate(1.08);
+  box-shadow: 0 0 16px 4px #fde68a99, 0 0 0 0 #fff0;
+  animation: pulseSun 2.5s infinite cubic-bezier(0.4, 0, 0.6, 1);
+}
+
+.moonPulse {
+  box-shadow: 0 0 16px 4px #a5b4fc99, 0 0 0 0 #fff0;
+  animation: pulseMoon 2.5s infinite cubic-bezier(0.4, 0, 0.6, 1);
+}
+
+@keyframes pulseSun {
+  0%, 100% {
+    box-shadow: 0 0 16px 4px #fde68a99, 0 0 0 0 #fff0;
+    opacity: 1;
+  }
+  50% {
+    box-shadow: 0 0 32px 8px #fde68abb, 0 0 0 0 #fff0;
+    opacity: 0.88;
+  }
+}
+
+@keyframes pulseMoon {
+  0%, 100% {
+    box-shadow: 0 0 16px 4px #a5b4fc99, 0 0 0 0 #fff0;
+    opacity: 1;
+  }
+  50% {
+    box-shadow: 0 0 32px 8px #a5b4fcbb, 0 0 0 0 #fff0;
+    opacity: 0.88;
+  }
 }
 
 @media (prefers-color-scheme: dark) {

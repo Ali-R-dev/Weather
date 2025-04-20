@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { WeatherData } from "../../../types/weather.types";
 import { getWeatherInfo } from "../../../utils/weatherCodeMap";
 import { useWeather } from "../../../context/WeatherContext";
@@ -13,10 +13,9 @@ import {
 import WeatherHeader from "./Header";
 import TemperatureDisplay from "./TemperatureDisplay";
 import MetricsGrid from "./MetricsGrid";
-import DetailPanel from "./DetailPanel";
-import SunriseSunset from "./SunriseSunset";
 import WeatherAdditionalInfo from "./WeatherAdditionalInfo";
-import WeatherDetailsToggle from "./WeatherDetailsToggle";
+
+// import SunriseSunset from "./SunriseSunset";
 
 interface CurrentWeatherProps {
   data: WeatherData;
@@ -26,7 +25,6 @@ const CurrentWeather: React.FC<CurrentWeatherProps> = ({ data }) => {
   const { currentLocation } = useWeather();
   const { applyTheme } = useTheme();
   const { settings } = useSettings();
-  const [showDetails, setShowDetails] = useState(false);
 
   const weatherInfo = getWeatherInfo(data.current.weather_code);
 
@@ -94,24 +92,11 @@ const CurrentWeather: React.FC<CurrentWeatherProps> = ({ data }) => {
         windUnit={settings.units.wind}
       />
 
-      <WeatherDetailsToggle
-        expanded={showDetails}
-        onToggle={() => setShowDetails(!showDetails)}
-      />
-
-      <DetailPanel show={showDetails}>
-        {/* Sunrise/Sunset (if available) */}
-        {data.daily?.sunrise && data.daily?.sunset && (
-          <SunriseSunset
-            sunrise={data.daily.sunrise[0]}
-            sunset={data.daily.sunset[0]}
-            timeFormat={settings.timeFormat}
-          />
-        )}
-
+      {/* Expanded details always visible, standard spacing */}
+      <div className="mt-6">
         {/* Additional weather details */}
         <WeatherAdditionalInfo pressure={data.current.pressure} />
-      </DetailPanel>
+      </div>
     </div>
   );
 };
