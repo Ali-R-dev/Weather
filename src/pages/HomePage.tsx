@@ -104,12 +104,6 @@ export default function HomePage() {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       className="min-h-screen flex flex-col relative bg-gradient-to-br from-sky-400 to-blue-500"
-      style={{
-        willChange: "transform",
-        backfaceVisibility: "hidden",
-        transform: "translateZ(0)",
-        perspective: "1000px",
-      }}
     >
       {/* Background Effect - Lazy loaded with Suspense */}
       <Suspense fallback={null}>
@@ -122,13 +116,13 @@ export default function HomePage() {
       </Suspense>
 
       <div className="relative z-10 flex-1 flex flex-col">
-        <main className="flex-1 container mx-auto px-4 py-4 flex flex-col">
+        <main className="flex-1 container mx-auto px-2 sm:px-4 py-2 sm:py-4 flex flex-col">
           {/* Search bar and settings */}
           <div
-            className="flex items-center justify-between mb-2"
+            className="flex flex-col sm:flex-row items-center justify-between mb-2 gap-2 sm:gap-0"
             ref={searchContainerRef}
           >
-            <div className="ml-3 p-2 text-3xl font-bold text-white">AR</div>
+            <div className="ml-0 sm:ml-3 p-2 text-2xl sm:text-3xl font-bold text-white">AR</div>
             <MiniSearchBar
               onFocus={() => setShowSearchResults(true)}
               onSelect={() => setShowSearchResults(false)}
@@ -137,9 +131,8 @@ export default function HomePage() {
 
             <button
               onClick={() => setShowSettings(true)}
-              className="ml-3 p-2 rounded-full hover:bg-white/10 transition-colors"
+              className="ml-0 sm:ml-3 p-2 rounded-full hover:bg-white/10 transition-colors"
               aria-label="Settings"
-              style={{ willChange: "transform" }}
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
@@ -177,19 +170,19 @@ export default function HomePage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
-              className="mt-4"
+              className="mt-2 sm:mt-4"
               style={{ willChange: "transform" }}
             >
               <CurrentWeather data={weatherData} />
 
               {/* Forecast tabs */}
-              <div className="relative mb-8 mt-4">
+              <div className="relative mb-4 sm:mb-8 mt-2 sm:mt-4">
                 <div className="flex justify-center">
                   <div className="relative rounded-full">
-                    <div className="flex  rounded-full p-1">
+                    <div className="flex rounded-full p-1">
                       <button
                         onClick={() => setActiveTab("hourly")}
-                        className={`relative px-6 py-2.5 rounded-full transition-all duration-300 flex items-center ${
+                        className={`relative px-3 sm:px-6 py-1.5 sm:py-2.5 rounded-full transition-all duration-300 flex items-center ${
                           activeTab === "hourly"
                             ? `${themeColors.color} ${themeColors.active} font-semibold`
                             : "text-white/80 hover:bg-white/10"
@@ -212,7 +205,7 @@ export default function HomePage() {
 
                       <button
                         onClick={() => setActiveTab("daily")}
-                        className={`relative px-6 py-2.5 rounded-full transition-all duration-300 flex items-center ${
+                        className={`relative px-3 sm:px-6 py-1.5 sm:py-2.5 rounded-full transition-all duration-300 flex items-center ${
                           activeTab === "daily"
                             ? `${themeColors.color} ${themeColors.active} font-semibold shadow-md`
                             : "text-white/80 hover:bg-white/10"
@@ -272,7 +265,7 @@ export default function HomePage() {
           )}
 
           {loading && !weatherData && (
-            <div className="flex-1 flex items-center justify-center">
+            <div className="flex-1 flex items-center justify-center min-h-[60vh]">
               <div className="text-white text-opacity-80">Loading...</div>
             </div>
           )}

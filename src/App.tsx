@@ -54,21 +54,8 @@ function App() {
       document.head.appendChild(meta);
     }
 
-    // Simulate initial loading
-    const timer = setTimeout(() => {
-      setInitialLoading(false);
-    }, 2000);
-
-    return () => {
-      // Measure total mount time when component unmounts
-      // markPerformance("app-mount-end");
-      // measureBetweenMarks(
-      //   "app-mount-start",
-      //   "app-mount-end",
-      //   "Total App Mount Time"
-      // );
-      clearTimeout(timer);
-    };
+    // Remove artificial loading delay, set loading to false immediately
+    setInitialLoading(false);
   }, []);
 
   return (
