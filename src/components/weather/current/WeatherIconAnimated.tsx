@@ -54,7 +54,7 @@ const WeatherIconAnimated: React.FC<WeatherIconAnimatedProps> = ({ icon }) => {
           repeatType: "reverse",
         }}
       >
-        <WeatherIcon type={icon} size="large" />
+        <WeatherIcon type={icon} size="xlarge" />
       </motion.div>
     </motion.div>
   );
