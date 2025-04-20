@@ -6,7 +6,10 @@ import { formatDay, formatDate } from "../../../utils/formatting";
 import { useSettings } from "../../../context/SettingsContext";
 import { AppConfig } from "../../../config/appConfig";
 
-interface DayItemProps {
+// Add native props support
+type NativeButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement>;
+
+interface DayItemProps extends NativeButtonProps {
   day: string;
   maxTemp: number;
   minTemp: number;
@@ -22,6 +25,7 @@ const DayItem: React.FC<DayItemProps> = ({
   weatherCode,
   precipProbability,
   isToday,
+  ...rest
 }) => {
   const weatherInfo = getWeatherInfo(weatherCode);
   const hasPrecip = precipProbability > 0;
@@ -53,16 +57,29 @@ const DayItem: React.FC<DayItemProps> = ({
   };
 
   return (
-    <div
+    <button
       className={`
         relative flex items-center px-4 py-3 rounded-xl
         backdrop-blur-sm border gap-3
+        w-full min-w-0
+        sm:px-3 sm:py-2
+        transition-all duration-200
+        focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-300/70
+        hover:shadow-lg hover:scale-[1.02]
         ${
           isToday
-            ? "bg-white/20 border-white/30"
-            : "bg-white/10 border-white/10"
+            ? "border-white/40 bg-white/20 shadow-md shadow-yellow-100/10"
+            : "border-white/15 bg-white/10"
         }
       `}
+      style={{
+        fontSize: '1rem',
+        maxWidth: '100%',
+        cursor: 'pointer',
+      }}
+      {...rest}
+      aria-label={`Forecast for ${formatDay(day)}: ${displayMaxTemp}° / ${displayMinTemp}°, ${weatherInfo.description}`}
+      role="button"
     >
       {/* Day info */}
       <div className="flex flex-col min-w-[60px]">
@@ -113,7 +130,7 @@ const DayItem: React.FC<DayItemProps> = ({
           {Math.round(displayMinTemp)}°
         </span>
       </div>
-    </div>
+    </button>
   );
 };
 

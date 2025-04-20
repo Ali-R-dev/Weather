@@ -10,6 +10,7 @@ import HourlyForecast from "../components/weather/hourly";
 import DailyForecast from "../components/weather/daily";
 import { MiniSearchBar } from "../components/weather/search";
 import SettingsPanel from "../components/settings/SettingsPanel";
+import SkipToContent from "../components/SkipToContent";
 
 export default function HomePage() {
   // Get weather data but not location setting
@@ -105,6 +106,7 @@ export default function HomePage() {
       animate={{ opacity: 1 }}
       className="min-h-screen flex flex-col relative bg-gradient-to-br from-sky-400 to-blue-500"
     >
+      <SkipToContent />
       {/* Background Effect - Lazy loaded with Suspense */}
       <Suspense fallback={null}>
         {weatherData && (
@@ -116,46 +118,49 @@ export default function HomePage() {
       </Suspense>
 
       <div className="relative z-10 flex-1 flex flex-col">
-        <main className="flex-1 container mx-auto px-2 sm:px-4 py-2 sm:py-4 flex flex-col">
+        <main id="main-content" className="flex-1 w-full px-2 md:px-8 lg:px-20 xl:px-40 py-2 md:py-6 flex flex-col">
           {/* Search bar and settings */}
-          <div
-            className="flex flex-col sm:flex-row items-center justify-between mb-2 gap-2 sm:gap-0"
-            ref={searchContainerRef}
-          >
-            <div className="ml-0 sm:ml-3 p-2 text-2xl sm:text-3xl font-bold text-white">AR</div>
-            <MiniSearchBar
-              onFocus={() => setShowSearchResults(true)}
-              onSelect={() => setShowSearchResults(false)}
-              isActive={showSearchResults}
-            />
-
-            <button
-              onClick={() => setShowSettings(true)}
-              className="ml-0 sm:ml-3 p-2 rounded-full hover:bg-white/10 transition-colors"
-              aria-label="Settings"
+          <nav aria-label="Main navigation" className="w-full">
+            <div
+              className="flex flex-row items-center justify-between mb-2 gap-2 px-0 sm:px-0 w-full"
+              ref={searchContainerRef}
             >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-6 w-6 text-white"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
+              <div className="p-2 text-2xl sm:text-3xl font-bold text-white min-w-[48px] text-left flex-shrink-0">AR</div>
+              <div className="flex-1 flex justify-center">
+                <MiniSearchBar
+                  onFocus={() => setShowSearchResults(true)}
+                  onSelect={() => setShowSearchResults(false)}
+                  isActive={showSearchResults}
+                />
+              </div>
+              <button
+                onClick={() => setShowSettings(true)}
+                className="p-2 rounded-full hover:bg-white/10 transition-colors min-w-[48px] text-right flex-shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-300"
+                aria-label="Settings"
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
-                />
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                />
-              </svg>
-            </button>
-          </div>
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  className="h-6 w-6 text-white"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  stroke="currentColor"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                  />
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
+                </svg>
+              </button>
+            </div>
+          </nav>
 
           {/* Last updated status */}
           {!showSearchResults && weatherData && (
@@ -170,7 +175,7 @@ export default function HomePage() {
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
-              className="mt-2 sm:mt-4"
+              className="mt-2 sm:mt-4 w-full"
               style={{ willChange: "transform" }}
             >
               <CurrentWeather data={weatherData} />
@@ -182,7 +187,7 @@ export default function HomePage() {
                     <div className="flex rounded-full p-1">
                       <button
                         onClick={() => setActiveTab("hourly")}
-                        className={`relative px-3 sm:px-6 py-1.5 sm:py-2.5 rounded-full transition-all duration-300 flex items-center ${
+                        className={`relative px-3 sm:px-6 py-1.5 sm:py-2.5 rounded-full transition-all duration-300 flex items-center text-base md:text-lg lg:text-xl ${
                           activeTab === "hourly"
                             ? `${themeColors.color} ${themeColors.active} font-semibold`
                             : "text-white/80 hover:bg-white/10"
@@ -205,7 +210,7 @@ export default function HomePage() {
 
                       <button
                         onClick={() => setActiveTab("daily")}
-                        className={`relative px-3 sm:px-6 py-1.5 sm:py-2.5 rounded-full transition-all duration-300 flex items-center ${
+                        className={`relative px-3 sm:px-6 py-1.5 sm:py-2.5 rounded-full transition-all duration-300 flex items-center text-base md:text-lg lg:text-xl ${
                           activeTab === "daily"
                             ? `${themeColors.color} ${themeColors.active} font-semibold shadow-md`
                             : "text-white/80 hover:bg-white/10"

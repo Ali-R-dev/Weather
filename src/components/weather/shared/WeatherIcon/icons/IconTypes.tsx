@@ -30,6 +30,8 @@ export interface WeatherIconProps {
   className?: string;
   animated?: boolean;
   withGlow?: boolean;
+  role?: string;
+  "aria-label"?: string;
 }
 
 export const getIconColorClass = (type: string): string => {

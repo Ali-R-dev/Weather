@@ -15,8 +15,11 @@ const WeatherAlertsList: React.FC<WeatherAlertsListProps> = ({ alerts }) => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.5 }}
+      role="region"
+      aria-label="Weather alerts section"
+      tabIndex={0}
     >
-      <h2 className="text-lg font-semibold text-white mb-2">
+      <h2 className="text-lg font-semibold text-white mb-2" id="weather-alerts-heading">
         Weather Alerts ({alerts.length})
       </h2>
 

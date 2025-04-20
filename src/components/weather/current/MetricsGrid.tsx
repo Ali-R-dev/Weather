@@ -25,7 +25,11 @@ const MetricsGrid: React.FC<MetricsGridProps> = ({
   windUnit,
 }) => {
   return (
-    <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+    <div
+      className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-4 w-full"
+      role="list"
+      aria-label="Current weather metrics"
+    >
       <HumidityMetric humidity={humidity} animationDelay={0.05} />
 
       <WindMetric

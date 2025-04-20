@@ -46,6 +46,16 @@ const CurrentWeather: React.FC<CurrentWeatherProps> = ({ data }) => {
       ? data.current.wind_speed_10m
       : convertWindSpeed(data.current.wind_speed_10m, "mph");
 
+  // Attach sunrise and sunset to weatherInfo for icon logic
+  const sunrise = data.daily?.sunrise ? data.daily.sunrise[0] : undefined;
+  const sunset = data.daily?.sunset ? data.daily.sunset[0] : undefined;
+
+  const weatherInfoWithSunTimes = {
+    ...weatherInfo,
+    sunrise,
+    sunset,
+  };
+
   // Apply theme based on current weather and time of day
   useEffect(() => {
     // Fix: Use getThemeFromWeatherCode to convert weather code to theme name first
@@ -69,7 +79,7 @@ const CurrentWeather: React.FC<CurrentWeatherProps> = ({ data }) => {
       <TemperatureDisplay
         temperature={temperature}
         feelsLike={feelsLike}
-        weatherInfo={weatherInfo}
+        weatherInfo={weatherInfoWithSunTimes}
         humidity={data.current.relative_humidity_2m}
         temperatureUnit={settings.units.temperature}
       />

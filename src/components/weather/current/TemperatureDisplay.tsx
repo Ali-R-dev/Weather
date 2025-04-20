@@ -12,6 +12,8 @@ interface TemperatureDisplayProps {
   weatherInfo: {
     label: string;
     icon: string;
+    sunrise?: string;
+    sunset?: string;
   };
   humidity: number;
   temperatureUnit: TemperatureUnit;
@@ -73,7 +75,7 @@ const TemperatureDisplay: React.FC<TemperatureDisplayProps> = ({
       </div>
 
       {/* Enhanced weather icon with animations and effects */}
-      <WeatherIconAnimated icon={weatherInfo.icon} />
+      <WeatherIconAnimated icon={weatherInfo.icon} sunrise={weatherInfo.sunrise} sunset={weatherInfo.sunset} />
     </motion.div>
   );
 };

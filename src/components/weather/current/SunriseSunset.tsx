@@ -39,9 +39,9 @@ const SunriseSunset: React.FC<SunriseSunsetProps> = ({
       initial={{ opacity: 0, y: 10 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
-      className={styles.container}
+      className={`${styles.container} flex flex-col items-center`}
     >
-      <div className="flex justify-between items-center mb-3">
+      <div className="flex justify-between items-center max-w-sm min-w-sm mx-auto mb-3">
         <div className="text-xs font-medium text-white/90 uppercase tracking-wide">
           Day Length
         </div>
@@ -51,58 +51,49 @@ const SunriseSunset: React.FC<SunriseSunsetProps> = ({
       </div>
 
       {/* Day progress bar */}
-      <div className="relative mb-5 mt-2">
-        <div className={styles.progressContainer}>
-          <div
-            className={styles.progressBar}
-            style={{ width: `${dayProgress}%` }}
-          ></div>
-
-          {/* Sunrise indicator */}
-          <div className={styles.sunriseIndicator}>
-            <div className={styles.timeIndicator}></div>
-            <div className={styles.verticalLine}></div>
-            <div className={styles.timeText}>
-              {formatTimeWithFormat(sunrise, timeFormat)}
-            </div>
-          </div>
-
-          {/* Sunset indicator */}
-          <div className={styles.sunsetIndicator}>
+      <div className="relative mb-5 mt-2 max-w-lg mx-auto" style={{minHeight: '3.5rem'}}>
+        {/* Night background */}
+        <div className={styles.nightBar}></div>
+        {/* Day segment */}
+        {(() => {
+          // Calculate percent for sunrise and sunset for left and width
+          const sunriseMinutes = sunriseDate.getHours() * 60 + sunriseDate.getMinutes();
+          const sunsetMinutes = sunsetDate.getHours() * 60 + sunsetDate.getMinutes();
+          const sunrisePercent = sunriseMinutes / 1440 * 100;
+          const sunsetPercent = sunsetMinutes / 1440 * 100;
+          const dayWidthPercent = sunsetPercent - sunrisePercent;
+          return (
             <div
-              className={`${styles.timeIndicator} ${styles.sunsetTimeIndicator}`}
+              className={styles.dayBar}
+              style={{
+                left: `${sunrisePercent}%`,
+                width: `${dayWidthPercent}%`
+              }}
             ></div>
-            <div className={styles.verticalLine}></div>
-            <div className={styles.timeText}>
-              {formatTimeWithFormat(sunset, timeFormat)}
-            </div>
-          </div>
-
-          {/* Sun position indicator */}
+          );
+        })()}
+        {/* Sun indicator only when sun is up */}
+        {(now >= sunriseDate && now <= sunsetDate) && (
           <div
-            className={styles.sunIndicator}
-            style={{ left: `${dayProgress}%` }}
+            className="absolute top-1/2 z-20 -translate-y-1/2"
+            style={{ left: `calc(${dayProgress}% - 0.75rem)` }}
           >
-            <div className={styles.sunWrapper}>
-              {dayProgress > 0 && dayProgress < 100 && (
-                <>
-                  <div className={styles.sunGlow}></div>
-                  <div className={styles.sunInnerGlow}></div>
-                </>
-              )}
-              <div
-                className={`${styles.sunCircle} ${
-                  dayProgress > 0 && dayProgress < 100
-                    ? styles.activeSun
-                    : styles.inactiveSun
-                }`}
-              ></div>
-            </div>
+            <span className={styles.sunPulse + " block w-6 h-6 rounded-full bg-gradient-to-br from-yellow-300 via-yellow-200 to-yellow-400 border-2 border-yellow-400"} aria-label="Current sun position" role="img"></span>
           </div>
+        )}
+        {/* Sunrise icon */}
+        <div className="absolute left-0 top-1/2 -translate-y-1/2 flex flex-col items-center z-30" style={{transform: 'translateY(-130%)'}}>
+          <span role="img" aria-label="Sunrise" className="text-yellow-300 text-xl">🌅</span>
+          <span className="text-xs text-yellow-100 mt-1">{formatTimeWithFormat(sunrise, timeFormat)}</span>
+        </div>
+        {/* Sunset icon */}
+        <div className="absolute right-0 top-1/2 -translate-y-1/2 flex flex-col items-center z-30" style={{transform: 'translateY(-130%)'}}>
+          <span role="img" aria-label="Sunset" className="text-indigo-200 text-xl">🌇</span>
+          <span className="text-xs text-indigo-100 mt-1">{formatTimeWithFormat(sunset, timeFormat)}</span>
         </div>
       </div>
 
-      <div className={styles.timeLabels}>
+      <div className={styles.timeLabels + ' max-w-lg mx-auto'}>
         <div className={styles.sunriseLabel}>
           <svg
             xmlns="http://www.w3.org/2000/svg"

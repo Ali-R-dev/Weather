@@ -41,9 +41,17 @@ const DetailPanel: React.FC<DetailPanelProps> = ({ show, children }) => {
             }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.4, delay: 0.1 }}
-            className="grid grid-cols-1 sm:grid-cols-2 gap-4"
+            className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-4 w-full"
+            role="list"
+            aria-label="Detailed weather information"
           >
-            {children}
+            <div
+              className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-4 w-full"
+              role="list"
+              aria-label="Current weather details"
+            >
+              {children}
+            </div>
           </motion.div>
         </motion.div>
       )}

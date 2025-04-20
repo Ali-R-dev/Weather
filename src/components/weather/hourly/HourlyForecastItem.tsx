@@ -33,10 +33,12 @@ const HourlyForecastItem: React.FC<HourlyForecastItemProps> = ({
       : AppConfig.utils.convertTemperature(temperature, "fahrenheit");
 
   return (
-    <motion.div
-      className={`${styles.hourlyItem} ${isCurrentHour ? styles.current : ""}`}
-      whileHover={{ scale: 1.05, y: -5 }}
-      whileTap={{ scale: 0.98 }}
+    <motion.button
+      className={`group flex flex-col items-center w-full px-2 py-3 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-300 border border-transparent hover:border-white/30 bg-white/10 transition-colors shadow-sm ${styles.hourlyItem} ${isCurrentHour ? styles.current : ""}`}
+      tabIndex={0}
+      aria-label={`Forecast for ${formatHour(time)}: ${displayTemp}°, ${weatherInfo?.description || ""}`}
+      role="button"
+      style={{ cursor: 'pointer' }}
     >
       {/* Time display */}
       <div className={styles.timeText}>
@@ -100,7 +102,7 @@ const HourlyForecastItem: React.FC<HourlyForecastItemProps> = ({
           <span>{precipitationProbability}%</span>
         </div>
       )}
-    </motion.div>
+    </motion.button>
   );
 };
 
