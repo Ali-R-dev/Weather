@@ -31,6 +31,8 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
+    "ts-node": "^10.9.1",
+    "jest-environment-jsdom": "^28.1.1",
     "rollup-plugin-visualizer": "^5.7.0",
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
