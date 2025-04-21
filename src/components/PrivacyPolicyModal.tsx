@@ -1,4 +1,5 @@
 import { motion, AnimatePresence } from 'framer-motion';
+import { useEffect, useRef } from 'react';
 
 interface PrivacyPolicyModalProps {
   visible: boolean;
@@ -8,17 +9,32 @@ interface PrivacyPolicyModalProps {
 export default function PrivacyPolicyModal({ visible, onClose }: PrivacyPolicyModalProps) {
   if (!visible) return null;
 
+  const dialogRef = useRef<HTMLDivElement>(null);
+  const closeBtnRef = useRef<HTMLButtonElement>(null);
+  useEffect(() => {
+    if (visible) closeBtnRef.current?.focus();
+  }, [visible]);
+
   return (
     <AnimatePresence>
-      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4">
+      <div
+        className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+        onKeyDown={e => e.key === 'Escape' && onClose()}
+      >
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           exit={{ opacity: 0, scale: 0.95 }}
+          ref={dialogRef}
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="privacy-modal-title"
           className="bg-gray-900/90 backdrop-blur-md rounded-xl shadow-xl max-w-2xl w-full max-h-[80vh] overflow-y-auto border border-white/10"
         >
           <div className="p-6">
-            <h2 className="text-2xl font-bold text-white mb-4">Privacy Policy</h2>
+            <h2 id="privacy-modal-title" className="text-2xl font-bold text-white mb-4">
+              Privacy Policy
+            </h2>
 
             <div className="space-y-4 text-white/80">
               <section>
@@ -110,6 +126,7 @@ export default function PrivacyPolicyModal({ visible, onClose }: PrivacyPolicyMo
 
             <div className="mt-6 flex justify-end">
               <button
+                ref={closeBtnRef}
                 onClick={onClose}
                 className="px-4 py-2 bg-white/10 hover:bg-white/20 rounded-lg text-white transition-colors"
               >
