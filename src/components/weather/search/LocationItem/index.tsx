@@ -1,17 +1,14 @@
-import React from "react";
-import { motion } from "framer-motion";
-import { SavedLocation } from "../../../../hooks/useSavedLocations";
-import { GeocodingResult } from "../../../../types/geocoding.types";
-import styles from "./styles.module.css";
+import React from 'react';
+import { motion } from 'framer-motion';
+import { SavedLocation } from '../../../../hooks/useSavedLocations';
+import { GeocodingResult } from '../../../../types/geocoding.types';
+import styles from './styles.module.css';
 
 interface LocationItemProps {
   location: SavedLocation | GeocodingResult;
   isDefault?: boolean;
   isRecent?: boolean;
-  onSelect: (
-    location: SavedLocation | GeocodingResult,
-    e: React.MouseEvent
-  ) => void;
+  onSelect: (location: SavedLocation | GeocodingResult, e: React.MouseEvent) => void;
   onSetDefault?: (e: React.MouseEvent, id: number) => void;
   onRemove?: (e: React.MouseEvent, id: number) => void;
   index: number;
@@ -36,7 +33,7 @@ const LocationItem: React.FC<LocationItemProps> = ({
       transition={{ delay: 0.1 + index * 0.05 }}
       whileHover={{
         scale: 1.02,
-        backgroundColor: "rgba(255, 255, 255, 0.1)",
+        backgroundColor: 'rgba(255, 255, 255, 0.1)',
       }}
       whileTap={{ scale: 0.98 }}
     >
@@ -46,9 +43,7 @@ const LocationItem: React.FC<LocationItemProps> = ({
             xmlns="http://www.w3.org/2000/svg"
             viewBox="0 0 20 20"
             fill="currentColor"
-            className={`w-3.5 h-3.5 ${
-              isRecent ? "text-blue-300" : "text-white/70"
-            }`}
+            className={`w-3.5 h-3.5 ${isRecent ? 'text-blue-300' : 'text-white/70'}`}
           >
             <path
               fillRule="evenodd"
@@ -61,9 +56,7 @@ const LocationItem: React.FC<LocationItemProps> = ({
           <div className="text-sm font-medium text-white">{location.name}</div>
           <div className="text-[10px] text-white/70">
             {location.country}
-            {"admin1" in location && location.admin1
-              ? `, ${location.admin1}`
-              : ""}
+            {'admin1' in location && location.admin1 ? `, ${location.admin1}` : ''}
           </div>
         </div>
       </div>
@@ -73,13 +66,11 @@ const LocationItem: React.FC<LocationItemProps> = ({
           <motion.button
             onClick={(e) => onSetDefault(e, location.id)}
             className={`p-1 rounded-full hover:bg-white/10 transition-colors action-button ${
-              isDefault
-                ? "text-yellow-300"
-                : "text-white/70 hover:text-white/90"
+              isDefault ? 'text-yellow-300' : 'text-white/70 hover:text-white/90'
             }`}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
-            title={isDefault ? "Default location" : "Set as default"}
+            title={isDefault ? 'Default location' : 'Set as default'}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

@@ -1,13 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { HourlyWeather } from "../../../types/weather.types";
-import {
-  groupHoursByDay,
-  findCurrentTimeIndex,
-} from "../../../utils/formatting";
-import TemperatureGraph from "./TemperatureGraph";
-import HourlySection from "./HourlySection";
-import HourlyForecastSummary from "./HourlyForecastSummary";
-import ViewToggle from "./ViewToggle";
+import React, { useState, useEffect } from 'react';
+import { HourlyWeather } from '../../../types/weather.types';
+import { groupHoursByDay, findCurrentTimeIndex } from '../../../utils/formatting';
+import TemperatureGraph from './TemperatureGraph';
+import HourlySection from './HourlySection';
+import HourlyForecastSummary from './HourlyForecastSummary';
+import ViewToggle from './ViewToggle';
 
 interface HourlyForecastProps {
   hourlyData: HourlyWeather;
@@ -22,10 +19,7 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({ hourlyData }) => {
     ? hourlyData.time.slice(0, 48) // Show two days if expanded
     : hourlyData.time.slice(0, 24); // Show one day by default
 
-  const displayTemps: number[] = hourlyData.temperature_2m.slice(
-    0,
-    expandedView ? 48 : 24
-  );
+  const displayTemps: number[] = hourlyData.temperature_2m.slice(0, expandedView ? 48 : 24);
 
   // Find the current time index when data changes
   useEffect(() => {
@@ -37,7 +31,7 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({ hourlyData }) => {
       setTimeout(() => {
         const currentHourElement = document.getElementById(`hour-${index}`);
         if (currentHourElement) {
-          const container = currentHourElement.closest(".overflow-x-auto");
+          const container = currentHourElement.closest('.overflow-x-auto');
           if (container) {
             const containerRect = container.getBoundingClientRect();
             const elementRect = currentHourElement.getBoundingClientRect();
@@ -85,10 +79,7 @@ const HourlyForecast: React.FC<HourlyForecastProps> = ({ hourlyData }) => {
         ))}
       </div>
 
-      <ViewToggle
-        expandedView={expandedView}
-        toggleView={() => setExpandedView(!expandedView)}
-      />
+      <ViewToggle expandedView={expandedView} toggleView={() => setExpandedView(!expandedView)} />
     </div>
   );
 };

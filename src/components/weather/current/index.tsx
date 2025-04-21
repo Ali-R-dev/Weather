@@ -1,19 +1,16 @@
-import React, { useEffect } from "react";
-import { WeatherData } from "../../../types/weather.types";
-import { getWeatherInfo } from "../../../utils/weatherCodeMap";
-import { useWeather } from "../../../context/WeatherContext";
-import { useTheme } from "../../../context/ThemeContext";
-import { useSettings } from "../../../context/SettingsContext";
-import { getThemeFromWeatherCode } from "../../../utils/themeUtils";
-import {
-  convertTemperature,
-  convertWindSpeed,
-} from "../../../utils/unitConversion";
+import React, { useEffect } from 'react';
+import { WeatherData } from '../../../types/weather.types';
+import { getWeatherInfo } from '../../../utils/weatherCodeMap';
+import { useWeather } from '../../../context/WeatherContext';
+import { useTheme } from '../../../context/ThemeContext';
+import { useSettings } from '../../../context/SettingsContext';
+import { getThemeFromWeatherCode } from '../../../utils/themeUtils';
+import { convertTemperature, convertWindSpeed } from '../../../utils/unitConversion';
 
-import WeatherHeader from "./Header";
-import TemperatureDisplay from "./TemperatureDisplay";
-import MetricsGrid from "./MetricsGrid";
-import WeatherAdditionalInfo from "./WeatherAdditionalInfo";
+import WeatherHeader from './Header';
+import TemperatureDisplay from './TemperatureDisplay';
+import MetricsGrid from './MetricsGrid';
+import WeatherAdditionalInfo from './WeatherAdditionalInfo';
 
 // import SunriseSunset from "./SunriseSunset";
 
@@ -30,19 +27,19 @@ const CurrentWeather: React.FC<CurrentWeatherProps> = ({ data }) => {
 
   // Format temperature according to user settings
   const temperature =
-    settings.units.temperature === "celsius"
+    settings.units.temperature === 'celsius'
       ? data.current.temperature_2m
-      : convertTemperature(data.current.temperature_2m, "fahrenheit");
+      : convertTemperature(data.current.temperature_2m, 'fahrenheit');
 
   const feelsLike =
-    settings.units.temperature === "celsius"
+    settings.units.temperature === 'celsius'
       ? data.current.apparent_temperature
-      : convertTemperature(data.current.apparent_temperature, "fahrenheit");
+      : convertTemperature(data.current.apparent_temperature, 'fahrenheit');
 
   const windSpeed =
-    settings.units.wind === "kph"
+    settings.units.wind === 'kph'
       ? data.current.wind_speed_10m
-      : convertWindSpeed(data.current.wind_speed_10m, "mph");
+      : convertWindSpeed(data.current.wind_speed_10m, 'mph');
 
   // Attach sunrise and sunset to weatherInfo for icon logic
   const sunrise = data.daily?.sunrise ? data.daily.sunrise[0] : undefined;
@@ -57,10 +54,7 @@ const CurrentWeather: React.FC<CurrentWeatherProps> = ({ data }) => {
   // Apply theme based on current weather and time of day
   useEffect(() => {
     // Fix: Use getThemeFromWeatherCode to convert weather code to theme name first
-    const theme = getThemeFromWeatherCode(
-      data.current.weather_code,
-      data.current.is_day === 1
-    );
+    const theme = getThemeFromWeatherCode(data.current.weather_code, data.current.is_day === 1);
     applyTheme(theme);
   }, [data.current.weather_code, data.current.is_day, applyTheme]);
 

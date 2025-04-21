@@ -1,5 +1,5 @@
-import React, { createContext, useState, useContext, useEffect } from "react";
-import { WeatherTheme, applyTheme } from "../styles/themes";
+import React, { createContext, useState, useContext, useEffect } from 'react';
+import { WeatherTheme, applyTheme } from '../styles/themes';
 
 interface ThemeContextType {
   applyTheme: (theme: WeatherTheme) => void;
@@ -8,17 +8,15 @@ interface ThemeContextType {
 
 const defaultContext: ThemeContextType = {
   applyTheme: () => {},
-  currentTheme: "sunny", // Default theme
+  currentTheme: 'sunny', // Default theme
 };
 
 const ThemeContext = createContext<ThemeContextType>(defaultContext);
 
 export const useTheme = () => useContext(ThemeContext);
 
-export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
-  children,
-}) => {
-  const [currentTheme, setCurrentTheme] = useState<WeatherTheme>("sunny");
+export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
+  const [currentTheme, setCurrentTheme] = useState<WeatherTheme>('sunny');
 
   const handleApplyTheme = (theme: WeatherTheme) => {
     setCurrentTheme(theme);
@@ -27,7 +25,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // Initialize with default theme
   useEffect(() => {
-    handleApplyTheme("sunny");
+    handleApplyTheme('sunny');
   }, []);
 
   return (

@@ -1,11 +1,11 @@
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export interface WeatherAlertData {
   id: string;
   title: string;
   description: string;
-  severity: "advisory" | "watch" | "warning";
+  severity: 'advisory' | 'watch' | 'warning';
   start: Date;
   end: Date;
   source?: string;
@@ -21,31 +21,31 @@ const WeatherAlert: React.FC<WeatherAlertProps> = ({ alert }) => {
   // Determine color based on severity
   const getSeverityColor = () => {
     switch (alert.severity) {
-      case "warning":
-        return "bg-red-500/80";
-      case "watch":
-        return "bg-orange-500/80";
-      case "advisory":
-        return "bg-yellow-500/80";
+      case 'warning':
+        return 'bg-red-500/80';
+      case 'watch':
+        return 'bg-orange-500/80';
+      case 'advisory':
+        return 'bg-yellow-500/80';
       default:
-        return "bg-blue-500/80";
+        return 'bg-blue-500/80';
     }
   };
 
   // Format date ranges
   const formatTimeRange = () => {
     const formatOptions: Intl.DateTimeFormatOptions = {
-      weekday: "short",
-      month: "short",
-      day: "numeric",
-      hour: "numeric",
-      minute: "2-digit",
+      weekday: 'short',
+      month: 'short',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: '2-digit',
     };
 
-    return `${alert.start.toLocaleString(
+    return `${alert.start.toLocaleString(undefined, formatOptions)} - ${alert.end.toLocaleString(
       undefined,
       formatOptions
-    )} - ${alert.end.toLocaleString(undefined, formatOptions)}`;
+    )}`;
   };
 
   return (
@@ -86,19 +86,14 @@ const WeatherAlert: React.FC<WeatherAlertProps> = ({ alert }) => {
         <div>
           <svg
             className={`w-5 h-5 text-white/80 transition-transform ${
-              expanded ? "transform rotate-180" : ""
+              expanded ? 'transform rotate-180' : ''
             }`}
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M19 9l-7 7-7-7"
-            />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
           </svg>
         </div>
       </div>
@@ -107,17 +102,13 @@ const WeatherAlert: React.FC<WeatherAlertProps> = ({ alert }) => {
         {expanded && (
           <motion.div
             initial={{ height: 0, opacity: 0 }}
-            animate={{ height: "auto", opacity: 1 }}
+            animate={{ height: 'auto', opacity: 1 }}
             exit={{ height: 0, opacity: 0 }}
             transition={{ duration: 0.3 }}
             className="px-4 pb-3 text-sm text-white/90 border-t border-white/20"
           >
             <p className="py-2 whitespace-pre-line">{alert.description}</p>
-            {alert.source && (
-              <p className="text-xs text-white/80 mt-2">
-                Source: {alert.source}
-              </p>
-            )}
+            {alert.source && <p className="text-xs text-white/80 mt-2">Source: {alert.source}</p>}
           </motion.div>
         )}
       </AnimatePresence>

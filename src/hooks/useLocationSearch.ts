@@ -1,11 +1,8 @@
-import { useState, useEffect, useRef } from "react";
-import { searchLocations, GeocodingResult } from "../services/geocodingService";
+import { useState, useEffect, useRef } from 'react';
+import { searchLocations, GeocodingResult } from '../services/geocodingService';
 
-export function useLocationSearch(
-  minChars: number = 2,
-  debounceTime: number = 300
-) {
-  const [query, setQuery] = useState("");
+export function useLocationSearch(minChars: number = 2, debounceTime: number = 300) {
+  const [query, setQuery] = useState('');
   const [results, setResults] = useState<GeocodingResult[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const searchTimeout = useRef<number | null>(null);
@@ -27,7 +24,7 @@ export function useLocationSearch(
         const locations = await searchLocations(query);
         setResults(locations);
       } catch (error) {
-        console.error("Search error:", error);
+        console.error('Search error:', error);
       } finally {
         setIsSearching(false);
       }
@@ -45,6 +42,6 @@ export function useLocationSearch(
     setQuery,
     results,
     isSearching,
-    clearSearch: () => setQuery(""),
+    clearSearch: () => setQuery(''),
   };
 }

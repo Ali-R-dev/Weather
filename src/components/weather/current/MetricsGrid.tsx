@@ -1,9 +1,9 @@
-import React from "react";
-import HumidityMetric from "./metrics/HumidityMetric";
-import WindMetric from "./metrics/WindMetric";
-import PrecipitationMetric from "./metrics/PrecipitationMetric";
-import UVIndexMetric from "./metrics/UVIndexMetric";
-import { WindUnit } from "../../../context/SettingsContext";
+import React from 'react';
+import HumidityMetric from './metrics/HumidityMetric';
+import WindMetric from './metrics/WindMetric';
+import PrecipitationMetric from './metrics/PrecipitationMetric';
+import UVIndexMetric from './metrics/UVIndexMetric';
+import { WindUnit } from '../../../context/SettingsContext';
 
 interface MetricsGridProps {
   humidity: number;

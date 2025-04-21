@@ -1,6 +1,6 @@
-import React from "react";
-import WeatherAlert, { WeatherAlertData } from "./WeatherAlert";
-import { motion, AnimatePresence } from "framer-motion";
+import React from 'react';
+import WeatherAlert, { WeatherAlertData } from './WeatherAlert';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface WeatherAlertsListProps {
   alerts: WeatherAlertData[];

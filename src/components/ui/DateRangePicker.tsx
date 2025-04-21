@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface DateRangePickerProps {
   startDate: Date;
@@ -13,7 +13,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
   startDate,
   endDate,
   onChange,
-  className = "",
+  className = '',
   maxRange = 7,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -24,10 +24,10 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
 
   // Format date to display
   const formatDate = (date: Date) => {
-    return date.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
+      year: 'numeric',
     });
   };
 
@@ -75,8 +75,7 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
 
     const hoverDate = hoveredDate || localEndDate;
     return (
-      date >= localStartDate &&
-      date <= (hoverDate > localStartDate ? hoverDate : localStartDate)
+      date >= localStartDate && date <= (hoverDate > localStartDate ? hoverDate : localStartDate)
     );
   };
 
@@ -119,15 +118,12 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
             className="absolute mt-2 z-30 w-72 bg-slate-800/95 backdrop-blur-xl rounded-xl shadow-lg border border-white/20 p-4"
           >
             <div className="mb-3 text-sm font-medium text-white/80">
-              {selectingStart ? "Select start date" : "Select end date"}
+              {selectingStart ? 'Select start date' : 'Select end date'}
             </div>
 
             <div className="grid grid-cols-7 gap-1">
-              {["Su", "Mo", "Tu", "We", "Th", "Fr", "Sa"].map((day) => (
-                <div
-                  key={day}
-                  className="text-center text-xs text-white/50 py-1"
-                >
+              {['Su', 'Mo', 'Tu', 'We', 'Th', 'Fr', 'Sa'].map((day) => (
+                <div key={day} className="text-center text-xs text-white/50 py-1">
                   {day}
                 </div>
               ))}
@@ -137,8 +133,8 @@ const DateRangePicker: React.FC<DateRangePickerProps> = ({
                   key={date.toISOString()}
                   className={`text-center py-2 rounded-md text-sm transition-all ${
                     isInRange(date)
-                      ? "bg-blue-500/80 text-white"
-                      : "hover:bg-white/10 text-white/80"
+                      ? 'bg-blue-500/80 text-white'
+                      : 'hover:bg-white/10 text-white/80'
                   }`}
                   onClick={() => handleDateClick(date)}
                   onMouseEnter={() => !selectingStart && setHoveredDate(date)}

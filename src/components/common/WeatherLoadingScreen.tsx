@@ -1,13 +1,11 @@
-import { useEffect, useState } from "react";
-import styles from "./WeatherLoadingScreen.module.css";
+import { useEffect, useState } from 'react';
+import styles from './WeatherLoadingScreen.module.css';
 
 interface WeatherLoadingScreenProps {
   isLoading: boolean;
 }
 
-export default function WeatherLoadingScreen({
-  isLoading,
-}: WeatherLoadingScreenProps) {
+export default function WeatherLoadingScreen({ isLoading }: WeatherLoadingScreenProps) {
   const [fadeOut, setFadeOut] = useState(false);
   const [hidden, setHidden] = useState(false);
 
@@ -24,7 +22,7 @@ export default function WeatherLoadingScreen({
   if (hidden) return null;
 
   return (
-    <div className={`${styles.loadingScreen} ${fadeOut ? styles.fadeOut : ""}`}>
+    <div className={`${styles.loadingScreen} ${fadeOut ? styles.fadeOut : ''}`}>
       <div className={styles.ambientBackground}>
         <div className="cloud cloud-1"></div>
         <div className="cloud cloud-2"></div>
@@ -50,9 +48,7 @@ export default function WeatherLoadingScreen({
             <div className="sun-circle"></div>
             <div className="cloud-shape"></div>
           </div>
-          <h1 className="text-2xl font-semibold text-white text-center">
-            Weather App
-          </h1>
+          <h1 className="text-2xl font-semibold text-white text-center">Weather App</h1>
         </div>
 
         <div className={styles.loadingSpinner}>

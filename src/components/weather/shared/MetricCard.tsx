@@ -1,5 +1,5 @@
-import React from "react";
-import { motion } from "framer-motion";
+import React from 'react';
+import { motion } from 'framer-motion';
 
 interface MetricCardProps {
   icon: React.ReactNode;
@@ -8,10 +8,10 @@ interface MetricCardProps {
   subtitle?: string;
   progress?: number; // Optional progress value (0-100)
   progressColor?: string; // CSS color value for progress bar
-  trend?: "up" | "down" | "stable"; // Optional trend indicator
+  trend?: 'up' | 'down' | 'stable'; // Optional trend indicator
   trendValue?: string; // Optional trend value (e.g., "+2°" or "-5%")
-  type?: "default" | "primary" | "success" | "warning" | "danger" | "info"; // Card type/color
-  size?: "sm" | "md" | "lg"; // Card size
+  type?: 'default' | 'primary' | 'success' | 'warning' | 'danger' | 'info'; // Card type/color
+  size?: 'sm' | 'md' | 'lg'; // Card size
   animationDelay?: number;
   onClick?: () => void; // Optional click handler
 }
@@ -25,38 +25,38 @@ const MetricCard: React.FC<MetricCardProps> = ({
   progressColor,
   trend,
   trendValue,
-  type = "default",
-  size = "md",
+  type = 'default',
+  size = 'md',
   animationDelay = 0.1,
   onClick,
 }) => {
   // Determine gradient and styling based on type
   const getTypeStyles = () => {
     switch (type) {
-      case "primary":
-        return "from-blue-500/20 to-indigo-600/10 border-blue-500/30 hover:from-blue-500/30 hover:to-indigo-600/20";
-      case "success":
-        return "from-green-500/20 to-emerald-600/10 border-green-500/30 hover:from-green-500/30 hover:to-emerald-600/20";
-      case "warning":
-        return "from-yellow-500/20 to-amber-600/10 border-yellow-500/30 hover:from-yellow-500/30 hover:to-amber-600/20";
-      case "danger":
-        return "from-red-500/20 to-rose-600/10 border-red-500/30 hover:from-red-500/30 hover:to-rose-600/20";
-      case "info":
-        return "from-cyan-500/20 to-sky-600/10 border-cyan-500/30 hover:from-cyan-500/30 hover:to-sky-600/20";
+      case 'primary':
+        return 'from-blue-500/20 to-indigo-600/10 border-blue-500/30 hover:from-blue-500/30 hover:to-indigo-600/20';
+      case 'success':
+        return 'from-green-500/20 to-emerald-600/10 border-green-500/30 hover:from-green-500/30 hover:to-emerald-600/20';
+      case 'warning':
+        return 'from-yellow-500/20 to-amber-600/10 border-yellow-500/30 hover:from-yellow-500/30 hover:to-amber-600/20';
+      case 'danger':
+        return 'from-red-500/20 to-rose-600/10 border-red-500/30 hover:from-red-500/30 hover:to-rose-600/20';
+      case 'info':
+        return 'from-cyan-500/20 to-sky-600/10 border-cyan-500/30 hover:from-cyan-500/30 hover:to-sky-600/20';
       default:
-        return "from-white/15 to-white/5 border-white/20 hover:from-white/20 hover:to-white/10";
+        return 'from-white/15 to-white/5 border-white/20 hover:from-white/20 hover:to-white/10';
     }
   };
 
   // Determine size-related classes
   const getSizeClasses = () => {
     switch (size) {
-      case "sm":
-        return "p-2.5 rounded-xl";
-      case "lg":
-        return "p-4 rounded-2xl";
+      case 'sm':
+        return 'p-2.5 rounded-xl';
+      case 'lg':
+        return 'p-4 rounded-2xl';
       default:
-        return "p-3 rounded-xl";
+        return 'p-3 rounded-xl';
     }
   };
 
@@ -65,9 +65,9 @@ const MetricCard: React.FC<MetricCardProps> = ({
     if (!trend) return null;
 
     const trendColors = {
-      up: "text-green-400",
-      down: "text-red-400",
-      stable: "text-blue-400",
+      up: 'text-green-400',
+      down: 'text-red-400',
+      stable: 'text-blue-400',
     };
 
     const trendIcons = {
@@ -114,9 +114,7 @@ const MetricCard: React.FC<MetricCardProps> = ({
     return (
       <div className={`flex items-center ${trendColors[trend]}`}>
         {trendIcons[trend]}
-        {trendValue && (
-          <span className="ml-1 text-xs font-medium">{trendValue}</span>
-        )}
+        {trendValue && <span className="ml-1 text-xs font-medium">{trendValue}</span>}
       </div>
     );
   };
@@ -124,18 +122,18 @@ const MetricCard: React.FC<MetricCardProps> = ({
   return (
     <motion.div
       className={`backdrop-blur-lg bg-gradient-to-br ${getTypeStyles()} ${getSizeClasses()} border shadow-lg transition-all cursor-${
-        onClick ? "pointer" : "default"
+        onClick ? 'pointer' : 'default'
       }`}
       whileHover={{
         scale: 1.02,
-        boxShadow: "0 10px 25px -5px rgba(0, 0, 0, 0.2)",
+        boxShadow: '0 10px 25px -5px rgba(0, 0, 0, 0.2)',
       }}
       whileTap={onClick ? { scale: 0.98 } : undefined}
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{
         delay: animationDelay,
-        type: "spring",
+        type: 'spring',
         stiffness: 500,
         damping: 30,
       }}
@@ -144,9 +142,7 @@ const MetricCard: React.FC<MetricCardProps> = ({
       <div className="flex items-center justify-between mb-1.5">
         <div className="flex items-center">
           <div className="mr-2 text-white/90">{icon}</div>
-          <div className="text-xs font-medium text-white/90 uppercase tracking-wide">
-            {title}
-          </div>
+          <div className="text-xs font-medium text-white/90 uppercase tracking-wide">{title}</div>
         </div>
         {getTrendIndicator()}
       </div>
@@ -154,9 +150,7 @@ const MetricCard: React.FC<MetricCardProps> = ({
       <div className="flex items-end justify-between">
         <div>
           <div className="text-xl font-bold text-white">{value}</div>
-          {subtitle && (
-            <div className="text-xs text-white/70 mt-0.5">{subtitle}</div>
-          )}
+          {subtitle && <div className="text-xs text-white/70 mt-0.5">{subtitle}</div>}
         </div>
       </div>
 
@@ -167,7 +161,7 @@ const MetricCard: React.FC<MetricCardProps> = ({
             className="h-full rounded-full"
             style={{
               width: `${progress}%`,
-              backgroundColor: progressColor || "rgba(255, 255, 255, 0.7)",
+              backgroundColor: progressColor || 'rgba(255, 255, 255, 0.7)',
             }}
             initial={{ width: 0 }}
             animate={{ width: `${progress}%` }}

@@ -1,6 +1,6 @@
-import React from "react";
-import { WeatherIconProps } from "./IconTypes";
-import { motion } from "framer-motion";
+import React from 'react';
+import { WeatherIconProps } from './IconTypes';
+import { motion } from 'framer-motion';
 
 const SunIcon: React.FC<WeatherIconProps> = ({ className, ...props }) => {
   return (
@@ -15,7 +15,7 @@ const SunIcon: React.FC<WeatherIconProps> = ({ className, ...props }) => {
     >
       {/* Animated sun rays */}
       {[...Array(8)].map((_, i) => {
-        const angle = (i * 45);
+        const angle = i * 45;
         return (
           <motion.line
             key={i}
@@ -43,8 +43,8 @@ const SunIcon: React.FC<WeatherIconProps> = ({ className, ...props }) => {
               duration: 2.4,
               repeat: Infinity,
               delay: i * 0.15,
-              repeatType: "reverse",
-              ease: "easeInOut",
+              repeatType: 'reverse',
+              ease: 'easeInOut',
             }}
           />
         );

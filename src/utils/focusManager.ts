@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef } from 'react';
 
 /**
  * Trap focus within a specific container (for modals, dialogs, etc.)
@@ -6,13 +6,9 @@ import { useEffect, useRef } from "react";
  * @param active Whether the focus trap is active
  * @param ref A ref to the container element
  */
-export const useFocusTrap = (
-  active: boolean
-): React.RefObject<HTMLDivElement> => {
+export const useFocusTrap = (active: boolean): React.RefObject<HTMLDivElement> => {
   // Fix the reference type - ensure it's always returned as a proper RefObject<HTMLDivElement>
-  const containerRef = useRef<HTMLDivElement>(
-    null
-  ) as React.RefObject<HTMLDivElement>;
+  const containerRef = useRef<HTMLDivElement>(null) as React.RefObject<HTMLDivElement>;
 
   useEffect(() => {
     if (!active) return;
@@ -28,15 +24,13 @@ export const useFocusTrap = (
     if (focusableElements.length === 0) return;
 
     const firstElement = focusableElements[0] as HTMLElement;
-    const lastElement = focusableElements[
-      focusableElements.length - 1
-    ] as HTMLElement;
+    const lastElement = focusableElements[focusableElements.length - 1] as HTMLElement;
 
     // Focus the first element when trap is activated
     firstElement.focus();
 
     const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key !== "Tab") return;
+      if (e.key !== 'Tab') return;
 
       // If Shift+Tab on first element, wrap to last
       if (e.shiftKey && document.activeElement === firstElement) {
@@ -52,13 +46,13 @@ export const useFocusTrap = (
     };
 
     // Add event listener
-    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener('keydown', handleKeyDown);
 
     // Store previously focused element to restore later
     const previousFocus = document.activeElement as HTMLElement;
 
     return () => {
-      document.removeEventListener("keydown", handleKeyDown);
+      document.removeEventListener('keydown', handleKeyDown);
       // Restore focus when trap is deactivated
       previousFocus?.focus();
     };
@@ -70,27 +64,24 @@ export const useFocusTrap = (
 /**
  * Announce messages to screen readers
  */
-export const announce = (
-  message: string,
-  priority: "polite" | "assertive" = "polite"
-): void => {
+export const announce = (message: string, priority: 'polite' | 'assertive' = 'polite'): void => {
   // Create announcement element if it doesn't exist
-  let announcer = document.getElementById("sr-announcer");
+  let announcer = document.getElementById('sr-announcer');
 
   if (!announcer) {
-    announcer = document.createElement("div");
-    announcer.id = "sr-announcer";
-    announcer.setAttribute("aria-live", priority);
-    announcer.setAttribute("aria-atomic", "true");
-    announcer.style.position = "absolute";
-    announcer.style.width = "1px";
-    announcer.style.height = "1px";
-    announcer.style.padding = "0";
-    announcer.style.margin = "-1px";
-    announcer.style.overflow = "hidden";
-    announcer.style.clip = "rect(0, 0, 0, 0)";
-    announcer.style.whiteSpace = "nowrap";
-    announcer.style.border = "0";
+    announcer = document.createElement('div');
+    announcer.id = 'sr-announcer';
+    announcer.setAttribute('aria-live', priority);
+    announcer.setAttribute('aria-atomic', 'true');
+    announcer.style.position = 'absolute';
+    announcer.style.width = '1px';
+    announcer.style.height = '1px';
+    announcer.style.padding = '0';
+    announcer.style.margin = '-1px';
+    announcer.style.overflow = 'hidden';
+    announcer.style.clip = 'rect(0, 0, 0, 0)';
+    announcer.style.whiteSpace = 'nowrap';
+    announcer.style.border = '0';
     document.body.appendChild(announcer);
   }
 
@@ -104,12 +95,12 @@ export const announce = (
 export const useEscapeKey = (callback: () => void): void => {
   useEffect(() => {
     const handleEscape = (event: KeyboardEvent) => {
-      if (event.key === "Escape") {
+      if (event.key === 'Escape') {
         callback();
       }
     };
 
-    document.addEventListener("keydown", handleEscape);
-    return () => document.removeEventListener("keydown", handleEscape);
+    document.addEventListener('keydown', handleEscape);
+    return () => document.removeEventListener('keydown', handleEscape);
   }, [callback]);
 };

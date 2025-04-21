@@ -1,5 +1,5 @@
-import React from "react";
-import { WeatherIconProps } from "./IconTypes";
+import React from 'react';
+import { WeatherIconProps } from './IconTypes';
 
 const SunIcon: React.FC<WeatherIconProps> = ({ className }) => {
   return (

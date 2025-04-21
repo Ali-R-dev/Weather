@@ -1,10 +1,10 @@
-import React, { ReactNode } from "react";
-import styles from "./Card.module.css";
+import React, { ReactNode } from 'react';
+import styles from './Card.module.css';
 
 interface CardProps {
   children: ReactNode;
   className?: string;
-  variant?: "default" | "glass" | "solid";
+  variant?: 'default' | 'glass' | 'solid';
   onClick?: () => void;
   hoverable?: boolean;
   elevated?: boolean;
@@ -12,8 +12,8 @@ interface CardProps {
 
 const Card: React.FC<CardProps> = ({
   children,
-  className = "",
-  variant = "default",
+  className = '',
+  variant = 'default',
   onClick,
   hoverable = false,
   elevated = false,
@@ -25,8 +25,8 @@ const Card: React.FC<CardProps> = ({
       className={`
         ${styles.card}
         ${variantClass}
-        ${hoverable ? styles.hoverable : ""}
-        ${elevated ? styles.elevated : ""}
+        ${hoverable ? styles.hoverable : ''}
+        ${elevated ? styles.elevated : ''}
         ${className}
       `}
       onClick={onClick}

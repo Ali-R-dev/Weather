@@ -1,26 +1,24 @@
-import React from "react";
-import { motion } from "framer-motion";
-import styles from "./CurrentWeather.module.css";
+import React from 'react';
+import { motion } from 'framer-motion';
+import styles from './CurrentWeather.module.css';
 
 interface WeatherAdditionalInfoProps {
   pressure?: number;
 }
 
-const WeatherAdditionalInfo: React.FC<WeatherAdditionalInfoProps> = ({
-  pressure,
-}) => {
+const WeatherAdditionalInfo: React.FC<WeatherAdditionalInfoProps> = ({ pressure }) => {
   if (!pressure) return null;
 
   return (
     <motion.div
       className={styles.detailCard}
       initial={{
-        boxShadow: "0 0px 0px 0px rgba(0, 0, 0, 0)", // Explicit initial value
+        boxShadow: '0 0px 0px 0px rgba(0, 0, 0, 0)', // Explicit initial value
       }}
       whileHover={{
-        backgroundColor: "rgba(255, 255, 255, 0.15)",
+        backgroundColor: 'rgba(255, 255, 255, 0.15)',
         y: -2,
-        boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)",
+        boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
       }}
       transition={{ duration: 0.2 }}
     >
@@ -45,8 +43,8 @@ const WeatherAdditionalInfo: React.FC<WeatherAdditionalInfoProps> = ({
       </div>
       <div className="text-xs text-white/60 mt-1">
         {pressure > 1013
-          ? "High pressure - Generally fair weather"
-          : "Low pressure - Potential for precipitation"}
+          ? 'High pressure - Generally fair weather'
+          : 'Low pressure - Potential for precipitation'}
       </div>
     </motion.div>
   );

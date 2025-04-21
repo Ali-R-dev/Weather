@@ -1,8 +1,8 @@
-import { useEffect, useRef } from "react";
-import "./WeatherEffects.css";
+import { useEffect, useRef } from 'react';
+import './WeatherEffects.css';
 
 interface RainEffectProps {
-  intensity: "light" | "medium" | "heavy";
+  intensity: 'light' | 'medium' | 'heavy';
   isDay: boolean;
 }
 
@@ -16,8 +16,8 @@ const RainEffect = ({ intensity, isDay }: RainEffectProps) => {
 
     // Clean up function
     return () => {
-      if (frontRowRef.current) frontRowRef.current.innerHTML = "";
-      if (backRowRef.current) backRowRef.current.innerHTML = "";
+      if (frontRowRef.current) frontRowRef.current.innerHTML = '';
+      if (backRowRef.current) backRowRef.current.innerHTML = '';
     };
   }, [intensity, isDay]); // Also recreate rain when day/night changes
 
@@ -26,21 +26,20 @@ const RainEffect = ({ intensity, isDay }: RainEffectProps) => {
     if (!frontRowRef.current || !backRowRef.current) return;
 
     // Clear existing drops
-    frontRowRef.current.innerHTML = "";
-    backRowRef.current.innerHTML = "";
+    frontRowRef.current.innerHTML = '';
+    backRowRef.current.innerHTML = '';
 
     let increment = 0;
-    let drops = "";
-    let backDrops = "";
+    let drops = '';
+    let backDrops = '';
 
     // Set drop count based on intensity
-    const dropCount =
-      intensity === "light" ? 70 : intensity === "medium" ? 100 : 150;
+    const dropCount = intensity === 'light' ? 70 : intensity === 'medium' ? 100 : 150;
 
     // Get drop color based on day/night
     const dropColor = isDay
-      ? "rgba(174, 194, 224, 0.6)" // Lighter blue for day
-      : "rgba(210, 230, 255, 0.8)"; // Brighter for night
+      ? 'rgba(174, 194, 224, 0.6)' // Lighter blue for day
+      : 'rgba(210, 230, 255, 0.8)'; // Brighter for night
 
     while (increment < dropCount) {
       // Random values for animation variations
@@ -72,7 +71,7 @@ const RainEffect = ({ intensity, isDay }: RainEffectProps) => {
   };
 
   return (
-    <div className={`rain-container ${intensity} ${isDay ? "day" : "night"}`}>
+    <div className={`rain-container ${intensity} ${isDay ? 'day' : 'night'}`}>
       <div ref={frontRowRef} className="rain front-row"></div>
       <div ref={backRowRef} className="rain back-row"></div>
     </div>

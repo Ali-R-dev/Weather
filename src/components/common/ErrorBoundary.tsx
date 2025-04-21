@@ -1,4 +1,4 @@
-import { Component, ErrorInfo, ReactNode } from "react";
+import { Component, ErrorInfo, ReactNode } from 'react';
 
 interface Props {
   children: ReactNode;
@@ -21,7 +21,7 @@ class ErrorBoundary extends Component<Props, State> {
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error("Uncaught error:", error, errorInfo);
+    console.error('Uncaught error:', error, errorInfo);
   }
 
   public render() {
@@ -44,8 +44,7 @@ class ErrorBoundary extends Component<Props, State> {
             </svg>
             <h3 className="text-xl font-medium">Something went wrong</h3>
             <p className="text-sm text-white/80 mt-2 text-center">
-              We're having trouble displaying this content. Please try
-              refreshing the page.
+              We're having trouble displaying this content. Please try refreshing the page.
             </p>
             <button
               onClick={() => window.location.reload()}

@@ -1,5 +1,5 @@
-import React, { useMemo } from "react";
-import { formatHour } from "../../../utils/formatting";
+import React, { useMemo } from 'react';
+import { formatHour } from '../../../utils/formatting';
 import {
   LineChart,
   Line,
@@ -10,9 +10,9 @@ import {
   ResponsiveContainer,
   ReferenceLine,
   Label,
-} from "recharts";
-import { useSettings } from "../../../context/SettingsContext";
-import { AppConfig } from "../../../config/appConfig";
+} from 'recharts';
+import { useSettings } from '../../../context/SettingsContext';
+import { AppConfig } from '../../../config/appConfig';
 
 // Create proper types
 interface TemperatureDataPoint {
@@ -46,9 +46,9 @@ const TemperatureGraph: React.FC<TemperatureGraphProps> = ({
 
   // Convert temperatures if needed (they come in Celsius)
   const convertedTemps = temperatures.map((temp) =>
-    settings.units.temperature === "celsius"
+    settings.units.temperature === 'celsius'
       ? temp
-      : AppConfig.utils.convertTemperature(temp, "fahrenheit")
+      : AppConfig.utils.convertTemperature(temp, 'fahrenheit')
   );
 
   // Use convertedTemps for data processing
@@ -59,11 +59,7 @@ const TemperatureGraph: React.FC<TemperatureGraphProps> = ({
       label: formatHour(times[i], settings.timeFormat), // Pass the user's time format preference
       isCurrent: i === currentTimeIndex,
       isPast: i <= currentTimeIndex,
-      isKey:
-        i === 0 ||
-        i === currentTimeIndex ||
-        i === convertedTemps.length - 1 ||
-        i % 4 === 0,
+      isKey: i === 0 || i === currentTimeIndex || i === convertedTemps.length - 1 || i % 4 === 0,
     }));
   }, [convertedTemps, times, currentTimeIndex, settings.timeFormat]); // Add settings.timeFormat as dependency
 
@@ -72,14 +68,11 @@ const TemperatureGraph: React.FC<TemperatureGraphProps> = ({
   const maxTemp = Math.ceil(Math.max(...convertedTemps)) + 1;
 
   // Calculate gradient transition point
-  const gradientBreakpoint =
-    (currentTimeIndex / (convertedTemps.length - 1)) * 100;
+  const gradientBreakpoint = (currentTimeIndex / (convertedTemps.length - 1)) * 100;
 
   // Determine if the graph is showing a significant temperature change
-  const tempChange =
-    convertedTemps[convertedTemps.length - 1] - convertedTemps[0];
-  const showsTempTrend =
-    Math.abs(tempChange) >= (settings.units.temperature === "celsius" ? 3 : 5);
+  const tempChange = convertedTemps[convertedTemps.length - 1] - convertedTemps[0];
+  const showsTempTrend = Math.abs(tempChange) >= (settings.units.temperature === 'celsius' ? 3 : 5);
 
   // Custom dot renderer with premium styling
   const renderDot = (props: DotProps) => {
@@ -131,7 +124,7 @@ const TemperatureGraph: React.FC<TemperatureGraphProps> = ({
           cx={cx}
           cy={cy}
           r={4}
-          fill={index <= currentTimeIndex ? "#66FF66" : "white"}
+          fill={index <= currentTimeIndex ? '#66FF66' : 'white'}
           opacity={0.9}
         />
         <circle
@@ -139,7 +132,7 @@ const TemperatureGraph: React.FC<TemperatureGraphProps> = ({
           cx={cx}
           cy={cy}
           r={2}
-          fill={index <= currentTimeIndex ? "#9CFFB3" : "#F8F8F8"}
+          fill={index <= currentTimeIndex ? '#9CFFB3' : '#F8F8F8'}
           opacity={0.7}
         />
       </g>
@@ -173,50 +166,27 @@ const TemperatureGraph: React.FC<TemperatureGraphProps> = ({
       {/* Temperature trend indicator */}
       {showsTempTrend && (
         <div className="absolute top-0 left-1/2 transform -translate-x-1/2 text-xs z-10">
-          <div
-            className={`font-medium ${
-              tempChange > 0 ? "text-yellow-400" : "text-blue-300"
-            }`}
-          >
-            {tempChange > 0 ? "Warming" : "Cooling"}{" "}
-            {Math.abs(Math.round(tempChange))}°
+          <div className={`font-medium ${tempChange > 0 ? 'text-yellow-400' : 'text-blue-300'}`}>
+            {tempChange > 0 ? 'Warming' : 'Cooling'} {Math.abs(Math.round(tempChange))}°
           </div>
         </div>
       )}
 
       <div className="absolute inset-0">
         <ResponsiveContainer width="100%" height="100%">
-          <LineChart
-            data={data}
-            margin={{ top: 25, right: 8, left: 8, bottom: 15 }}
-          >
+          <LineChart data={data} margin={{ top: 25, right: 8, left: 8, bottom: 15 }}>
             <defs>
               {/* Premium gradient for the line */}
-              <linearGradient
-                id="temperatureGradient"
-                x1="0"
-                y1="0"
-                x2="1"
-                y2="0"
-              >
+              <linearGradient id="temperatureGradient" x1="0" y1="0" x2="1" y2="0">
                 <stop offset="0%" stopColor="#4ADE80" />
-                <stop
-                  offset={`${gradientBreakpoint - 0.01}%`}
-                  stopColor="#66FF66"
-                />
+                <stop offset={`${gradientBreakpoint - 0.01}%`} stopColor="#66FF66" />
                 <stop offset={`${gradientBreakpoint}%`} stopColor="#FFFFFF" />
                 <stop offset="100%" stopColor="#F0F0F0" />
               </linearGradient>
 
               {/* Shadow effect for the line */}
               <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-                <feDropShadow
-                  dx="0"
-                  dy="1"
-                  stdDeviation="2"
-                  floodColor="#000"
-                  floodOpacity="0.2"
-                />
+                <feDropShadow dx="0" dy="1" stdDeviation="2" floodColor="#000" floodOpacity="0.2" />
               </filter>
             </defs>
 
@@ -236,7 +206,7 @@ const TemperatureGraph: React.FC<TemperatureGraphProps> = ({
               tick={{
                 fontSize: 10,
                 fontFamily: "'SF Pro Display', 'Segoe UI', Roboto, sans-serif",
-                fill: "rgba(255,255,255,0.7)",
+                fill: 'rgba(255,255,255,0.7)',
               }}
               interval={3}
               padding={{ left: 10, right: 10 }}
@@ -253,13 +223,11 @@ const TemperatureGraph: React.FC<TemperatureGraphProps> = ({
                     <div className="backdrop-blur-md bg-gray-900/80 border border-gray-700 text-white px-3 py-2 rounded-lg shadow-lg">
                       <div className="font-medium text-xs mb-0.5">
                         {data.label}
-                        {data.isCurrent && (
-                          <span className="text-xs ml-1 font-bold">(Now)</span>
-                        )}
+                        {data.isCurrent && <span className="text-xs ml-1 font-bold">(Now)</span>}
                       </div>
                       <div
                         className={`text-sm font-bold ${
-                          data.isPast ? "text-green-400" : "text-white"
+                          data.isPast ? 'text-green-400' : 'text-white'
                         }`}
                       >
                         {Math.round(data.temp)}°
@@ -297,9 +265,9 @@ const TemperatureGraph: React.FC<TemperatureGraphProps> = ({
               dot={(props) => renderDot(props)}
               activeDot={{
                 r: 5.5,
-                stroke: "white",
+                stroke: 'white',
                 strokeWidth: 1.5,
-                fill: "white", // Fixed string value instead of function
+                fill: 'white', // Fixed string value instead of function
               }}
               isAnimationActive={false}
               connectNulls={true}

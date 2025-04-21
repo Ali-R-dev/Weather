@@ -90,7 +90,7 @@
   .temperatureDisplay {
     font-size: 4rem;
   }
-  
+
   .detailCard {
     padding: 0.4rem 0.5rem;
     font-size: 0.88rem;
@@ -260,17 +260,21 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes slideInUp {
-  from { 
+  from {
     opacity: 0;
-    transform: translateY(10px); 
+    transform: translateY(10px);
   }
-  to { 
+  to {
     opacity: 1;
-    transform: translateY(0); 
+    transform: translateY(0);
   }
 }

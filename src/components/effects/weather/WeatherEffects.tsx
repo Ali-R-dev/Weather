@@ -1,20 +1,17 @@
-import "./WeatherEffects.css";
-import styles from "./WeatherEffects.module.css";
+import './WeatherEffects.css';
+import styles from './WeatherEffects.module.css';
 
-export const RainEffect = ({ intensity = "medium", isDay = true }) => {
+export const RainEffect = ({ intensity = 'medium', isDay = true }) => {
   return (
     <div className={styles.weatherScene}>
       <div
-        className={`${styles.rainContainer} ${
-          intensity === "light" ? styles.light : ""
-        } ${intensity === "heavy" ? styles.heavy : ""} ${
-          !isDay ? styles.night : ""
-        }`}
+        className={`${styles.rainContainer} ${intensity === 'light' ? styles.light : ''} ${
+          intensity === 'heavy' ? styles.heavy : ''
+        } ${!isDay ? styles.night : ''}`}
       >
         {/* Generate raindrops */}
         {Array.from({
-          length:
-            intensity === "heavy" ? 100 : intensity === "medium" ? 70 : 40,
+          length: intensity === 'heavy' ? 100 : intensity === 'medium' ? 70 : 40,
         }).map((_, i) => (
           <div
             key={`raindrop-${i}`}
@@ -34,20 +31,17 @@ export const RainEffect = ({ intensity = "medium", isDay = true }) => {
   );
 };
 
-export const SnowEffect = ({ intensity = "medium", isDay = true }) => {
+export const SnowEffect = ({ intensity = 'medium', isDay = true }) => {
   return (
     <div className={styles.weatherScene}>
       <div
-        className={`${styles.snowContainer} ${
-          intensity === "light" ? styles.light : ""
-        } ${intensity === "heavy" ? styles.heavy : ""} ${
-          !isDay ? styles.night : ""
-        }`}
+        className={`${styles.snowContainer} ${intensity === 'light' ? styles.light : ''} ${
+          intensity === 'heavy' ? styles.heavy : ''
+        } ${!isDay ? styles.night : ''}`}
       >
         {/* Generate snowflakes */}
         {Array.from({
-          length:
-            intensity === "heavy" ? 100 : intensity === "medium" ? 70 : 40,
+          length: intensity === 'heavy' ? 100 : intensity === 'medium' ? 70 : 40,
         }).map((_, i) => (
           <div
             key={`snowflake-${i}`}
@@ -71,7 +65,7 @@ export const SnowEffect = ({ intensity = "medium", isDay = true }) => {
 export const FogEffect = ({ isDay = true }) => {
   return (
     <div className={styles.weatherScene}>
-      <div className={`${styles.fogContainer} ${!isDay ? styles.night : ""}`}>
+      <div className={`${styles.fogContainer} ${!isDay ? styles.night : ''}`}>
         {/* Generate fog layers */}
         {Array.from({ length: 5 }).map((_, i) => (
           <div
@@ -96,22 +90,10 @@ export const SunnyEffect = () => {
       <div className={styles.sunContainer}>
         <div className={styles.sun}>
           <div className={styles.sunCore}></div>
-          <div
-            className={styles.sunRay}
-            style={{ transform: "rotate(0deg)" }}
-          ></div>
-          <div
-            className={styles.sunRay}
-            style={{ transform: "rotate(45deg)" }}
-          ></div>
-          <div
-            className={styles.sunRay}
-            style={{ transform: "rotate(90deg)" }}
-          ></div>
-          <div
-            className={styles.sunRay}
-            style={{ transform: "rotate(135deg)" }}
-          ></div>
+          <div className={styles.sunRay} style={{ transform: 'rotate(0deg)' }}></div>
+          <div className={styles.sunRay} style={{ transform: 'rotate(45deg)' }}></div>
+          <div className={styles.sunRay} style={{ transform: 'rotate(90deg)' }}></div>
+          <div className={styles.sunRay} style={{ transform: 'rotate(135deg)' }}></div>
         </div>
         <div className={styles.sunGlow}></div>
       </div>
@@ -148,7 +130,7 @@ export const CloudyEffect = ({ isDay = true }) => {
   return (
     <>
       <div className={styles.weatherScene}></div>
-      <div className={`${styles.cloudContainer} ${!isDay ? styles.night : ""}`}>
+      <div className={`${styles.cloudContainer} ${!isDay ? styles.night : ''}`}>
         {/* Generate clouds */}
         {Array.from({ length: 5 }).map((_, i) => (
           <div
@@ -173,7 +155,7 @@ export const StormyEffect = ({ isDay = true }) => {
   return (
     <>
       <div className={styles.weatherScene}></div>
-      <div className={`${styles.stormContainer} ${!isDay ? styles.night : ""}`}>
+      <div className={`${styles.stormContainer} ${!isDay ? styles.night : ''}`}>
         {/* Generate storm clouds */}
         {Array.from({ length: 5 }).map((_, i) => (
           <div

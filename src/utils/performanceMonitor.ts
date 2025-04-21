@@ -35,11 +35,7 @@ export const mark = (name: string): void => {
 /**
  * Measure time between two marks
  */
-export const measure = (
-  from: string,
-  to: string,
-  label: string
-): number | null => {
+export const measure = (from: string, to: string, label: string): number | null => {
   if (!isEnabled) return null;
 
   if (marks[from] && marks[to]) {
@@ -78,10 +74,8 @@ export const startRecurringMeasurement = (name: string): (() => void) => {
 /**
  * Monitor component render time with React useEffect
  */
-export const useComponentPerformance = (
-  componentName: string
-): (() => void) => {
-  if (!isEnabled || typeof window === "undefined") return () => {}; // Return empty function instead of void
+export const useComponentPerformance = (componentName: string): (() => void) => {
+  if (!isEnabled || typeof window === 'undefined') return () => {}; // Return empty function instead of void
 
   mark(`${componentName}-render-start`);
 

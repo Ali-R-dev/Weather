@@ -1,9 +1,8 @@
-import type { GeocodingResult } from "../types/geocoding.types";
+import type { GeocodingResult } from '../types/geocoding.types';
 export type { GeocodingResult };
 
-const API_ENDPOINT = "https://geocoding-api.open-meteo.com/v1/search";
-const REVERSE_GEOCODING_ENDPOINT =
-  "https://nominatim.openstreetmap.org/reverse";
+const API_ENDPOINT = 'https://geocoding-api.open-meteo.com/v1/search';
+const REVERSE_GEOCODING_ENDPOINT = 'https://nominatim.openstreetmap.org/reverse';
 
 interface GeocodingParams {
   name?: string;
@@ -22,10 +21,10 @@ export async function searchLocations(
   if (!query || query.trim().length < 2) return [];
 
   const url = new URL(API_ENDPOINT);
-  url.searchParams.append("name", query);
-  url.searchParams.append("count", (params.count || 10).toString());
-  url.searchParams.append("language", params.language || "en");
-  url.searchParams.append("format", params.format || "json");
+  url.searchParams.append('name', query);
+  url.searchParams.append('count', (params.count || 10).toString());
+  url.searchParams.append('language', params.language || 'en');
+  url.searchParams.append('format', params.format || 'json');
 
   try {
     const response = await fetch(url.toString());
@@ -37,7 +36,7 @@ export async function searchLocations(
     const data = await response.json();
     return data.results || [];
   } catch (error) {
-    console.error("Failed to search locations:", error);
+    console.error('Failed to search locations:', error);
     return [];
   }
 }
@@ -51,16 +50,15 @@ export async function reverseGeocode(
 ): Promise<GeocodingResult | null> {
   try {
     const url = new URL(REVERSE_GEOCODING_ENDPOINT);
-    url.searchParams.append("lat", latitude.toString());
-    url.searchParams.append("lon", longitude.toString());
-    url.searchParams.append("format", "json");
-    url.searchParams.append("zoom", "10"); // City level zoom
-    url.searchParams.append("addressdetails", "1");
+    url.searchParams.append('lat', latitude.toString());
+    url.searchParams.append('lon', longitude.toString());
+    url.searchParams.append('format', 'json');
+    url.searchParams.append('zoom', '10'); // City level zoom
+    url.searchParams.append('addressdetails', '1');
 
     const response = await fetch(url.toString(), {
       headers: {
-        "User-Agent":
-          "Weather App (https://github.com/yourusername/weather-app)", // Required by Nominatim ToS
+        'User-Agent': 'Weather App (https://github.com/yourusername/weather-app)', // Required by Nominatim ToS
       },
     });
 
@@ -84,10 +82,10 @@ export async function reverseGeocode(
       admin2: data.address.county || data.address.district,
       latitude: parseFloat(data.lat),
       longitude: parseFloat(data.lon),
-      timezone: "auto", // We don't get timezone from Nominatim
+      timezone: 'auto', // We don't get timezone from Nominatim
     };
   } catch (error) {
-    console.error("Failed to reverse geocode:", error);
+    console.error('Failed to reverse geocode:', error);
     return null;
   }
 }

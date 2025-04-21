@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import "./WeatherEffects.css";
+import { useEffect, useState } from 'react';
+import './WeatherEffects.css';
 
 interface CloudyEffectProps {
   isDay: boolean;
@@ -42,7 +42,7 @@ const CloudyEffect = ({ isDay }: CloudyEffectProps) => {
   }, [isDay]);
 
   return (
-    <div className={`cloudy-container ${isDay ? "day" : "night"}`}>
+    <div className={`cloudy-container ${isDay ? 'day' : 'night'}`}>
       {clouds.map((cloud, index) => (
         <div
           key={`cloud-${index}`}
@@ -64,9 +64,7 @@ const CloudyEffect = ({ isDay }: CloudyEffectProps) => {
             height="120"
           >
             <path
-              className={
-                isDay ? "cloud-path day-cloud" : "cloud-path night-cloud"
-              }
+              className={isDay ? 'cloud-path day-cloud' : 'cloud-path night-cloud'}
               d="M150,90H60c-16.6,0-30-13.4-30-30s13.4-30,30-30c2.6,0,5.1,0.3,7.5,1C74.2,18.6,86.9,10,100,10c16.9,0,31,12.5,33.7,28.7c1.4-0.4,2.9-0.7,4.3-0.7c8.8,0,16,7.2,16,16s-7.2,16-16,16c-4.4,0-8.4-1.8-11.3-4.7C160.5,75.6,156.1,90,150,90z"
             />
           </svg>

@@ -1,16 +1,13 @@
-import React from "react";
-import { motion } from "framer-motion";
-import ExpandToggle from "../../ui/ExpandToggle";
+import React from 'react';
+import { motion } from 'framer-motion';
+import ExpandToggle from '../../ui/ExpandToggle';
 
 interface WeatherDetailsToggleProps {
   expanded: boolean;
   onToggle: () => void;
 }
 
-const WeatherDetailsToggle: React.FC<WeatherDetailsToggleProps> = ({
-  expanded,
-  onToggle,
-}) => {
+const WeatherDetailsToggle: React.FC<WeatherDetailsToggleProps> = ({ expanded, onToggle }) => {
   return (
     <motion.div
       initial={{ opacity: 0 }}

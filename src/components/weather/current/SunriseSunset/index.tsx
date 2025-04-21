@@ -1,8 +1,8 @@
-import React from "react";
-import { motion } from "framer-motion";
-import { TimeFormat } from "../../../../context/SettingsContext";
-import { formatTimeWithFormat } from "../../../../utils/formatting";
-import styles from "./styles.module.css";
+import React from 'react';
+import { motion } from 'framer-motion';
+import { TimeFormat } from '../../../../context/SettingsContext';
+import { formatTimeWithFormat } from '../../../../utils/formatting';
+import styles from './styles.module.css';
 
 interface SunriseSunsetProps {
   sunrise: string;
@@ -10,19 +10,13 @@ interface SunriseSunsetProps {
   timeFormat: TimeFormat;
 }
 
-const SunriseSunset: React.FC<SunriseSunsetProps> = ({
-  sunrise,
-  sunset,
-  timeFormat,
-}) => {
+const SunriseSunset: React.FC<SunriseSunsetProps> = ({ sunrise, sunset, timeFormat }) => {
   // Calculate day length in hours and minutes
   const sunriseDate = new Date(sunrise);
   const sunsetDate = new Date(sunset);
   const dayLengthMs = sunsetDate.getTime() - sunriseDate.getTime();
   const dayLengthHours = Math.floor(dayLengthMs / (1000 * 60 * 60));
-  const dayLengthMinutes = Math.floor(
-    (dayLengthMs % (1000 * 60 * 60)) / (1000 * 60)
-  );
+  const dayLengthMinutes = Math.floor((dayLengthMs % (1000 * 60 * 60)) / (1000 * 60));
 
   // Calculate current progress through the day
   const now = new Date();
@@ -52,10 +46,7 @@ const SunriseSunset: React.FC<SunriseSunsetProps> = ({
       <div className={styles.progressWrapper}>
         <div className={styles.progressContainer}>
           {/* Progress track */}
-          <div
-            className={styles.progressBar}
-            style={{ width: `${dayProgress}%` }}
-          ></div>
+          <div className={styles.progressBar} style={{ width: `${dayProgress}%` }}></div>
 
           {/* Time markers */}
           <div className={styles.timeMarkers}>
@@ -68,27 +59,18 @@ const SunriseSunset: React.FC<SunriseSunsetProps> = ({
           <div className={styles.sunriseIndicator}>
             <div className={styles.timeIndicator}></div>
             <div className={styles.verticalLine}></div>
-            <div className={styles.timeText}>
-              {formatTimeWithFormat(sunrise, timeFormat)}
-            </div>
+            <div className={styles.timeText}>{formatTimeWithFormat(sunrise, timeFormat)}</div>
           </div>
 
           {/* Sunset indicator */}
           <div className={styles.sunsetIndicator}>
-            <div
-              className={`${styles.timeIndicator} ${styles.sunsetTimeIndicator}`}
-            ></div>
+            <div className={`${styles.timeIndicator} ${styles.sunsetTimeIndicator}`}></div>
             <div className={styles.verticalLine}></div>
-            <div className={styles.timeText}>
-              {formatTimeWithFormat(sunset, timeFormat)}
-            </div>
+            <div className={styles.timeText}>{formatTimeWithFormat(sunset, timeFormat)}</div>
           </div>
 
           {/* Sun position indicator */}
-          <div
-            className={styles.sunIndicator}
-            style={{ left: `${dayProgress}%` }}
-          >
+          <div className={styles.sunIndicator} style={{ left: `${dayProgress}%` }}>
             <div className={styles.sunWrapper}>
               {dayProgress > 0 && dayProgress < 100 && (
                 <>
@@ -98,9 +80,7 @@ const SunriseSunset: React.FC<SunriseSunsetProps> = ({
               )}
               <div
                 className={`${styles.sunCircle} ${
-                  dayProgress > 0 && dayProgress < 100
-                    ? styles.activeSun
-                    : styles.inactiveSun
+                  dayProgress > 0 && dayProgress < 100 ? styles.activeSun : styles.inactiveSun
                 }`}
               ></div>
             </div>

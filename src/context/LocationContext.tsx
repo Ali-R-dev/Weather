@@ -1,10 +1,10 @@
-import { createContext, useContext, ReactNode } from "react";
+import { createContext, useContext, ReactNode } from 'react';
 import {
   useLocationService,
   LocationInfo,
   SavedLocation,
   LocationSource,
-} from "../services/LocationService";
+} from '../services/LocationService';
 
 // Define the shape of our context
 interface LocationContextType {
@@ -17,10 +17,7 @@ interface LocationContextType {
   isInitialized: boolean;
 
   // Actions
-  setLocation: (
-    location: LocationInfo,
-    source?: LocationSource
-  ) => Promise<void>;
+  setLocation: (location: LocationInfo, source?: LocationSource) => Promise<void>;
   setDefaultLocation: (locationId: number) => void;
   saveLocation: (location: SavedLocation) => void;
   removeLocation: (locationId: number) => void;
@@ -29,20 +26,14 @@ interface LocationContextType {
 }
 
 // Create context with undefined default value
-const LocationContext = createContext<LocationContextType | undefined>(
-  undefined
-);
+const LocationContext = createContext<LocationContextType | undefined>(undefined);
 
 // Provider component
 export function LocationProvider({ children }: { children: ReactNode }) {
   // Use the hook from LocationService directly
   const locationState = useLocationService();
 
-  return (
-    <LocationContext.Provider value={locationState}>
-      {children}
-    </LocationContext.Provider>
-  );
+  return <LocationContext.Provider value={locationState}>{children}</LocationContext.Provider>;
 }
 
 // Consumer hook
@@ -50,7 +41,7 @@ export function useLocation(): LocationContextType {
   const context = useContext(LocationContext);
 
   if (context === undefined) {
-    throw new Error("useLocation must be used within a LocationProvider");
+    throw new Error('useLocation must be used within a LocationProvider');
   }
 
   return context;

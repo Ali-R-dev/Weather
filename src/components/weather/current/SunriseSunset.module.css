@@ -93,7 +93,8 @@
 }
 
 @keyframes pulseSun {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow: 0 0 16px 4px #fde68a99, 0 0 0 0 #fff0;
     opacity: 1;
   }
@@ -104,7 +105,8 @@
 }
 
 @keyframes pulseMoon {
-  0%, 100% {
+  0%,
+  100% {
     box-shadow: 0 0 16px 4px #a5b4fc99, 0 0 0 0 #fff0;
     opacity: 1;
   }
@@ -122,8 +124,12 @@
 }
 
 @keyframes pulse {
-  0% { box-shadow: 0 0 36px 12px #fde04788, 0 0 0 4px #fef9c355; }
-  100% { box-shadow: 0 0 56px 20px #fde047bb, 0 0 0 8px #fef9c366; }
+  0% {
+    box-shadow: 0 0 36px 12px #fde04788, 0 0 0 4px #fef9c355;
+  }
+  100% {
+    box-shadow: 0 0 56px 20px #fde047bb, 0 0 0 8px #fef9c366;
+  }
 }
 
 .activeSun {
@@ -144,7 +150,8 @@
   margin-right: auto;
 }
 
-.sunriseLabel, .sunsetLabel {
+.sunriseLabel,
+.sunsetLabel {
   display: flex;
   align-items: center;
 }
@@ -167,7 +174,8 @@
   font-weight: 500;
 }
 
-.sunriseIndicator, .sunsetIndicator {
+.sunriseIndicator,
+.sunsetIndicator {
   position: absolute;
   bottom: 0;
   display: flex;

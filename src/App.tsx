@@ -1,11 +1,11 @@
-import { useEffect, useState, Suspense, lazy } from "react";
-import { WeatherProvider } from "./context/WeatherContext";
-import { ThemeProvider } from "./context/ThemeContext";
-import { SettingsProvider } from "./context/SettingsContext";
-import { LocationProvider } from "./context/LocationContext";
-import { UIProvider } from "./context/UIContext";
-import WeatherLoadingScreen from "./components/common/WeatherLoadingScreen";
-import ErrorBoundary from "./components/common/ErrorBoundary";
+import { useEffect, useState, Suspense, lazy } from 'react';
+import { WeatherProvider } from './context/WeatherContext';
+import { ThemeProvider } from './context/ThemeContext';
+import { SettingsProvider } from './context/SettingsContext';
+import { LocationProvider } from './context/LocationContext';
+import { UIProvider } from './context/UIContext';
+import WeatherLoadingScreen from './components/common/WeatherLoadingScreen';
+import ErrorBoundary from './components/common/ErrorBoundary';
 
 // import {
 //   initializeAllMonitoring,
@@ -14,11 +14,9 @@ import ErrorBoundary from "./components/common/ErrorBoundary";
 // } from "./utils/performance";
 
 // Lazy load components
-const HomePage = lazy(() => import("./pages/HomePage"));
-const Footer = lazy(() => import("./components/layout/Footer"));
-const PrivacyPolicyModal = lazy(
-  () => import("./components/PrivacyPolicyModal")
-);
+const HomePage = lazy(() => import('./pages/HomePage'));
+const Footer = lazy(() => import('./components/layout/Footer'));
+const PrivacyPolicyModal = lazy(() => import('./components/PrivacyPolicyModal'));
 
 interface AppContentProps {
   initialLoading: boolean;
@@ -38,7 +36,7 @@ function App() {
     // markPerformance("app-mount-start");
 
     // Check if it's the first visit
-    const hasAcceptedPrivacy = localStorage.getItem("privacyPolicyAccepted");
+    const hasAcceptedPrivacy = localStorage.getItem('privacyPolicyAccepted');
     if (!hasAcceptedPrivacy) {
       setPrivacyModalVisible(true);
     }
@@ -46,11 +44,11 @@ function App() {
     // Update theme-color meta tag
     const metaThemeColor = document.querySelector('meta[name="theme-color"]');
     if (metaThemeColor) {
-      metaThemeColor.setAttribute("content", "#0ea5e9");
+      metaThemeColor.setAttribute('content', '#0ea5e9');
     } else {
-      const meta = document.createElement("meta");
-      meta.name = "theme-color";
-      meta.content = "#0ea5e9";
+      const meta = document.createElement('meta');
+      meta.name = 'theme-color';
+      meta.content = '#0ea5e9';
       document.head.appendChild(meta);
     }
 
@@ -106,7 +104,7 @@ function AppContent({
           visible={privacyModalVisible}
           onClose={() => {
             setPrivacyModalVisible(false);
-            localStorage.setItem("privacyPolicyAccepted", "true");
+            localStorage.setItem('privacyPolicyAccepted', 'true');
           }}
         />
       </div>

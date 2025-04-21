@@ -1,6 +1,6 @@
-import React from "react";
-import MetricItem from "./MetricItem";
-import { motion } from "framer-motion";
+import React from 'react';
+import MetricItem from './MetricItem';
+import { motion } from 'framer-motion';
 
 interface PrecipitationMetricProps {
   precipitation: number;
@@ -16,18 +16,18 @@ const PrecipitationMetric: React.FC<PrecipitationMetricProps> = ({
   const precipitationText =
     precipitation > 0
       ? precipitation < 1
-        ? "Light"
+        ? 'Light'
         : precipitation < 10
-        ? "Moderate"
-        : "Heavy"
-      : "None";
+        ? 'Moderate'
+        : 'Heavy'
+      : 'None';
 
   // Get color based on precipitation intensity
   const getPrecipColor = () => {
-    if (precipitation === 0) return "#94A3B8"; // gray-400
-    if (precipitation < 1) return "#60A5FA"; // blue-400
-    if (precipitation < 10) return "#3B82F6"; // blue-500
-    return "#2563EB"; // blue-600
+    if (precipitation === 0) return '#94A3B8'; // gray-400
+    if (precipitation < 1) return '#60A5FA'; // blue-400
+    if (precipitation < 10) return '#3B82F6'; // blue-500
+    return '#2563EB'; // blue-600
   };
 
   // Enhanced interactive precipitation icon
@@ -54,10 +54,10 @@ const PrecipitationMetric: React.FC<PrecipitationMetricProps> = ({
                 className="absolute"
                 style={{
                   left: `${25 + i * 20}%`,
-                  top: "65%",
-                  width: "2px",
-                  height: "5px",
-                  borderRadius: "0 0 2px 2px",
+                  top: '65%',
+                  width: '2px',
+                  height: '5px',
+                  borderRadius: '0 0 2px 2px',
                   background: getPrecipColor(),
                 }}
                 animate={{

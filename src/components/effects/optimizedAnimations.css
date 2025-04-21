@@ -28,7 +28,8 @@
 }
 
 @keyframes float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateY(0);
   }
   50% {
@@ -41,7 +42,8 @@
 }
 
 @keyframes dynamic-pulse {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
     opacity: calc(0.8 + (0.2 * (1 - var(--animation-intensity))));
   }
@@ -74,8 +76,7 @@
 .optimized-snowfall {
   will-change: transform;
   transform: translateZ(0);
-  animation: 
-    optimized-snowfall calc(10s / var(--animation-speed)) linear infinite,
+  animation: optimized-snowfall calc(10s / var(--animation-speed)) linear infinite,
     optimized-sway calc(3s / var(--animation-speed)) ease-in-out infinite alternate;
 }
 

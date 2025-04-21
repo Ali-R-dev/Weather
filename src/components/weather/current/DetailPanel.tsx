@@ -1,5 +1,5 @@
-import React from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 interface DetailPanelProps {
   show: boolean;
@@ -19,7 +19,7 @@ const DetailPanel: React.FC<DetailPanelProps> = ({ show, children }) => {
             // boxShadow: "0 0px 0px 0px rgba(0, 0, 0, 0)",
           }}
           animate={{
-            height: "auto",
+            height: 'auto',
             opacity: 1,
             y: 0,
             // boxShadow: show
@@ -30,7 +30,7 @@ const DetailPanel: React.FC<DetailPanelProps> = ({ show, children }) => {
           transition={{
             duration: 0.4,
             opacity: { duration: 0.3 },
-            height: { type: "spring", stiffness: 300, damping: 30 },
+            height: { type: 'spring', stiffness: 300, damping: 30 },
           }}
           className="mt-6 overflow-hidden"
         >

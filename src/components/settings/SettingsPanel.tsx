@@ -1,6 +1,6 @@
-import { useState } from "react";
-import { motion } from "framer-motion";
-import { useSettings } from "../../context/SettingsContext";
+import { useState } from 'react';
+import { motion } from 'framer-motion';
+import { useSettings } from '../../context/SettingsContext';
 
 interface SettingsPanelProps {
   isOpen: boolean;
@@ -12,12 +12,8 @@ const SettingsPanel = ({ isOpen, onClose }: SettingsPanelProps) => {
   const [tempUnit, setTempUnit] = useState(settings.units.temperature);
   const [windUnit, setWindUnit] = useState(settings.units.wind);
   const [timeFormat, setTimeFormat] = useState(settings.timeFormat);
-  const [reduceMotion, setReduceMotion] = useState(
-    settings.accessibility.reduceMotion
-  );
-  const [highContrast, setHighContrast] = useState(
-    settings.accessibility.highContrast
-  );
+  const [reduceMotion, setReduceMotion] = useState(settings.accessibility.reduceMotion);
+  const [highContrast, setHighContrast] = useState(settings.accessibility.highContrast);
 
   const handleSave = () => {
     updateSettings({
@@ -39,21 +35,21 @@ const SettingsPanel = ({ isOpen, onClose }: SettingsPanelProps) => {
       initial={{ opacity: 0, y: 20 }}
       animate={{ opacity: isOpen ? 1 : 0, y: isOpen ? 0 : 20 }}
       className={`fixed inset-0 z-50 flex items-start justify-center bg-black/50 ${
-        !isOpen && "pointer-events-none"
+        !isOpen && 'pointer-events-none'
       }`}
       style={{
-        willChange: "transform",
-        backfaceVisibility: "hidden",
-        transform: "translateZ(0)",
+        willChange: 'transform',
+        backfaceVisibility: 'hidden',
+        transform: 'translateZ(0)',
       }}
     >
       <div className="min-h-screen w-full py-4 px-2 sm:py-16 sm:px-4 overflow-y-auto">
         <motion.div
           className="bg-gradient-to-br from-gray-800/90 to-gray-900/90 backdrop-blur-md rounded-2xl border border-white/10 shadow-xl w-[95%] sm:w-full max-w-md p-4 sm:p-6 mx-auto my-auto"
           style={{
-            willChange: "transform",
-            backfaceVisibility: "hidden",
-            transform: "translateZ(0)",
+            willChange: 'transform',
+            backfaceVisibility: 'hidden',
+            transform: 'translateZ(0)',
           }}
         >
           <div className="flex justify-between items-center mb-6">
@@ -82,23 +78,21 @@ const SettingsPanel = ({ isOpen, onClose }: SettingsPanelProps) => {
           <div className="space-y-6">
             {/* Temperature Units */}
             <div>
-              <label className="block text-white text-sm font-medium mb-2">
-                Temperature
-              </label>
+              <label className="block text-white text-sm font-medium mb-2">Temperature</label>
               <div className="flex bg-white/10 rounded-lg p-1">
                 <button
                   className={`flex-1 py-2 rounded-md transition-colors ${
-                    tempUnit === "celsius" ? "bg-white/20 font-medium" : ""
+                    tempUnit === 'celsius' ? 'bg-white/20 font-medium' : ''
                   }`}
-                  onClick={() => setTempUnit("celsius")}
+                  onClick={() => setTempUnit('celsius')}
                 >
                   Celsius (°C)
                 </button>
                 <button
                   className={`flex-1 py-2 rounded-md transition-colors ${
-                    tempUnit === "fahrenheit" ? "bg-white/20 font-medium" : ""
+                    tempUnit === 'fahrenheit' ? 'bg-white/20 font-medium' : ''
                   }`}
-                  onClick={() => setTempUnit("fahrenheit")}
+                  onClick={() => setTempUnit('fahrenheit')}
                 >
                   Fahrenheit (°F)
                 </button>
@@ -107,23 +101,21 @@ const SettingsPanel = ({ isOpen, onClose }: SettingsPanelProps) => {
 
             {/* Wind Speed Units */}
             <div>
-              <label className="block text-white text-sm font-medium mb-2">
-                Wind Speed
-              </label>
+              <label className="block text-white text-sm font-medium mb-2">Wind Speed</label>
               <div className="flex bg-white/10 rounded-lg p-1">
                 <button
                   className={`flex-1 py-2 rounded-md transition-colors ${
-                    windUnit === "kph" ? "bg-white/20 font-medium" : ""
+                    windUnit === 'kph' ? 'bg-white/20 font-medium' : ''
                   }`}
-                  onClick={() => setWindUnit("kph")}
+                  onClick={() => setWindUnit('kph')}
                 >
                   km/h
                 </button>
                 <button
                   className={`flex-1 py-2 rounded-md transition-colors ${
-                    windUnit === "mph" ? "bg-white/20 font-medium" : ""
+                    windUnit === 'mph' ? 'bg-white/20 font-medium' : ''
                   }`}
-                  onClick={() => setWindUnit("mph")}
+                  onClick={() => setWindUnit('mph')}
                 >
                   mph
                 </button>
@@ -132,23 +124,21 @@ const SettingsPanel = ({ isOpen, onClose }: SettingsPanelProps) => {
 
             {/* Time Format */}
             <div>
-              <label className="block text-white text-sm font-medium mb-2">
-                Time Format
-              </label>
+              <label className="block text-white text-sm font-medium mb-2">Time Format</label>
               <div className="flex bg-white/10 rounded-lg p-1">
                 <button
                   className={`flex-1 py-2 rounded-md transition-colors ${
-                    timeFormat === "12h" ? "bg-white/20 font-medium" : ""
+                    timeFormat === '12h' ? 'bg-white/20 font-medium' : ''
                   }`}
-                  onClick={() => setTimeFormat("12h")}
+                  onClick={() => setTimeFormat('12h')}
                 >
                   12-hour
                 </button>
                 <button
                   className={`flex-1 py-2 rounded-md transition-colors ${
-                    timeFormat === "24h" ? "bg-white/20 font-medium" : ""
+                    timeFormat === '24h' ? 'bg-white/20 font-medium' : ''
                   }`}
-                  onClick={() => setTimeFormat("24h")}
+                  onClick={() => setTimeFormat('24h')}
                 >
                   24-hour
                 </button>
@@ -157,9 +147,7 @@ const SettingsPanel = ({ isOpen, onClose }: SettingsPanelProps) => {
 
             {/* Accessibility options */}
             <div>
-              <label className="block text-white text-sm font-medium mb-2">
-                Accessibility
-              </label>
+              <label className="block text-white text-sm font-medium mb-2">Accessibility</label>
 
               <div className="flex items-center justify-between py-2">
                 <span className="text-white/80">Reduce motion</span>

@@ -49,7 +49,8 @@ Visit the live demo at [weather.araza.me](https://weather.araza.me)
    npm install
    ```
 
-3. Start the development server:
+3. Run `npm run prepare` to install Git hooks.
+4. Start the development server:
    ```bash
    npm run dev
    ```
@@ -69,3 +70,26 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ### Contact
 For any questions or feedback, please open an issue or reach out to the maintainers.
+
+## ⚙️ Configuration & Environment Variables
+
+- Create a `.env` file in the project root:
+  ```bash
+  # .env
+  VITE_API_URL=https://api.open-meteo.com
+  ```
+- Rename or create environment-specific files:
+  - `.env.development.local`
+  - `.env.production.local`
+  - `.env.test.local`
+
+## 🏗️ Project Structure & Architecture
+
+This project is organized as follows:
+- `src/api` — Weather API calls
+- `src/context` — React Context providers
+- `src/components` — Reusable UI components
+- `src/hooks` — Custom React hooks
+- `src/pages` — Route-level page components
+- `src/utils` — Helper utilities
+- `src/styles` — Global styles (Tailwind CSS entry)

@@ -9,7 +9,9 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "clean:imports": "eslint . --fix --rule 'unused-imports/no-unused-imports: error'",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "format": "prettier --write \"src/**/*.{ts,tsx,js,jsx,json,css,md}\"",
+    "prepare": "husky install"
   },
   "dependencies": {
     "@tailwindcss/vite": "^4.0.14",
@@ -36,6 +38,17 @@
     "typescript": "~5.7.2",
     "typescript-eslint": "^8.24.1",
     "vite": "^6.2.0",
-    "vite-plugin-compression": "^0.5.1"
+    "vite-plugin-compression": "^0.5.1",
+    "prettier": "^2.8.8",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "husky": "^8.0.0",
+    "lint-staged": "^13.1.0"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,json,css,md}": [
+      "prettier --write",
+      "eslint --fix"
+    ]
   }
 }

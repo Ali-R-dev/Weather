@@ -46,23 +46,23 @@
   .cols-sm-1 {
     grid-template-columns: 1fr;
   }
-  
+
   .cols-sm-2 {
     grid-template-columns: repeat(2, 1fr);
   }
-  
+
   .cols-sm-3 {
     grid-template-columns: repeat(3, 1fr);
   }
-  
+
   .cols-sm-4 {
     grid-template-columns: repeat(4, 1fr);
   }
-  
+
   .cols-sm-5 {
     grid-template-columns: repeat(5, 1fr);
   }
-  
+
   .cols-sm-6 {
     grid-template-columns: repeat(6, 1fr);
   }
@@ -73,23 +73,23 @@
   .cols-md-1 {
     grid-template-columns: 1fr;
   }
-  
+
   .cols-md-2 {
     grid-template-columns: repeat(2, 1fr);
   }
-  
+
   .cols-md-3 {
     grid-template-columns: repeat(3, 1fr);
   }
-  
+
   .cols-md-4 {
     grid-template-columns: repeat(4, 1fr);
   }
-  
+
   .cols-md-5 {
     grid-template-columns: repeat(5, 1fr);
   }
-  
+
   .cols-md-6 {
     grid-template-columns: repeat(6, 1fr);
   }
@@ -100,23 +100,23 @@
   .cols-lg-1 {
     grid-template-columns: 1fr;
   }
-  
+
   .cols-lg-2 {
     grid-template-columns: repeat(2, 1fr);
   }
-  
+
   .cols-lg-3 {
     grid-template-columns: repeat(3, 1fr);
   }
-  
+
   .cols-lg-4 {
     grid-template-columns: repeat(4, 1fr);
   }
-  
+
   .cols-lg-5 {
     grid-template-columns: repeat(5, 1fr);
   }
-  
+
   .cols-lg-6 {
     grid-template-columns: repeat(6, 1fr);
   }
@@ -127,23 +127,23 @@
   .cols-xl-1 {
     grid-template-columns: 1fr;
   }
-  
+
   .cols-xl-2 {
     grid-template-columns: repeat(2, 1fr);
   }
-  
+
   .cols-xl-3 {
     grid-template-columns: repeat(3, 1fr);
   }
-  
+
   .cols-xl-4 {
     grid-template-columns: repeat(4, 1fr);
   }
-  
+
   .cols-xl-5 {
     grid-template-columns: repeat(5, 1fr);
   }
-  
+
   .cols-xl-6 {
     grid-template-columns: repeat(6, 1fr);
   }

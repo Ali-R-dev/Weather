@@ -1,24 +1,24 @@
-import { TimeFormat } from "../context/SettingsContext";
-import { AppConfig } from "../config/appConfig";
+import { TimeFormat } from '../context/SettingsContext';
+import { AppConfig } from '../config/appConfig';
 
 // Define the type for time format options that matches DateTimeFormatOptions
 type TimeFormatOptions = {
-  hour: "numeric" | "2-digit";
-  minute: "2-digit";
+  hour: 'numeric' | '2-digit';
+  minute: '2-digit';
   hour12: boolean;
   timeZone?: string;
 };
 
 // Define fallback formats in case AppConfig isn't loaded correctly
 const FALLBACK_TIME_FORMATS: Record<TimeFormat, TimeFormatOptions> = {
-  "12h": {
-    hour: "numeric",
-    minute: "2-digit",
+  '12h': {
+    hour: 'numeric',
+    minute: '2-digit',
     hour12: true,
   },
-  "24h": {
-    hour: "2-digit",
-    minute: "2-digit",
+  '24h': {
+    hour: '2-digit',
+    minute: '2-digit',
     hour12: false,
   },
 };
@@ -26,9 +26,7 @@ const FALLBACK_TIME_FORMATS: Record<TimeFormat, TimeFormatOptions> = {
 // Improve the getTimeFormat function to be more robust
 const getTimeFormat = (format: TimeFormat): TimeFormatOptions => {
   if (!AppConfig?.timeFormats?.[format]) {
-    console.warn(
-      "AppConfig not available or invalid format, using fallback formats"
-    );
+    console.warn('AppConfig not available or invalid format, using fallback formats');
     return FALLBACK_TIME_FORMATS[format];
   }
 
@@ -36,15 +34,15 @@ const getTimeFormat = (format: TimeFormat): TimeFormatOptions => {
 
   // Validate that the config format matches our expected type
   if (
-    typeof configFormat === "object" &&
-    (configFormat.hour === "numeric" || configFormat.hour === "2-digit") &&
-    configFormat.minute === "2-digit" &&
-    typeof configFormat.hour12 === "boolean"
+    typeof configFormat === 'object' &&
+    (configFormat.hour === 'numeric' || configFormat.hour === '2-digit') &&
+    configFormat.minute === '2-digit' &&
+    typeof configFormat.hour12 === 'boolean'
   ) {
     return configFormat as TimeFormatOptions;
   }
 
-  console.warn("Invalid time format in config, using fallback format");
+  console.warn('Invalid time format in config, using fallback format');
   return FALLBACK_TIME_FORMATS[format];
 };
 
@@ -55,79 +53,70 @@ const getTimeFormat = (format: TimeFormat): TimeFormatOptions => {
 export const formatTime = (timeString: string): string => {
   try {
     const date = new Date(timeString);
-    if (isNaN(date.getTime())) return "";
-    return date.toLocaleTimeString("en-US", getTimeFormat("12h"));
+    if (isNaN(date.getTime())) return '';
+    return date.toLocaleTimeString('en-US', getTimeFormat('12h'));
   } catch (error) {
-    console.error("Error formatting time:", error);
-    return timeString || "";
+    console.error('Error formatting time:', error);
+    return timeString || '';
   }
 };
 
 /**
  * Format a time string to show only hour in preferred format
  */
-export const formatHour = (
-  timeString: string,
-  format: TimeFormat = "12h"
-): string => {
+export const formatHour = (timeString: string, format: TimeFormat = '12h'): string => {
   try {
     const date = new Date(timeString);
-    if (isNaN(date.getTime())) return "";
+    if (isNaN(date.getTime())) return '';
 
-    return date.toLocaleTimeString("en-US", {
-      hour: "numeric",
-      hour12: format === "12h",
+    return date.toLocaleTimeString('en-US', {
+      hour: 'numeric',
+      hour12: format === '12h',
     });
   } catch (error) {
-    console.error("Error formatting hour:", error, timeString);
-    return "";
+    console.error('Error formatting hour:', error, timeString);
+    return '';
   }
 };
 
 /**
  * Format a time string with user's preferred format
  */
-export const formatTimeWithFormat = (
-  timeString: string,
-  format: TimeFormat
-): string => {
+export const formatTimeWithFormat = (timeString: string, format: TimeFormat): string => {
   try {
-    if (!timeString) return "";
+    if (!timeString) return '';
 
     const date = new Date(timeString);
-    if (isNaN(date.getTime())) return "";
+    if (isNaN(date.getTime())) return '';
 
-    return date.toLocaleTimeString("en-US", getTimeFormat(format));
+    return date.toLocaleTimeString('en-US', getTimeFormat(format));
   } catch (error) {
-    console.error("Error formatting time with format:", error);
-    return timeString || "";
+    console.error('Error formatting time with format:', error);
+    return timeString || '';
   }
 };
 
 /**
  * Format time for a specific timezone with user's preferred format
  */
-export const formatLocalTime = (
-  timezone?: string,
-  format: TimeFormat = "12h"
-): string => {
+export const formatLocalTime = (timezone?: string, format: TimeFormat = '12h'): string => {
   try {
-    if (!timezone) return "";
+    if (!timezone) return '';
 
     const options: TimeFormatOptions = {
       ...getTimeFormat(format),
       timeZone: timezone,
     };
 
-    return new Date().toLocaleTimeString("en-US", options);
+    return new Date().toLocaleTimeString('en-US', options);
   } catch (error) {
     // Common error: invalid timezone - fallback to local time
     try {
       console.warn(`Invalid timezone: ${timezone}, using local time`);
-      return new Date().toLocaleTimeString("en-US", getTimeFormat(format));
+      return new Date().toLocaleTimeString('en-US', getTimeFormat(format));
     } catch (innerError) {
-      console.error("Error formatting local time:", innerError);
-      return "";
+      console.error('Error formatting local time:', innerError);
+      return '';
     }
   }
 };
@@ -138,11 +127,11 @@ export const formatLocalTime = (
 export const formatDay = (dateString: string): string => {
   try {
     const date = new Date(dateString);
-    if (isNaN(date.getTime())) return "";
-    return date.toLocaleDateString("en-US", { weekday: "short" });
+    if (isNaN(date.getTime())) return '';
+    return date.toLocaleDateString('en-US', { weekday: 'short' });
   } catch (error) {
-    console.error("Error formatting day:", error);
-    return "";
+    console.error('Error formatting day:', error);
+    return '';
   }
 };
 
@@ -151,18 +140,18 @@ export const formatDay = (dateString: string): string => {
  */
 export const formatDate = (dateString: string): string => {
   try {
-    if (!dateString) return "";
+    if (!dateString) return '';
 
     const date = new Date(dateString);
-    if (isNaN(date.getTime())) return "";
+    if (isNaN(date.getTime())) return '';
 
-    return date.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
+    return date.toLocaleDateString('en-US', {
+      month: 'short',
+      day: 'numeric',
     });
   } catch (error) {
-    console.error("Error formatting date:", error);
-    return dateString || "";
+    console.error('Error formatting date:', error);
+    return dateString || '';
   }
 };
 
@@ -177,7 +166,7 @@ export const isDaytime = (timeString: string): boolean => {
     const hour = date.getHours();
     return hour >= 6 && hour < 18;
   } catch (error) {
-    console.error("Error checking if daytime:", error);
+    console.error('Error checking if daytime:', error);
     return true; // Default to daytime on error
   }
 };
@@ -185,9 +174,7 @@ export const isDaytime = (timeString: string): boolean => {
 /**
  * Group hours by day for UI organization
  */
-export const groupHoursByDay = (
-  hours: string[]
-): { [key: string]: string[] } => {
+export const groupHoursByDay = (hours: string[]): { [key: string]: string[] } => {
   try {
     const days: { [key: string]: string[] } = {};
 
@@ -214,7 +201,7 @@ export const groupHoursByDay = (
 
     return days;
   } catch (error) {
-    console.error("Error grouping hours by day:", error);
+    console.error('Error grouping hours by day:', error);
     return {};
   }
 };
@@ -251,7 +238,7 @@ export const findCurrentTimeIndex = (times: string[]): number => {
 
     return closest.idx;
   } catch (error) {
-    console.error("Error finding current time index:", error);
+    console.error('Error finding current time index:', error);
     return 0;
   }
 };

@@ -1,8 +1,4 @@
-import {
-  TemperatureUnit,
-  WindUnit,
-  TimeFormat,
-} from "../context/SettingsContext";
+import { TemperatureUnit, WindUnit, TimeFormat } from '../context/SettingsContext';
 
 /**
  * Central configuration for the Weather App
@@ -30,7 +26,7 @@ export const AppConfig = {
   utils: {
     // Convert between Celsius and Fahrenheit
     convertTemperature: (value: number, toUnit: TemperatureUnit): number => {
-      if (toUnit === "celsius") {
+      if (toUnit === 'celsius') {
         // If target unit is Celsius, assume input is Fahrenheit
         return (value - 32) * (5 / 9);
       } else {
@@ -41,24 +37,21 @@ export const AppConfig = {
 
     // Convert any temperature to Celsius for internal calculations
     toCelsius: (value: number, fromUnit: TemperatureUnit): number => {
-      return fromUnit === "celsius" ? value : (value - 32) * (5 / 9);
+      return fromUnit === 'celsius' ? value : (value - 32) * (5 / 9);
     },
 
-    getUnitSymbol: (
-      type: "temperature" | "wind",
-      unit: TemperatureUnit | WindUnit
-    ): string => {
-      if (type === "temperature") {
-        return unit === "celsius" ? "°C" : "°F";
+    getUnitSymbol: (type: 'temperature' | 'wind', unit: TemperatureUnit | WindUnit): string => {
+      if (type === 'temperature') {
+        return unit === 'celsius' ? '°C' : '°F';
       } else {
-        return unit === "kph" ? "km/h" : "mph";
+        return unit === 'kph' ? 'km/h' : 'mph';
       }
     },
 
     // Convert wind speed
     convertWindSpeed: (value: number, toUnit: WindUnit): number => {
       const config = AppConfig.units.wind;
-      if (toUnit === "kph") {
+      if (toUnit === 'kph') {
         return value;
       } else {
         return value * config.mph.conversionFactor;
@@ -67,11 +60,7 @@ export const AppConfig = {
   },
 
   // Get comfort level based on temperature and humidity
-  getComfortLevel: (
-    temperature: number,
-    humidity: number,
-    unit: TemperatureUnit = "celsius"
-  ) => {
+  getComfortLevel: (temperature: number, humidity: number, unit: TemperatureUnit = 'celsius') => {
     // Convert temperature to Celsius for internal calculations
     const tempCelsius = AppConfig.utils.toCelsius(temperature, unit);
 
@@ -79,37 +68,35 @@ export const AppConfig = {
     const thresholds = AppConfig.temperature.celsius;
 
     if (tempCelsius > thresholds.hot && humidity > 70)
-      return { level: "Uncomfortable", color: "text-red-500" };
+      return { level: 'Uncomfortable', color: 'text-red-500' };
     if (tempCelsius > thresholds.warm && humidity > 60)
-      return { level: "Warm", color: "text-orange-400" };
-    if (tempCelsius < thresholds.cold)
-      return { level: "Cold", color: "text-blue-400" };
-    if (tempCelsius < thresholds.chilly)
-      return { level: "Cool", color: "text-cyan-400" };
-    return { level: "Comfortable", color: "text-green-400" };
+      return { level: 'Warm', color: 'text-orange-400' };
+    if (tempCelsius < thresholds.cold) return { level: 'Cold', color: 'text-blue-400' };
+    if (tempCelsius < thresholds.chilly) return { level: 'Cool', color: 'text-cyan-400' };
+    return { level: 'Comfortable', color: 'text-green-400' };
   },
 
   // Units configuration
   units: {
     temperature: {
       celsius: {
-        symbol: "°C",
+        symbol: '°C',
         conversionFactor: 1,
         offset: 0,
       },
       fahrenheit: {
-        symbol: "°F",
+        symbol: '°F',
         conversionFactor: 9 / 5,
         offset: 32,
       },
     },
     wind: {
       kph: {
-        symbol: "km/h",
+        symbol: 'km/h',
         conversionFactor: 1,
       },
       mph: {
-        symbol: "mph",
+        symbol: 'mph',
         conversionFactor: 0.621371,
       },
     },
@@ -129,24 +116,24 @@ export const AppConfig = {
 
   // Default settings
   defaults: {
-    temperatureUnit: "celsius" as TemperatureUnit,
-    windUnit: "kph" as WindUnit,
-    timeFormat: "12h" as TimeFormat,
+    temperatureUnit: 'celsius' as TemperatureUnit,
+    windUnit: 'kph' as WindUnit,
+    timeFormat: '12h' as TimeFormat,
     reduceMotion: false,
     highContrast: false,
   },
 
   // Format options
   timeFormats: {
-    "12h": {
+    '12h': {
       hour12: true,
-      hour: "numeric",
-      minute: "2-digit",
+      hour: 'numeric',
+      minute: '2-digit',
     },
-    "24h": {
+    '24h': {
       hour12: false,
-      hour: "2-digit",
-      minute: "2-digit",
+      hour: '2-digit',
+      minute: '2-digit',
     },
   },
 };

@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 
 export interface SavedLocation {
   id: number;
@@ -12,21 +12,19 @@ export interface SavedLocation {
 
 export default function useSavedLocations() {
   const [savedLocations, setSavedLocations] = useState<SavedLocation[]>([]);
-  const [defaultLocation, setDefaultLocation] = useState<SavedLocation | null>(
-    null
-  );
+  const [defaultLocation, setDefaultLocation] = useState<SavedLocation | null>(null);
 
   // Load saved locations from localStorage on mount
   useEffect(() => {
-    const storedLocations = localStorage.getItem("savedLocations");
-    const storedDefaultLocation = localStorage.getItem("defaultLocation");
+    const storedLocations = localStorage.getItem('savedLocations');
+    const storedDefaultLocation = localStorage.getItem('defaultLocation');
 
     if (storedLocations) {
       try {
         const locations = JSON.parse(storedLocations);
         setSavedLocations(locations);
       } catch (error) {
-        console.error("Failed to parse saved locations:", error);
+        console.error('Failed to parse saved locations:', error);
       }
     }
 
@@ -35,7 +33,7 @@ export default function useSavedLocations() {
         const defaultLoc = JSON.parse(storedDefaultLocation);
         setDefaultLocation(defaultLoc);
       } catch (error) {
-        console.error("Failed to parse default location:", error);
+        console.error('Failed to parse default location:', error);
       }
     }
   }, []);
@@ -47,7 +45,7 @@ export default function useSavedLocations() {
     if (!exists) {
       const updatedLocations = [...savedLocations, location];
       setSavedLocations(updatedLocations);
-      localStorage.setItem("savedLocations", JSON.stringify(updatedLocations));
+      localStorage.setItem('savedLocations', JSON.stringify(updatedLocations));
 
       // If this is the first location saved, make it default
       if (updatedLocations.length === 1 && !defaultLocation) {
@@ -62,25 +60,20 @@ export default function useSavedLocations() {
 
     if (location) {
       setDefaultLocation({ ...location, isDefault: true });
-      localStorage.setItem(
-        "defaultLocation",
-        JSON.stringify({ ...location, isDefault: true })
-      );
+      localStorage.setItem('defaultLocation', JSON.stringify({ ...location, isDefault: true }));
     }
   };
 
   // Remove saved location
   const removeLocation = (locationId: number) => {
-    const updatedLocations = savedLocations.filter(
-      (loc) => loc.id !== locationId
-    );
+    const updatedLocations = savedLocations.filter((loc) => loc.id !== locationId);
     setSavedLocations(updatedLocations);
-    localStorage.setItem("savedLocations", JSON.stringify(updatedLocations));
+    localStorage.setItem('savedLocations', JSON.stringify(updatedLocations));
 
     // If default location was removed, clear it
     if (defaultLocation && defaultLocation.id === locationId) {
       setDefaultLocation(null);
-      localStorage.removeItem("defaultLocation");
+      localStorage.removeItem('defaultLocation');
 
       // If there are other locations, set the first one as default
       if (updatedLocations.length > 0) {

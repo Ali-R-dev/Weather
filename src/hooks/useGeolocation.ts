@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 
 interface GeolocationState {
   loading: boolean;
@@ -17,7 +17,7 @@ export default function useGeolocation() {
     if (!navigator.geolocation) {
       setState({
         loading: false,
-        error: "Geolocation is not supported by your browser",
+        error: 'Geolocation is not supported by your browser',
         location: null,
       });
       return;

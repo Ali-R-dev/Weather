@@ -1,8 +1,8 @@
-import { useEffect, useState } from "react";
-import "./WeatherEffects.css";
+import { useEffect, useState } from 'react';
+import './WeatherEffects.css';
 
 interface SnowEffectProps {
-  intensity: "light" | "heavy";
+  intensity: 'light' | 'heavy';
   isDay: boolean;
 }
 
@@ -11,7 +11,7 @@ const SnowEffect = ({ intensity, isDay }: SnowEffectProps) => {
 
   useEffect(() => {
     // Number of snowflakes based on intensity
-    const flakeCount = intensity === "light" ? 12 : 24;
+    const flakeCount = intensity === 'light' ? 12 : 24;
 
     // Create snowflakes
     const flakes = Array.from({ length: flakeCount }).map((_, index) => (
@@ -31,10 +31,7 @@ const SnowEffect = ({ intensity, isDay }: SnowEffectProps) => {
   }, [intensity]);
 
   return (
-    <div
-      className={`snowflakes ${intensity} ${isDay ? "day" : "night"}`}
-      aria-hidden="true"
-    >
+    <div className={`snowflakes ${intensity} ${isDay ? 'day' : 'night'}`} aria-hidden="true">
       {snowflakes}
     </div>
   );

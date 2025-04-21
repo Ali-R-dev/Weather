@@ -1,4 +1,4 @@
-import { Metric, onCLS, onFID, onLCP, onFCP, onTTFB } from "web-vitals";
+import { Metric, onCLS, onFID, onLCP, onFCP, onTTFB } from 'web-vitals';
 
 // Store measurements
 const measurements: Record<string, number> = {};
@@ -7,33 +7,33 @@ const measurements: Record<string, number> = {};
 export const initPerformanceMonitoring = () => {
   // Core Web Vitals
   onCLS((metric: Metric) => {
-    console.log("CLS:", metric.value);
-    measurements["CLS"] = metric.value;
+    console.log('CLS:', metric.value);
+    measurements['CLS'] = metric.value;
   });
 
   onFID((metric: Metric) => {
-    console.log("FID:", metric.value);
-    measurements["FID"] = metric.value;
+    console.log('FID:', metric.value);
+    measurements['FID'] = metric.value;
   });
 
   onLCP((metric: Metric) => {
-    console.log("LCP:", metric.value);
-    measurements["LCP"] = metric.value;
+    console.log('LCP:', metric.value);
+    measurements['LCP'] = metric.value;
   });
 
   onFCP((metric: Metric) => {
-    console.log("FCP:", metric.value);
-    measurements["FCP"] = metric.value;
+    console.log('FCP:', metric.value);
+    measurements['FCP'] = metric.value;
   });
 
   onTTFB((metric: Metric) => {
-    console.log("TTFB:", metric.value);
-    measurements["TTFB"] = metric.value;
+    console.log('TTFB:', metric.value);
+    measurements['TTFB'] = metric.value;
   });
 
   // Custom performance marks
   if (performance.mark) {
-    performance.mark("app-init");
+    performance.mark('app-init');
   }
 };
 
@@ -41,7 +41,7 @@ export const initPerformanceMonitoring = () => {
 export const measureRender = (componentName: string, startTime: number) => {
   const endTime = performance.now();
   const duration = endTime - startTime;
-  console.log(`${componentName} render time:`, duration.toFixed(2), "ms");
+  console.log(`${componentName} render time:`, duration.toFixed(2), 'ms');
   measurements[`${componentName}-render`] = duration;
 };
 
@@ -49,7 +49,7 @@ export const measureRender = (componentName: string, startTime: number) => {
 export const measureDataFetch = (operation: string, startTime: number) => {
   const endTime = performance.now();
   const duration = endTime - startTime;
-  console.log(`${operation} duration:`, duration.toFixed(2), "ms");
+  console.log(`${operation} duration:`, duration.toFixed(2), 'ms');
   measurements[`${operation}`] = duration;
 };
 
@@ -73,31 +73,27 @@ export const markPerformance = (markName: string) => {
 };
 
 // Measure between two marks
-export const measureBetweenMarks = (
-  startMark: string,
-  endMark: string,
-  label: string
-) => {
+export const measureBetweenMarks = (startMark: string, endMark: string, label: string) => {
   if (performance.measure) {
     try {
       performance.measure(label, startMark, endMark);
       const entries = performance.getEntriesByName(label);
       if (entries.length > 0) {
-        console.log(`${label}:`, entries[0].duration.toFixed(2), "ms");
+        console.log(`${label}:`, entries[0].duration.toFixed(2), 'ms');
         measurements[label] = entries[0].duration;
       }
     } catch (e) {
-      console.warn("Error measuring performance:", e);
+      console.warn('Error measuring performance:', e);
     }
   }
 };
 
 // Log long tasks
 export const observeLongTasks = () => {
-  if ("PerformanceObserver" in window) {
+  if ('PerformanceObserver' in window) {
     const observer = new PerformanceObserver((list) => {
       list.getEntries().forEach((entry) => {
-        console.warn("Long Task detected:", {
+        console.warn('Long Task detected:', {
           duration: entry.duration,
           startTime: entry.startTime,
           name: entry.name,
@@ -105,7 +101,7 @@ export const observeLongTasks = () => {
       });
     });
 
-    observer.observe({ entryTypes: ["longtask"] });
+    observer.observe({ entryTypes: ['longtask'] });
     return () => observer.disconnect();
   }
   return () => {};
@@ -120,11 +116,9 @@ export const initializeAllMonitoring = () => {
   const performance = window.performance as any;
   if (performance?.memory) {
     setInterval(() => {
-      console.log("Memory usage:", {
-        usedJSHeapSize:
-          (performance.memory.usedJSHeapSize / 1048576).toFixed(2) + " MB",
-        totalJSHeapSize:
-          (performance.memory.totalJSHeapSize / 1048576).toFixed(2) + " MB",
+      console.log('Memory usage:', {
+        usedJSHeapSize: (performance.memory.usedJSHeapSize / 1048576).toFixed(2) + ' MB',
+        totalJSHeapSize: (performance.memory.totalJSHeapSize / 1048576).toFixed(2) + ' MB',
       });
     }, 5000);
   }

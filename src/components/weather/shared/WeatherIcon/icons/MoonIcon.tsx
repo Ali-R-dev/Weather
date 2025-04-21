@@ -1,5 +1,5 @@
-import React from "react";
-import { WeatherIconProps } from "./IconTypes";
+import React from 'react';
+import { WeatherIconProps } from './IconTypes';
 
 const MoonIcon: React.FC<WeatherIconProps> = ({ className, ...props }) => {
   return (

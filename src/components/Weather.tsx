@@ -1,9 +1,9 @@
-import React, { useState } from "react";
-import { WeatherData } from "../types/weather.types";
-import CurrentWeather from "./weather/current";
-import HourlyForecast from "./weather/hourly";
-import DailyForecast from "./weather/daily";
-import { useTheme } from "../context/ThemeContext";
+import React, { useState } from 'react';
+import { WeatherData } from '../types/weather.types';
+import CurrentWeather from './weather/current';
+import HourlyForecast from './weather/hourly';
+import DailyForecast from './weather/daily';
+import { useTheme } from '../context/ThemeContext';
 
 interface WeatherProps {
   data: WeatherData;
@@ -11,38 +11,32 @@ interface WeatherProps {
   error?: string | null;
 }
 
-const Weather: React.FC<WeatherProps> = ({
-  data,
-  isLoading = false,
-  error = null,
-}) => {
-  const [activeTab, setActiveTab] = useState<"current" | "hourly" | "daily">(
-    "current"
-  );
+const Weather: React.FC<WeatherProps> = ({ data, isLoading = false, error = null }) => {
+  const [activeTab, setActiveTab] = useState<'current' | 'hourly' | 'daily'>('current');
   const { currentTheme } = useTheme(); // Get current theme
 
   // Function to get theme-based gradient for active tab
   const getThemeGradient = () => {
     // Match the button gradient to current weather theme
     switch (currentTheme) {
-      case "sunny":
-        return "from-yellow-500/80 to-amber-400/70 shadow-yellow-500/20";
-      case "night-clear":
-        return "from-indigo-500/80 to-purple-400/70 shadow-indigo-500/20";
-      case "cloudy":
-        return "from-gray-500/80 to-slate-400/70 shadow-gray-500/20";
-      case "night-cloudy":
-        return "from-slate-500/80 to-gray-400/70 shadow-slate-500/20";
-      case "rainy":
-        return "from-blue-500/80 to-sky-400/70 shadow-blue-500/20";
-      case "night-rainy":
-        return "from-blue-700/80 to-blue-500/70 shadow-blue-700/20";
-      case "snowy":
-        return "from-blue-300/80 to-sky-200/70 shadow-blue-300/20";
-      case "stormy":
-        return "from-slate-600/80 to-slate-500/70 shadow-slate-600/20";
+      case 'sunny':
+        return 'from-yellow-500/80 to-amber-400/70 shadow-yellow-500/20';
+      case 'night-clear':
+        return 'from-indigo-500/80 to-purple-400/70 shadow-indigo-500/20';
+      case 'cloudy':
+        return 'from-gray-500/80 to-slate-400/70 shadow-gray-500/20';
+      case 'night-cloudy':
+        return 'from-slate-500/80 to-gray-400/70 shadow-slate-500/20';
+      case 'rainy':
+        return 'from-blue-500/80 to-sky-400/70 shadow-blue-500/20';
+      case 'night-rainy':
+        return 'from-blue-700/80 to-blue-500/70 shadow-blue-700/20';
+      case 'snowy':
+        return 'from-blue-300/80 to-sky-200/70 shadow-blue-300/20';
+      case 'stormy':
+        return 'from-slate-600/80 to-slate-500/70 shadow-slate-600/20';
       default:
-        return "from-blue-500/80 to-blue-400/70 shadow-blue-500/20"; // Default fallback
+        return 'from-blue-500/80 to-blue-400/70 shadow-blue-500/20'; // Default fallback
     }
   };
 
@@ -77,11 +71,11 @@ const Weather: React.FC<WeatherProps> = ({
         <div className="flex space-x-1 p-1 bg-white/10 backdrop-blur-md rounded-xl">
           <button
             className={`flex-1 py-3 px-2 rounded-lg transition-all flex items-center justify-center ${
-              activeTab === "current"
+              activeTab === 'current'
                 ? `bg-gradient-to-r ${getThemeGradient()} shadow-lg transform -translate-y-0.5`
-                : "bg-white/5 hover:bg-white/15"
+                : 'bg-white/5 hover:bg-white/15'
             }`}
-            onClick={() => setActiveTab("current")}
+            onClick={() => setActiveTab('current')}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -96,11 +90,11 @@ const Weather: React.FC<WeatherProps> = ({
 
           <button
             className={`flex-1 py-3 px-2 rounded-lg transition-all flex items-center justify-center ${
-              activeTab === "hourly"
+              activeTab === 'hourly'
                 ? `bg-gradient-to-r ${getThemeGradient()} shadow-lg transform -translate-y-0.5`
-                : "bg-white/5 hover:bg-white/15"
+                : 'bg-white/5 hover:bg-white/15'
             }`}
-            onClick={() => setActiveTab("hourly")}
+            onClick={() => setActiveTab('hourly')}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -119,11 +113,11 @@ const Weather: React.FC<WeatherProps> = ({
 
           <button
             className={`flex-1 py-3 px-2 rounded-lg transition-all flex items-center justify-center ${
-              activeTab === "daily"
+              activeTab === 'daily'
                 ? `bg-gradient-to-r ${getThemeGradient()} shadow-lg transform -translate-y-0.5`
-                : "bg-white/5 hover:bg-white/15"
+                : 'bg-white/5 hover:bg-white/15'
             }`}
-            onClick={() => setActiveTab("daily")}
+            onClick={() => setActiveTab('daily')}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -147,17 +141,17 @@ const Weather: React.FC<WeatherProps> = ({
           <div className="flex space-x-1">
             <div
               className={`h-1 w-6 rounded-full ${
-                activeTab === "current" ? "bg-white" : "bg-white/30"
+                activeTab === 'current' ? 'bg-white' : 'bg-white/30'
               }`}
             ></div>
             <div
               className={`h-1 w-6 rounded-full ${
-                activeTab === "hourly" ? "bg-white" : "bg-white/30"
+                activeTab === 'hourly' ? 'bg-white' : 'bg-white/30'
               }`}
             ></div>
             <div
               className={`h-1 w-6 rounded-full ${
-                activeTab === "daily" ? "bg-white" : "bg-white/30"
+                activeTab === 'daily' ? 'bg-white' : 'bg-white/30'
               }`}
             ></div>
           </div>
@@ -167,11 +161,9 @@ const Weather: React.FC<WeatherProps> = ({
       {/* Tab Content */}
       <div className="rounded-3xl overflow-hidden border border-white/10 h-auto bg-gradient-to-br from-black/20 to-black/30 backdrop-blur-md">
         <div className="p-4 h-full">
-          {activeTab === "current" && <CurrentWeather data={data} />}
-          {activeTab === "hourly" && (
-            <HourlyForecast hourlyData={data.hourly} />
-          )}
-          {activeTab === "daily" && <DailyForecast dailyData={data.daily} />}
+          {activeTab === 'current' && <CurrentWeather data={data} />}
+          {activeTab === 'hourly' && <HourlyForecast hourlyData={data.hourly} />}
+          {activeTab === 'daily' && <DailyForecast dailyData={data.daily} />}
         </div>
       </div>
     </div>

@@ -1,10 +1,10 @@
 /* DayItem.tsx - Enhanced */
-import React from "react";
-import WeatherIcon from "../shared/WeatherIcon";
-import { getWeatherInfo } from "../../../utils/weatherCodeMap";
-import { formatDay, formatDate } from "../../../utils/formatting";
-import { useSettings } from "../../../context/SettingsContext";
-import { AppConfig } from "../../../config/appConfig";
+import React from 'react';
+import WeatherIcon from '../shared/WeatherIcon';
+import { getWeatherInfo } from '../../../utils/weatherCodeMap';
+import { formatDay, formatDate } from '../../../utils/formatting';
+import { useSettings } from '../../../context/SettingsContext';
+import { AppConfig } from '../../../config/appConfig';
 
 // Add native props support
 type NativeButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement>;
@@ -32,28 +32,28 @@ const DayItem: React.FC<DayItemProps> = ({
   const { settings } = useSettings();
 
   const displayMaxTemp =
-    settings.units.temperature === "celsius"
+    settings.units.temperature === 'celsius'
       ? maxTemp
-      : AppConfig.utils.convertTemperature(maxTemp, "fahrenheit");
+      : AppConfig.utils.convertTemperature(maxTemp, 'fahrenheit');
 
   const displayMinTemp =
-    settings.units.temperature === "celsius"
+    settings.units.temperature === 'celsius'
       ? minTemp
-      : AppConfig.utils.convertTemperature(minTemp, "fahrenheit");
+      : AppConfig.utils.convertTemperature(minTemp, 'fahrenheit');
 
   const maxTempCelsius = maxTemp;
 
   const getTempColor = (temp: number) => {
-    if (temp >= 35) return "text-red-500"; // Extreme heat
-    if (temp >= 30) return "text-red-400"; // Very hot
-    if (temp >= 25) return "text-orange-400"; // Hot
-    if (temp >= 20) return "text-orange-300"; // Warm
-    if (temp >= 15) return "text-yellow-300"; // Mild
-    if (temp >= 10) return "text-green-300"; // Cool
-    if (temp >= 5) return "text-blue-300"; // Cold
-    if (temp >= 0) return "text-blue-400"; // Very cold
-    if (temp >= -5) return "text-indigo-400"; // Freezing
-    return "text-indigo-500"; // Extreme cold
+    if (temp >= 35) return 'text-red-500'; // Extreme heat
+    if (temp >= 30) return 'text-red-400'; // Very hot
+    if (temp >= 25) return 'text-orange-400'; // Hot
+    if (temp >= 20) return 'text-orange-300'; // Warm
+    if (temp >= 15) return 'text-yellow-300'; // Mild
+    if (temp >= 10) return 'text-green-300'; // Cool
+    if (temp >= 5) return 'text-blue-300'; // Cold
+    if (temp >= 0) return 'text-blue-400'; // Very cold
+    if (temp >= -5) return 'text-indigo-400'; // Freezing
+    return 'text-indigo-500'; // Extreme cold
   };
 
   return (
@@ -68,8 +68,8 @@ const DayItem: React.FC<DayItemProps> = ({
         hover:shadow-lg hover:scale-[1.02]
         ${
           isToday
-            ? "border-white/40 bg-white/20 shadow-md shadow-yellow-100/10"
-            : "border-white/15 bg-white/10"
+            ? 'border-white/40 bg-white/20 shadow-md shadow-yellow-100/10'
+            : 'border-white/15 bg-white/10'
         }
       `}
       style={{
@@ -78,14 +78,14 @@ const DayItem: React.FC<DayItemProps> = ({
         cursor: 'pointer',
       }}
       {...rest}
-      aria-label={`Forecast for ${formatDay(day)}: ${displayMaxTemp}° / ${displayMinTemp}°, ${weatherInfo.description}`}
+      aria-label={`Forecast for ${formatDay(day)}: ${displayMaxTemp}° / ${displayMinTemp}°, ${
+        weatherInfo.description
+      }`}
       role="button"
     >
       {/* Day info */}
       <div className="flex flex-col min-w-[60px]">
-        <div className="font-semibold text-sm text-white">
-          {isToday ? "Today" : formatDay(day)}
-        </div>
+        <div className="font-semibold text-sm text-white">{isToday ? 'Today' : formatDay(day)}</div>
         <div className="text-xs text-white/70 mt-0.5">{formatDate(day)}</div>
       </div>
 
@@ -97,9 +97,7 @@ const DayItem: React.FC<DayItemProps> = ({
       {/* Weather info and precipitation */}
       <div className="flex-grow flex flex-col md:flex-row md:items-center md:gap-2">
         {/* Weather description */}
-        <span className="text-sm font-medium text-white/90 md:flex-grow">
-          {weatherInfo.label}
-        </span>
+        <span className="text-sm font-medium text-white/90 md:flex-grow">{weatherInfo.label}</span>
 
         {/* Precipitation indicator - below on mobile, inline on larger screens */}
         {hasPrecip && (
@@ -119,11 +117,7 @@ const DayItem: React.FC<DayItemProps> = ({
 
       {/* Temperature */}
       <div className="flex items-center gap-1.5 min-w-[70px] shrink-0 justify-end ml-1">
-        <span
-          className={`font-bold text-sm whitespace-nowrap ${getTempColor(
-            maxTempCelsius
-          )}`}
-        >
+        <span className={`font-bold text-sm whitespace-nowrap ${getTempColor(maxTempCelsius)}`}>
           {Math.round(displayMaxTemp)}°
         </span>
         <span className="text-sm text-white/60 whitespace-nowrap">

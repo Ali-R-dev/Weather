@@ -1,6 +1,6 @@
-import React from "react";
-import DayItem from "./DayItem";
-import { formatDate } from "../../../utils/formatting";
+import React from 'react';
+import DayItem from './DayItem';
+import { formatDate } from '../../../utils/formatting';
 
 interface DailyForecastProps {
   dailyData?: {
@@ -40,8 +40,14 @@ const DailyForecast: React.FC<DailyForecastProps> = ({ dailyData }) => {
       aria-label="Daily weather forecast"
       tabIndex={0}
     >
-      <h2 className="sr-only" id="daily-forecast-heading">Daily Forecast</h2>
-      <div className="flex flex-col gap-2 w-full" role="list" aria-labelledby="daily-forecast-heading">
+      <h2 className="sr-only" id="daily-forecast-heading">
+        Daily Forecast
+      </h2>
+      <div
+        className="flex flex-col gap-2 w-full"
+        role="list"
+        aria-labelledby="daily-forecast-heading"
+      >
         {dailyData.time.map((time, index) => {
           // Validate data for each item
           const maxTemp = dailyData.temperature_2m_max?.[index];

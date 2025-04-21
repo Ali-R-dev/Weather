@@ -1,5 +1,5 @@
-import { JSX, useEffect, useState } from "react";
-import "./WeatherEffects.css";
+import { JSX, useEffect, useState } from 'react';
+import './WeatherEffects.css';
 
 interface FogEffectProps {
   isDay: boolean;
@@ -31,11 +31,7 @@ const FogEffect = ({ isDay }: FogEffectProps) => {
     setFogLayers(layers);
   }, [isDay]);
 
-  return (
-    <div className={`fog-container ${isDay ? "day" : "night"}`}>
-      {fogLayers}
-    </div>
-  );
+  return <div className={`fog-container ${isDay ? 'day' : 'night'}`}>{fogLayers}</div>;
 };
 
 export default FogEffect;

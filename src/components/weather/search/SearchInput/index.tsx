@@ -1,6 +1,6 @@
-import React from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import styles from "./styles.module.css";
+import React from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import styles from './styles.module.css';
 
 interface SearchInputProps {
   query: string;
@@ -64,11 +64,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
               fill="currentColor"
               className="w-5 h-5"
             >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M6 18L18 6M6 6l12 12"
-              />
+              <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
             </svg>
           </motion.button>
         )}

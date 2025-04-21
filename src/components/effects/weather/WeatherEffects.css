@@ -156,7 +156,8 @@
 }
 
 @keyframes snowflakes-shake {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateX(0);
   }
   50% {
@@ -165,32 +166,104 @@
 }
 
 /* Position snowflakes in different positions */
-.snowflake:nth-child(1) { left: 10%; animation-delay: 1s; }
-.snowflake:nth-child(2) { left: 20%; animation-delay: 0.5s; }
-.snowflake:nth-child(3) { left: 30%; animation-delay: 2s; }
-.snowflake:nth-child(4) { left: 40%; animation-delay: 2s; }
-.snowflake:nth-child(5) { left: 50%; animation-delay: 3s; }
-.snowflake:nth-child(6) { left: 60%; animation-delay: 2s; }
-.snowflake:nth-child(7) { left: 70%; animation-delay: 1s; }
-.snowflake:nth-child(8) { left: 80%; animation-delay: 0s; }
-.snowflake:nth-child(9) { left: 90%; animation-delay: 1.5s; }
-.snowflake:nth-child(10) { left: 25%; animation-delay: 0s; }
-.snowflake:nth-child(11) { left: 65%; animation-delay: 2.5s; }
-.snowflake:nth-child(12) { left: 35%; animation-delay: 1.5s; }
+.snowflake:nth-child(1) {
+  left: 10%;
+  animation-delay: 1s;
+}
+.snowflake:nth-child(2) {
+  left: 20%;
+  animation-delay: 0.5s;
+}
+.snowflake:nth-child(3) {
+  left: 30%;
+  animation-delay: 2s;
+}
+.snowflake:nth-child(4) {
+  left: 40%;
+  animation-delay: 2s;
+}
+.snowflake:nth-child(5) {
+  left: 50%;
+  animation-delay: 3s;
+}
+.snowflake:nth-child(6) {
+  left: 60%;
+  animation-delay: 2s;
+}
+.snowflake:nth-child(7) {
+  left: 70%;
+  animation-delay: 1s;
+}
+.snowflake:nth-child(8) {
+  left: 80%;
+  animation-delay: 0s;
+}
+.snowflake:nth-child(9) {
+  left: 90%;
+  animation-delay: 1.5s;
+}
+.snowflake:nth-child(10) {
+  left: 25%;
+  animation-delay: 0s;
+}
+.snowflake:nth-child(11) {
+  left: 65%;
+  animation-delay: 2.5s;
+}
+.snowflake:nth-child(12) {
+  left: 35%;
+  animation-delay: 1.5s;
+}
 
 /* Additional snowflakes for heavy intensity */
-.snowflake:nth-child(13) { left: 15%; animation-delay: 0.7s; }
-.snowflake:nth-child(14) { left: 45%; animation-delay: 1.2s; }
-.snowflake:nth-child(15) { left: 55%; animation-delay: 2.2s; }
-.snowflake:nth-child(16) { left: 75%; animation-delay: 1.7s; }
-.snowflake:nth-child(17) { left: 5%; animation-delay: 2.7s; }
-.snowflake:nth-child(18) { left: 85%; animation-delay: 0.3s; }
-.snowflake:nth-child(19) { left: 95%; animation-delay: 1.3s; }
-.snowflake:nth-child(20) { left: 28%; animation-delay: 0.8s; }
-.snowflake:nth-child(21) { left: 33%; animation-delay: 3.1s; }
-.snowflake:nth-child(22) { left: 48%; animation-delay: 1.9s; }
-.snowflake:nth-child(23) { left: 62%; animation-delay: 2.8s; }
-.snowflake:nth-child(24) { left: 78%; animation-delay: 1.2s; }
+.snowflake:nth-child(13) {
+  left: 15%;
+  animation-delay: 0.7s;
+}
+.snowflake:nth-child(14) {
+  left: 45%;
+  animation-delay: 1.2s;
+}
+.snowflake:nth-child(15) {
+  left: 55%;
+  animation-delay: 2.2s;
+}
+.snowflake:nth-child(16) {
+  left: 75%;
+  animation-delay: 1.7s;
+}
+.snowflake:nth-child(17) {
+  left: 5%;
+  animation-delay: 2.7s;
+}
+.snowflake:nth-child(18) {
+  left: 85%;
+  animation-delay: 0.3s;
+}
+.snowflake:nth-child(19) {
+  left: 95%;
+  animation-delay: 1.3s;
+}
+.snowflake:nth-child(20) {
+  left: 28%;
+  animation-delay: 0.8s;
+}
+.snowflake:nth-child(21) {
+  left: 33%;
+  animation-delay: 3.1s;
+}
+.snowflake:nth-child(22) {
+  left: 48%;
+  animation-delay: 1.9s;
+}
+.snowflake:nth-child(23) {
+  left: 62%;
+  animation-delay: 2.8s;
+}
+.snowflake:nth-child(24) {
+  left: 78%;
+  animation-delay: 1.2s;
+}
 
 /* =================== Fog Effect CSS =================== */
 
@@ -208,7 +281,8 @@
   width: 200%;
 }
 
-.fog .image01, .fog .image02 {
+.fog .image01,
+.fog .image02 {
   float: left;
   height: 100%;
   width: 50%;
@@ -218,52 +292,94 @@
   animation: foglayer_01_opacity 10s linear infinite, foglayer_moveme 15s linear infinite;
 }
 
-#foglayer_02, #foglayer_03 {
+#foglayer_02,
+#foglayer_03 {
   animation: foglayer_02_opacity 21s linear infinite, foglayer_moveme 13s linear infinite;
 }
 
 /* Moving Fog Background Images */
-#foglayer_01 .image01, #foglayer_01 .image02 {
-  background: url("https://raw.githubusercontent.com/danielstuart14/CSS_FOG_ANIMATION/master/fog1.png") center center/cover no-repeat transparent;
+#foglayer_01 .image01,
+#foglayer_01 .image02 {
+  background: url('https://raw.githubusercontent.com/danielstuart14/CSS_FOG_ANIMATION/master/fog1.png')
+    center center/cover no-repeat transparent;
 }
 
-#foglayer_02 .image01, #foglayer_02 .image02,
-#foglayer_03 .image01, #foglayer_03 .image02 {
-  background: url("https://raw.githubusercontent.com/danielstuart14/CSS_FOG_ANIMATION/master/fog2.png") center center/cover no-repeat transparent;
+#foglayer_02 .image01,
+#foglayer_02 .image02,
+#foglayer_03 .image01,
+#foglayer_03 .image02 {
+  background: url('https://raw.githubusercontent.com/danielstuart14/CSS_FOG_ANIMATION/master/fog2.png')
+    center center/cover no-repeat transparent;
 }
 
 /* Keyframe Layer 1 */
 @keyframes foglayer_01_opacity {
-  0% { opacity: .1; }
-  22% { opacity: .5; }
-  40% { opacity: .28; }
-  58% { opacity: .4; }
-  80% { opacity: .16; }
-  100% { opacity: .1; }
+  0% {
+    opacity: 0.1;
+  }
+  22% {
+    opacity: 0.5;
+  }
+  40% {
+    opacity: 0.28;
+  }
+  58% {
+    opacity: 0.4;
+  }
+  80% {
+    opacity: 0.16;
+  }
+  100% {
+    opacity: 0.1;
+  }
 }
 
 /* Keyframe Layer 2 */
 @keyframes foglayer_02_opacity {
-  0% { opacity: .5; }
-  25% { opacity: .2; }
-  50% { opacity: .1; }
-  80% { opacity: .3; }
-  100% { opacity: .5; }
+  0% {
+    opacity: 0.5;
+  }
+  25% {
+    opacity: 0.2;
+  }
+  50% {
+    opacity: 0.1;
+  }
+  80% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 0.5;
+  }
 }
 
 /* Keyframe Layer 3 */
 @keyframes foglayer_03_opacity {
-  0% { opacity: .8; }
-  27% { opacity: .2; }
-  52% { opacity: .6; }
-  68% { opacity: .3; }
-  100% { opacity: .8; }
+  0% {
+    opacity: 0.8;
+  }
+  27% {
+    opacity: 0.2;
+  }
+  52% {
+    opacity: 0.6;
+  }
+  68% {
+    opacity: 0.3;
+  }
+  100% {
+    opacity: 0.8;
+  }
 }
 
 /* Keyframe moveMe */
 @keyframes foglayer_moveme {
-  0% { left: 0; }
-  100% { left: -100%; }
+  0% {
+    left: 0;
+  }
+  100% {
+    left: -100%;
+  }
 }
 
 /* Improved fog effect */
@@ -281,23 +397,27 @@
   left: -150%;
   width: 400%;
   height: 40%;
-  background: linear-gradient(90deg, 
-    rgba(255,255,255,0) 0%,
-    rgba(255,255,255,0.2) 10%,
-    rgba(255,255,255,0.5) 50%,
-    rgba(255,255,255,0.2) 90%,
-    rgba(255,255,255,0) 100%);
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.2) 10%,
+    rgba(255, 255, 255, 0.5) 50%,
+    rgba(255, 255, 255, 0.2) 90%,
+    rgba(255, 255, 255, 0) 100%
+  );
   border-radius: 50%;
   animation: fog-move linear infinite;
 }
 
 .night .fog-layer {
-  background: linear-gradient(90deg, 
-    rgba(200,200,255,0) 0%,
-    rgba(200,200,255,0.1) 10%,
-    rgba(200,200,255,0.3) 50%,
-    rgba(200,200,255,0.1) 90%,
-    rgba(200,200,255,0) 100%);
+  background: linear-gradient(
+    90deg,
+    rgba(200, 200, 255, 0) 0%,
+    rgba(200, 200, 255, 0.1) 10%,
+    rgba(200, 200, 255, 0.3) 50%,
+    rgba(200, 200, 255, 0.1) 90%,
+    rgba(200, 200, 255, 0) 100%
+  );
 }
 
 @keyframes fog-move {
@@ -329,7 +449,7 @@
   left: 40%;
   width: 120px;
   height: 120px;
-  background: radial-gradient(circle, rgba(255,236,173,1) 0%, rgba(255,205,57,0) 70%);
+  background: radial-gradient(circle, rgba(255, 236, 173, 1) 0%, rgba(255, 205, 57, 0) 70%);
   border-radius: 50%;
   box-shadow: 0 0 50px 20px rgba(255, 255, 255, 0.3);
   animation: pulse 3s ease-in-out infinite;
@@ -354,7 +474,8 @@
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
     opacity: 0.8;
   }
@@ -365,7 +486,8 @@
 }
 
 @keyframes twinkle {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0.3;
     transform: scale(0.8);
   }
@@ -406,12 +528,12 @@
 }
 
 .day-cloud {
-  fill: #FFFFFF;
+  fill: #ffffff;
   filter: drop-shadow(0 4px 6px rgba(0, 0, 0, 0.1));
 }
 
 .night-cloud {
-  fill: #E0E0E0;
+  fill: #e0e0e0;
   filter: drop-shadow(0 4px 8px rgba(0, 0, 30, 0.3));
 }
 
@@ -439,7 +561,8 @@
   background: rgba(180, 180, 180, 0.4);
 }
 
-.cloud:before, .cloud:after {
+.cloud:before,
+.cloud:after {
   content: '';
   position: absolute;
   background: inherit;
@@ -535,7 +658,8 @@
 }
 
 @keyframes float {
-  0%, 100% {
+  0%,
+  100% {
     transform: translateX(0);
   }
   50% {
@@ -553,13 +677,13 @@
   position: absolute;
   background-color: #fff;
   border-radius: 50%;
-  box-shadow: 0 1px 5px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
   filter: blur(2px);
 }
 
 .night .cloud-part {
   background-color: #c8c8c8;
-  box-shadow: 0 1px 8px rgba(0,0,0,0.3);
+  box-shadow: 0 1px 8px rgba(0, 0, 0, 0.3);
 }
 
 .part1 {
@@ -630,13 +754,27 @@
 }
 
 @keyframes flash {
-  0% { opacity: 0; }
-  10% { opacity: 1; }
-  25% { opacity: 0.8; }
-  40% { opacity: 0; }
-  50% { opacity: 0.2; }
-  85% { opacity: 0; }
-  100% { opacity: 0; }
+  0% {
+    opacity: 0;
+  }
+  10% {
+    opacity: 1;
+  }
+  25% {
+    opacity: 0.8;
+  }
+  40% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.2;
+  }
+  85% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
 }
 
 /* =================== Sunny Effect CSS =================== */
@@ -656,7 +794,7 @@
   left: 40%;
   width: 120px;
   height: 120px;
-  background: radial-gradient(circle, rgba(255,236,173,1) 0%, rgba(255,205,57,0) 70%);
+  background: radial-gradient(circle, rgba(255, 236, 173, 1) 0%, rgba(255, 205, 57, 0) 70%);
   border-radius: 50%;
   box-shadow: 0 0 50px 20px rgba(255, 255, 255, 0.3);
   animation: pulse 3s ease-in-out infinite;
@@ -681,7 +819,8 @@
 }
 
 @keyframes pulse {
-  0%, 100% {
+  0%,
+  100% {
     transform: scale(1);
     opacity: 0.8;
   }
@@ -692,7 +831,8 @@
 }
 
 @keyframes twinkle {
-  0%, 100% {
+  0%,
+  100% {
     opacity: 0.3;
     transform: scale(0.8);
   }
@@ -703,11 +843,15 @@
 }
 
 @media only screen and (min-width: 280px) and (max-width: 767px) {
-  .fog .image01, .fog .image02 {
+  .fog .image01,
+  .fog .image02 {
     width: 100%;
   }
-  
-  .cloud1, .cloud2, .cloud3, .cloud4 {
+
+  .cloud1,
+  .cloud2,
+  .cloud3,
+  .cloud4 {
     transform: scale(0.7);
   }
 }

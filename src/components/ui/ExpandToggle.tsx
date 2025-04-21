@@ -1,5 +1,5 @@
-import React from "react";
-import { motion } from "framer-motion";
+import React from 'react';
+import { motion } from 'framer-motion';
 
 interface ExpandToggleProps {
   expanded: boolean;
@@ -7,11 +7,7 @@ interface ExpandToggleProps {
   label?: string;
 }
 
-const ExpandToggle: React.FC<ExpandToggleProps> = ({
-  expanded,
-  onToggle,
-  label,
-}) => {
+const ExpandToggle: React.FC<ExpandToggleProps> = ({ expanded, onToggle, label }) => {
   return (
     <motion.button
       onClick={onToggle}
@@ -19,13 +15,11 @@ const ExpandToggle: React.FC<ExpandToggleProps> = ({
       whileHover={{ scale: 1.03 }}
       whileTap={{ scale: 0.97 }}
     >
-      <span className="mr-1">{expanded ? "Hide" : "Show"}</span>
-      {label ? label : "Details"}
+      <span className="mr-1">{expanded ? 'Hide' : 'Show'}</span>
+      {label ? label : 'Details'}
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        className={`w-4 h-4 ml-1 transition-transform ${
-          expanded ? "rotate-180" : ""
-        }`}
+        className={`w-4 h-4 ml-1 transition-transform ${expanded ? 'rotate-180' : ''}`}
         fill="none"
         viewBox="0 0 24 24"
         stroke="currentColor"
@@ -34,7 +28,7 @@ const ExpandToggle: React.FC<ExpandToggleProps> = ({
           strokeLinecap="round"
           strokeLinejoin="round"
           strokeWidth={2}
-          d={expanded ? "M5 15l7-7 7 7" : "M19 9l-7 7-7-7"}
+          d={expanded ? 'M5 15l7-7 7 7' : 'M19 9l-7 7-7-7'}
         />
       </svg>
     </motion.button>

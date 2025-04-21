@@ -1,23 +1,17 @@
-import { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import {
-  searchLocations,
-  GeocodingResult,
-} from "../../services/geocodingService";
-import { useLocation } from "../../context/LocationContext"; // Use location context
-import { SavedLocation } from "../../hooks/useSavedLocations";
-import LoadingSpinner from "../common/LoadingSpinner";
+import { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { searchLocations, GeocodingResult } from '../../services/geocodingService';
+import { useLocation } from '../../context/LocationContext'; // Use location context
+import { SavedLocation } from '../../hooks/useSavedLocations';
+import LoadingSpinner from '../common/LoadingSpinner';
 
 interface LocationSearchProps {
   onLocationSelect?: () => void;
   compact?: boolean;
 }
 
-export default function LocationSearch({
-  onLocationSelect,
-  compact = false,
-}: LocationSearchProps) {
-  const [query, setQuery] = useState("");
+export default function LocationSearch({ onLocationSelect, compact = false }: LocationSearchProps) {
+  const [query, setQuery] = useState('');
   const [results, setResults] = useState<GeocodingResult[]>([]);
   const [isSearching, setIsSearching] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
@@ -59,7 +53,7 @@ export default function LocationSearch({
         const locations = await searchLocations(query);
         setResults(locations);
       } catch (error) {
-        console.error("Search error:", error);
+        console.error('Search error:', error);
       } finally {
         setIsSearching(false);
         setIsDropdownOpen(true);
@@ -82,12 +76,12 @@ export default function LocationSearch({
 
   // Load recently used locations from localStorage
   useEffect(() => {
-    const recentLocations = localStorage.getItem("recentLocations");
+    const recentLocations = localStorage.getItem('recentLocations');
     if (recentLocations) {
       try {
         setRecentlyUsed(JSON.parse(recentLocations));
       } catch (e) {
-        console.error("Error parsing recent locations", e);
+        console.error('Error parsing recent locations', e);
       }
     }
   }, []);
@@ -95,28 +89,25 @@ export default function LocationSearch({
   // Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsDropdownOpen(false);
       }
     }
 
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
 
   // Add to recently used locations
   const addToRecentlyUsed = (location: SavedLocation) => {
-    const updatedRecent = [
-      location,
-      ...recentlyUsed.filter((loc) => loc.id !== location.id),
-    ].slice(0, 3);
+    const updatedRecent = [location, ...recentlyUsed.filter((loc) => loc.id !== location.id)].slice(
+      0,
+      3
+    );
     setRecentlyUsed(updatedRecent);
-    localStorage.setItem("recentLocations", JSON.stringify(updatedRecent));
+    localStorage.setItem('recentLocations', JSON.stringify(updatedRecent));
   };
 
   // Select a location from search results
@@ -142,7 +133,7 @@ export default function LocationSearch({
 
     saveLocation(savedLocation);
     addToRecentlyUsed(savedLocation);
-    setQuery("");
+    setQuery('');
     setIsDropdownOpen(false);
 
     if (onLocationSelect) {
@@ -193,13 +184,13 @@ export default function LocationSearch({
             className={`relative flex items-center w-full overflow-hidden rounded-xl 
                       bg-gradient-to-r from-white/15 to-white/10 backdrop-blur-md 
                       border border-white/20 shadow-lg ${
-                        searchFocused ? "ring-2 ring-white/30" : ""
+                        searchFocused ? 'ring-2 ring-white/30' : ''
                       }`}
             animate={{
               scale: searchFocused ? 1.01 : 1,
               boxShadow: searchFocused
-                ? "0 10px 25px -5px rgba(0, 0, 0, 0.2)"
-                : "0 4px 12px -2px rgba(0, 0, 0, 0.1)",
+                ? '0 10px 25px -5px rgba(0, 0, 0, 0.2)'
+                : '0 4px 12px -2px rgba(0, 0, 0, 0.1)',
             }}
             transition={{ duration: 0.2 }}
           >
@@ -238,7 +229,7 @@ export default function LocationSearch({
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.8 }}
                 className="mr-2 p-1.5 rounded-full text-white/60 hover:text-white hover:bg-white/10"
-                onClick={() => setQuery("")}
+                onClick={() => setQuery('')}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -266,8 +257,8 @@ export default function LocationSearch({
           <motion.div
             className={`${
               compact
-                ? "fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-md"
-                : "absolute z-[100] mt-2 w-full"
+                ? 'fixed top-0 left-1/2 -translate-x-1/2 w-full max-w-md'
+                : 'absolute z-[100] mt-2 w-full'
             } shadow-2xl max-h-[50vh] overflow-auto backdrop-blur-xl bg-black/60 border border-white/20 rounded-2xl`}
             style={{ zIndex: 9999 }}
             initial={{ opacity: 0, y: -10, scale: 0.95 }}
@@ -275,7 +266,7 @@ export default function LocationSearch({
             exit={{ opacity: 0, y: -10, scale: 0.95 }}
             transition={{
               duration: 0.2,
-              type: "spring",
+              type: 'spring',
               stiffness: 500,
               damping: 30,
             }}
@@ -288,9 +279,7 @@ export default function LocationSearch({
                 animate={{ opacity: 1 }}
                 transition={{ delay: 0.1 }}
               >
-                <div className="text-white text-sm font-medium">
-                  Search Locations
-                </div>
+                <div className="text-white text-sm font-medium">Search Locations</div>
                 <motion.button
                   onClick={() => {
                     if (onLocationSelect) onLocationSelect();
@@ -307,11 +296,7 @@ export default function LocationSearch({
                     stroke="currentColor"
                     className="w-4 h-4 text-white/90"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M6 18L18 6M6 6l12 12"
-                    />
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
                   </svg>
                 </motion.button>
               </motion.div>
@@ -359,7 +344,7 @@ export default function LocationSearch({
                       initial={{ opacity: 0, scale: 0.8 }}
                       animate={{ opacity: 1, scale: 1 }}
                       className="mr-2 p-1 rounded-full text-white/60 hover:text-white hover:bg-white/10"
-                      onClick={() => setQuery("")}
+                      onClick={() => setQuery('')}
                     >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -403,7 +388,7 @@ export default function LocationSearch({
                       transition={{ delay: 0.1 + index * 0.05 }}
                       whileHover={{
                         scale: 1.01,
-                        backgroundColor: "rgba(255,255,255,0.1)",
+                        backgroundColor: 'rgba(255,255,255,0.1)',
                       }}
                       whileTap={{ scale: 0.99 }}
                     >
@@ -423,12 +408,8 @@ export default function LocationSearch({
                           </svg>
                         </div>
                         <div>
-                          <div className="text-sm font-medium text-white">
-                            {location.name}
-                          </div>
-                          <div className="text-[10px] text-white/70">
-                            {location.country}
-                          </div>
+                          <div className="text-sm font-medium text-white">{location.name}</div>
+                          <div className="text-[10px] text-white/70">{location.country}</div>
                         </div>
                       </div>
                     </motion.div>
@@ -459,7 +440,7 @@ export default function LocationSearch({
                       transition={{ delay: 0.2 + index * 0.05 }}
                       whileHover={{
                         scale: 1.01,
-                        backgroundColor: "rgba(255,255,255,0.1)",
+                        backgroundColor: 'rgba(255,255,255,0.1)',
                       }}
                       whileTap={{ scale: 0.99 }}
                     >
@@ -489,7 +470,7 @@ export default function LocationSearch({
                           </div>
                           <div className="text-[10px] text-white/70">
                             {location.country}
-                            {location.admin1 ? `, ${location.admin1}` : ""}
+                            {location.admin1 ? `, ${location.admin1}` : ''}
                           </div>
                         </div>
                       </div>
@@ -560,7 +541,7 @@ export default function LocationSearch({
                       transition={{ delay: 0.3 + index * 0.05 }}
                       whileHover={{
                         scale: 1.01,
-                        backgroundColor: "rgba(255,255,255,0.1)",
+                        backgroundColor: 'rgba(255,255,255,0.1)',
                       }}
                       whileTap={{ scale: 0.99 }}
                     >
@@ -580,12 +561,10 @@ export default function LocationSearch({
                           </svg>
                         </div>
                         <div>
-                          <div className="text-sm font-medium text-white">
-                            {location.name}
-                          </div>
+                          <div className="text-sm font-medium text-white">{location.name}</div>
                           <div className="text-[10px] text-white/70">
                             {location.country}
-                            {location.admin1 ? `, ${location.admin1}` : ""}
+                            {location.admin1 ? `, ${location.admin1}` : ''}
                           </div>
                         </div>
                       </div>
@@ -612,34 +591,28 @@ export default function LocationSearch({
             )}
 
             {/* Empty states */}
-            {query.trim().length > 1 &&
-              results.length === 0 &&
-              !isSearching && (
-                <div className="px-3 py-4 text-center">
-                  <div className="inline-block p-2 rounded-full bg-white/10 mb-2">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      strokeWidth={1.5}
-                      stroke="currentColor"
-                      className="w-5 h-5 text-white/70"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        d="M15.182 16.318A4.486 4.486 0 0012.016 15a4.486 4.486 0 00-3.198 1.318M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75zm-.375 0h.008v.015h-.008V9.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75z"
-                      />
-                    </svg>
-                  </div>
-                  <div className="text-sm text-white/70">
-                    No locations found for "{query}"
-                  </div>
-                  <div className="text-[10px] text-white/50 mt-1">
-                    Try a different search term
-                  </div>
+            {query.trim().length > 1 && results.length === 0 && !isSearching && (
+              <div className="px-3 py-4 text-center">
+                <div className="inline-block p-2 rounded-full bg-white/10 mb-2">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="w-5 h-5 text-white/70"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M15.182 16.318A4.486 4.486 0 0012.016 15a4.486 4.486 0 00-3.198 1.318M21 12a9 9 0 11-18 0 9 9 0 0118 0zM9.75 9.75c0 .414-.168.75-.375.75S9 10.164 9 9.75 9.168 9 9.375 9s.375.336.375.75zm-.375 0h.008v.015h-.008V9.75zm5.625 0c0 .414-.168.75-.375.75s-.375-.336-.375-.75.168-.75.375-.75.375.336.375.75zm-.375 0h.008v.015h-.008V9.75z"
+                    />
+                  </svg>
                 </div>
-              )}
+                <div className="text-sm text-white/70">No locations found for "{query}"</div>
+                <div className="text-[10px] text-white/50 mt-1">Try a different search term</div>
+              </div>
+            )}
 
             {query.trim().length <= 1 &&
               savedLocations.length === 0 &&
@@ -666,9 +639,7 @@ export default function LocationSearch({
                       />
                     </svg>
                   </div>
-                  <div className="text-sm text-white/70">
-                    No saved locations
-                  </div>
+                  <div className="text-sm text-white/70">No saved locations</div>
                   <div className="text-[10px] text-white/50 mt-1">
                     Search for a location or use your current location
                   </div>
@@ -696,9 +667,9 @@ export default function LocationSearch({
                       }
                     },
                     (error) => {
-                      console.error("Geolocation error:", error);
+                      console.error('Geolocation error:', error);
                       alert(
-                        "Unable to get your location. Please enable location services or search for a location."
+                        'Unable to get your location. Please enable location services or search for a location.'
                       );
                     }
                   );

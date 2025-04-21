@@ -1,30 +1,27 @@
-import React from "react";
-import MetricItem from "./MetricItem";
-import { motion } from "framer-motion";
+import React from 'react';
+import MetricItem from './MetricItem';
+import { motion } from 'framer-motion';
 
 interface HumidityMetricProps {
   humidity: number;
   animationDelay?: number;
 }
 
-const HumidityMetric: React.FC<HumidityMetricProps> = ({
-  humidity,
-  animationDelay = 0.2,
-}) => {
+const HumidityMetric: React.FC<HumidityMetricProps> = ({ humidity, animationDelay = 0.2 }) => {
   // Determine humidity level text
   const getHumidityLevel = () => {
-    if (humidity < 30) return "Dry";
-    if (humidity < 50) return "Comfortable";
-    if (humidity < 70) return "Moderate";
-    return "Humid";
+    if (humidity < 30) return 'Dry';
+    if (humidity < 50) return 'Comfortable';
+    if (humidity < 70) return 'Moderate';
+    return 'Humid';
   };
 
   // Get color based on humidity level
   const getHumidityColor = () => {
-    if (humidity < 30) return "#F87171"; // red-400 (dry)
-    if (humidity < 50) return "#10B981"; // green-500 (comfortable)
-    if (humidity < 70) return "#60A5FA"; // blue-400 (moderate)
-    return "#3B82F6"; // blue-500 (humid)
+    if (humidity < 30) return '#F87171'; // red-400 (dry)
+    if (humidity < 50) return '#10B981'; // green-500 (comfortable)
+    if (humidity < 70) return '#60A5FA'; // blue-400 (moderate)
+    return '#3B82F6'; // blue-500 (humid)
   };
 
   // Creative humidity icon with water level visual
@@ -57,7 +54,7 @@ const HumidityMetric: React.FC<HumidityMetricProps> = ({
               transition={{
                 duration: 2,
                 repeat: Infinity,
-                repeatType: "mirror",
+                repeatType: 'mirror',
               }}
             />
           )}

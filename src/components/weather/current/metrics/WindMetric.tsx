@@ -1,6 +1,6 @@
-import React from "react";
-import MetricItem from "./MetricItem";
-import { motion } from "framer-motion";
+import React from 'react';
+import MetricItem from './MetricItem';
+import { motion } from 'framer-motion';
 
 interface WindMetricProps {
   windSpeed: number;
@@ -17,27 +17,27 @@ const WindMetric: React.FC<WindMetricProps> = ({
 }) => {
   // Get wind direction as text (N, NE, E, etc.)
   const getWindDirection = (degrees: number) => {
-    const directions = ["N", "NE", "E", "SE", "S", "SW", "W", "NW"];
+    const directions = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
     const index = Math.round((degrees % 360) / 45) % 8;
     return directions[index];
   };
 
   // Get color for wind speed
   const getWindSpeedColor = () => {
-    if (windSpeed < 5) return "#10B981"; // Light - green
-    if (windSpeed < 15) return "#60A5FA"; // Moderate - blue
-    if (windSpeed < 25) return "#FBBF24"; // Strong - amber
-    if (windSpeed < 35) return "#F97316"; // Very strong - orange
-    return "#EF4444"; // Severe - red
+    if (windSpeed < 5) return '#10B981'; // Light - green
+    if (windSpeed < 15) return '#60A5FA'; // Moderate - blue
+    if (windSpeed < 25) return '#FBBF24'; // Strong - amber
+    if (windSpeed < 35) return '#F97316'; // Very strong - orange
+    return '#EF4444'; // Severe - red
   };
 
   // Wind speed category label
   const getWindSpeedLabel = () => {
-    if (windSpeed < 5) return "Light";
-    if (windSpeed < 15) return "Moderate";
-    if (windSpeed < 25) return "Strong";
-    if (windSpeed < 35) return "Very Strong";
-    return "Severe";
+    if (windSpeed < 5) return 'Light';
+    if (windSpeed < 15) return 'Moderate';
+    if (windSpeed < 25) return 'Strong';
+    if (windSpeed < 35) return 'Very Strong';
+    return 'Severe';
   };
 
   // Create an integrated wind icon with direction visualization
@@ -60,13 +60,13 @@ const WindMetric: React.FC<WindMetricProps> = ({
         >
           <div
             className="relative w-full h-0.5 flex items-center"
-            style={{ transformOrigin: "center" }}
+            style={{ transformOrigin: 'center' }}
           >
             <div
               className="absolute left-1/2 w-1/2 h-full rounded-full"
               style={{
                 background: `linear-gradient(to right, transparent, ${getWindSpeedColor()})`,
-                transform: "translateX(-25%)",
+                transform: 'translateX(-25%)',
               }}
             ></div>
             {/* Arrow head */}
@@ -75,8 +75,8 @@ const WindMetric: React.FC<WindMetricProps> = ({
               style={{
                 width: 0,
                 height: 0,
-                borderTop: "2px solid transparent",
-                borderBottom: "2px solid transparent",
+                borderTop: '2px solid transparent',
+                borderBottom: '2px solid transparent',
                 borderLeft: `4px solid ${getWindSpeedColor()}`,
               }}
             ></div>

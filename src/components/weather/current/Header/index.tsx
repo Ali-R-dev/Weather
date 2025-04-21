@@ -1,8 +1,8 @@
-import React from "react";
-import { motion } from "framer-motion";
-import { formatLocalTime } from "../../../../utils/formatting";
-import { TimeFormat } from "../../../../context/SettingsContext";
-import styles from "./styles.module.css";
+import React from 'react';
+import { motion } from 'framer-motion';
+import { formatLocalTime } from '../../../../utils/formatting';
+import { TimeFormat } from '../../../../context/SettingsContext';
+import styles from './styles.module.css';
 
 interface WeatherHeaderProps {
   locationName: string | undefined;
@@ -47,9 +47,7 @@ const WeatherHeader: React.FC<WeatherHeaderProps> = ({
           >
             {(region || country) && (
               <span className="font-medium">
-                {region && country
-                  ? `${region}, ${country}`
-                  : country || region}
+                {region && country ? `${region}, ${country}` : country || region}
               </span>
             )}
           </motion.div>
@@ -60,7 +58,7 @@ const WeatherHeader: React.FC<WeatherHeaderProps> = ({
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ duration: 0.5, delay: 0.4 }}
-          whileHover={{ scale: 1.03, backgroundColor: "rgba(255,255,255,0.1)" }}
+          whileHover={{ scale: 1.03, backgroundColor: 'rgba(255,255,255,0.1)' }}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -74,9 +72,7 @@ const WeatherHeader: React.FC<WeatherHeaderProps> = ({
               clipRule="evenodd"
             />
           </svg>
-          <span className="font-medium">
-            {formatLocalTime(timezone, timeFormat)}
-          </span>
+          <span className="font-medium">{formatLocalTime(timezone, timeFormat)}</span>
         </motion.div>
       </div>
     </motion.div>

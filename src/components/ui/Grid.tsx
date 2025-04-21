@@ -1,9 +1,9 @@
-import React, { ReactNode } from "react";
-import styles from "./Grid.module.css";
+import React, { ReactNode } from 'react';
+import styles from './Grid.module.css';
 
 interface GridProps {
   children: ReactNode;
-  spacing?: "xs" | "sm" | "md" | "lg" | "xl";
+  spacing?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
   columns?: {
     xs?: number;
     sm?: number;
@@ -16,15 +16,15 @@ interface GridProps {
 
 const Grid: React.FC<GridProps> = ({
   children,
-  spacing = "md",
+  spacing = 'md',
   columns = { xs: 1, sm: 2, md: 3, lg: 4 },
-  className = "",
+  className = '',
 }) => {
   // Create CSS class names for columns at different breakpoints
   const columnClasses = Object.entries(columns)
     .map(([breakpoint, count]) => styles[`cols-${breakpoint}-${count}`])
     .filter(Boolean)
-    .join(" ");
+    .join(' ');
 
   return (
     <div

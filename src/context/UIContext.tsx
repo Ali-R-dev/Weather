@@ -1,10 +1,4 @@
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  ReactNode,
-} from "react";
+import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 
 interface UIContextProps {
   // Animation settings
@@ -31,10 +25,7 @@ interface UIContextProps {
   setIsLoading: (loading: boolean) => void;
 
   // Toast notifications
-  showToast: (
-    message: string,
-    type?: "info" | "success" | "warning" | "error"
-  ) => void;
+  showToast: (message: string, type?: 'info' | 'success' | 'warning' | 'error') => void;
 }
 
 const UIContext = createContext<UIContextProps | undefined>(undefined);
@@ -42,7 +33,7 @@ const UIContext = createContext<UIContextProps | undefined>(undefined);
 export const useUI = () => {
   const context = useContext(UIContext);
   if (!context) {
-    throw new Error("useUI must be used within a UIProvider");
+    throw new Error('useUI must be used within a UIProvider');
   }
   return context;
 };
@@ -65,7 +56,7 @@ export const UIProvider: React.FC<UIProviderProps> = ({ children }) => {
   const [compactMode, setCompactMode] = useState(false);
 
   // Accent color
-  const [accentColor, setAccentColor] = useState("#0ea5e9");
+  const [accentColor, setAccentColor] = useState('#0ea5e9');
 
   // App loading state
   const [isLoading, setIsLoading] = useState(false);
@@ -75,41 +66,36 @@ export const UIProvider: React.FC<UIProviderProps> = ({ children }) => {
     Array<{
       id: number;
       message: string;
-      type: "info" | "success" | "warning" | "error";
+      type: 'info' | 'success' | 'warning' | 'error';
     }>
   >([]);
 
   // Check for system reduced motion preference
   useEffect(() => {
-    const prefersReducedMotion = window.matchMedia(
-      "(prefers-reduced-motion: reduce)"
-    );
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
     setReducedMotion(prefersReducedMotion.matches);
 
     const handleChange = (event: MediaQueryListEvent) => {
       setReducedMotion(event.matches);
     };
 
-    prefersReducedMotion.addEventListener("change", handleChange);
+    prefersReducedMotion.addEventListener('change', handleChange);
     return () => {
-      prefersReducedMotion.removeEventListener("change", handleChange);
+      prefersReducedMotion.removeEventListener('change', handleChange);
     };
   }, []);
 
   // Apply reduced motion setting
   useEffect(() => {
     if (reducedMotion) {
-      document.documentElement.classList.add("reduce-motion");
-      document.documentElement.style.setProperty("--animation-speed", "0.5");
-      document.documentElement.style.setProperty(
-        "--animation-intensity",
-        "0.5"
-      );
+      document.documentElement.classList.add('reduce-motion');
+      document.documentElement.style.setProperty('--animation-speed', '0.5');
+      document.documentElement.style.setProperty('--animation-intensity', '0.5');
     } else {
-      document.documentElement.classList.remove("reduce-motion");
-      document.documentElement.style.setProperty("--animation-speed", "1");
+      document.documentElement.classList.remove('reduce-motion');
+      document.documentElement.style.setProperty('--animation-speed', '1');
       document.documentElement.style.setProperty(
-        "--animation-intensity",
+        '--animation-intensity',
         String(animationIntensity)
       );
     }
@@ -121,9 +107,9 @@ export const UIProvider: React.FC<UIProviderProps> = ({ children }) => {
     setHighContrast(newValue);
 
     if (newValue) {
-      document.documentElement.classList.add("high-contrast");
+      document.documentElement.classList.add('high-contrast');
     } else {
-      document.documentElement.classList.remove("high-contrast");
+      document.documentElement.classList.remove('high-contrast');
     }
   };
 
@@ -133,17 +119,14 @@ export const UIProvider: React.FC<UIProviderProps> = ({ children }) => {
     setCompactMode(newValue);
 
     if (newValue) {
-      document.documentElement.classList.add("compact-ui");
+      document.documentElement.classList.add('compact-ui');
     } else {
-      document.documentElement.classList.remove("compact-ui");
+      document.documentElement.classList.remove('compact-ui');
     }
   };
 
   // Show toast notification
-  const showToast = (
-    message: string,
-    type: "info" | "success" | "warning" | "error" = "info"
-  ) => {
+  const showToast = (message: string, type: 'info' | 'success' | 'warning' | 'error' = 'info') => {
     const id = Date.now();
     setToasts((prev) => [...prev, { id, message, type }]);
 
@@ -156,7 +139,7 @@ export const UIProvider: React.FC<UIProviderProps> = ({ children }) => {
   // Set accent color and update CSS variables
   const handleSetAccentColor = (color: string) => {
     setAccentColor(color);
-    document.documentElement.style.setProperty("--color-accent", color);
+    document.documentElement.style.setProperty('--color-accent', color);
   };
 
   return (
@@ -185,13 +168,13 @@ export const UIProvider: React.FC<UIProviderProps> = ({ children }) => {
             <div
               key={toast.id}
               className={`px-4 py-2 rounded-md shadow-lg animate-fade-in text-white ${
-                toast.type === "success"
-                  ? "bg-green-500"
-                  : toast.type === "error"
-                  ? "bg-red-500"
-                  : toast.type === "warning"
-                  ? "bg-yellow-500"
-                  : "bg-blue-500"
+                toast.type === 'success'
+                  ? 'bg-green-500'
+                  : toast.type === 'error'
+                  ? 'bg-red-500'
+                  : toast.type === 'warning'
+                  ? 'bg-yellow-500'
+                  : 'bg-blue-500'
               }`}
             >
               {toast.message}

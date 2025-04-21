@@ -1,14 +1,14 @@
-import React, { useState, useEffect, useRef } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { useLocation } from "../../../../context/LocationContext";
-import { SavedLocation } from "../../../../hooks/useSavedLocations";
-import { GeocodingResult } from "../../../../types/geocoding.types";
-import { useLocationSearch } from "../../../../hooks/useLocationSearch";
-import SearchInput from "../SearchInput";
-import LocationItem from "../LocationItem";
-import NoResults from "../NoResults";
-import styles from "./styles.module.css";
-import { LocationSource } from "../../../../services/LocationService";
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useLocation } from '../../../../context/LocationContext';
+import { SavedLocation } from '../../../../hooks/useSavedLocations';
+import { GeocodingResult } from '../../../../types/geocoding.types';
+import { useLocationSearch } from '../../../../hooks/useLocationSearch';
+import SearchInput from '../SearchInput';
+import LocationItem from '../LocationItem';
+import NoResults from '../NoResults';
+import styles from './styles.module.css';
+import { LocationSource } from '../../../../services/LocationService';
 
 interface MiniSearchBarProps {
   onFocus: () => void;
@@ -16,13 +16,8 @@ interface MiniSearchBarProps {
   isActive: boolean;
 }
 
-export default function MiniSearchBar({
-  onFocus,
-  onSelect,
-  isActive,
-}: MiniSearchBarProps) {
-  const { query, setQuery, results, isSearching, clearSearch } =
-    useLocationSearch(2, 300); // minChars=2, debounceTime=300
+export default function MiniSearchBar({ onFocus, onSelect, isActive }: MiniSearchBarProps) {
+  const { query, setQuery, results, isSearching, clearSearch } = useLocationSearch(2, 300); // minChars=2, debounceTime=300
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -43,17 +38,14 @@ export default function MiniSearchBar({
   // Close dropdown when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setIsDropdownOpen(false);
       }
     }
 
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, []);
 
@@ -76,10 +68,7 @@ export default function MiniSearchBar({
     event?: React.MouseEvent
   ) => {
     // Don't update weather if clicking remove/default buttons
-    if (
-      event?.target &&
-      (event.target as HTMLElement).closest(".action-button")
-    ) {
+    if (event?.target && (event.target as HTMLElement).closest('.action-button')) {
       return;
     }
 
@@ -92,13 +81,13 @@ export default function MiniSearchBar({
         name: location.name,
         country: location.country,
         admin1: location.admin1,
-        admin2: "admin2" in location ? location.admin2 : undefined,
+        admin2: 'admin2' in location ? location.admin2 : undefined,
       },
       LocationSource.SEARCH
     );
 
     // Convert to SavedLocation if from search results
-    if (!("isDefault" in location)) {
+    if (!('isDefault' in location)) {
       const savedLocation: SavedLocation = {
         id: location.id,
         name: location.name,
@@ -157,7 +146,7 @@ export default function MiniSearchBar({
             exit={{ opacity: 0, y: -10, scale: 0.95 }}
             transition={{
               duration: 0.2,
-              type: "spring",
+              type: 'spring',
               stiffness: 500,
               damping: 30,
             }}
@@ -238,9 +227,9 @@ export default function MiniSearchBar({
             )}
 
             {/* Empty state */}
-            {query.trim().length > 1 &&
-              results.length === 0 &&
-              !isSearching && <NoResults query={query} />}
+            {query.trim().length > 1 && results.length === 0 && !isSearching && (
+              <NoResults query={query} />
+            )}
           </motion.div>
         )}
       </AnimatePresence>

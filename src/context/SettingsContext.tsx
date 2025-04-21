@@ -1,15 +1,9 @@
-import {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-  ReactNode,
-} from "react";
-import { AppConfig } from "../config/appConfig";
+import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { AppConfig } from '../config/appConfig';
 
-export type TemperatureUnit = "celsius" | "fahrenheit";
-export type WindUnit = "kph" | "mph";
-export type TimeFormat = "12h" | "24h";
+export type TemperatureUnit = 'celsius' | 'fahrenheit';
+export type WindUnit = 'kph' | 'mph';
+export type TimeFormat = '12h' | '24h';
 
 interface Settings {
   units: {
@@ -49,32 +43,32 @@ const SettingsContext = createContext<SettingsContextType>({
 export function SettingsProvider({ children }: { children: ReactNode }) {
   const [settings, setSettings] = useState<Settings>(() => {
     // Load from localStorage if available
-    const savedSettings = localStorage.getItem("weatherAppSettings");
+    const savedSettings = localStorage.getItem('weatherAppSettings');
     return savedSettings ? JSON.parse(savedSettings) : defaultSettings;
   });
 
   // Save settings to localStorage when they change
   useEffect(() => {
-    localStorage.setItem("weatherAppSettings", JSON.stringify(settings));
+    localStorage.setItem('weatherAppSettings', JSON.stringify(settings));
 
     // Apply high contrast mode to the document if enabled
     if (settings.accessibility.highContrast) {
-      document.documentElement.classList.add("high-contrast");
+      document.documentElement.classList.add('high-contrast');
     } else {
-      document.documentElement.classList.remove("high-contrast");
+      document.documentElement.classList.remove('high-contrast');
     }
 
     // Apply reduced motion if enabled
     if (settings.accessibility.reduceMotion) {
-      document.documentElement.classList.add("reduce-motion");
+      document.documentElement.classList.add('reduce-motion');
     } else {
-      document.documentElement.classList.remove("reduce-motion");
+      document.documentElement.classList.remove('reduce-motion');
     }
   }, [settings]);
 
   // This will force components to re-render when settings change
   useEffect(() => {
-    console.log("Settings updated:", settings);
+    console.log('Settings updated:', settings);
   }, [settings]);
 
   const updateSettings = (newSettings: Settings) => {
@@ -91,7 +85,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
 export function useSettings() {
   const context = useContext(SettingsContext);
   if (context === undefined) {
-    throw new Error("useSettings must be used within a SettingsProvider");
+    throw new Error('useSettings must be used within a SettingsProvider');
   }
   return context;
 }

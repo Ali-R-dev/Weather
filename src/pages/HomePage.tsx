@@ -1,16 +1,16 @@
-import { useState, useRef, useEffect, Suspense } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { useWeather } from "../context/WeatherContext";
-import { useTheme } from "../context/ThemeContext";
+import { useState, useRef, useEffect, Suspense } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { useWeather } from '../context/WeatherContext';
+import { useTheme } from '../context/ThemeContext';
 // import { useLocation } from "../context/LocationContext"; // Use location context
-import { timeAgo } from "../utils/dateUtils";
-import BackgroundEffect from "../components/effects/BackgroundEffect";
-import CurrentWeather from "../components/weather/current";
-import HourlyForecast from "../components/weather/hourly";
-import DailyForecast from "../components/weather/daily";
-import { MiniSearchBar } from "../components/weather/search";
-import SettingsPanel from "../components/settings/SettingsPanel";
-import SkipToContent from "../components/SkipToContent";
+import { timeAgo } from '../utils/dateUtils';
+import BackgroundEffect from '../components/effects/BackgroundEffect';
+import CurrentWeather from '../components/weather/current';
+import HourlyForecast from '../components/weather/hourly';
+import DailyForecast from '../components/weather/daily';
+import { MiniSearchBar } from '../components/weather/search';
+import SettingsPanel from '../components/settings/SettingsPanel';
+import SkipToContent from '../components/SkipToContent';
 
 export default function HomePage() {
   // Get weather data but not location setting
@@ -20,7 +20,7 @@ export default function HomePage() {
   // const { currentLocation } = useLocation();
 
   // Remove location-related refs that were handling initialization
-  const [activeTab, setActiveTab] = useState<"hourly" | "daily">("hourly");
+  const [activeTab, setActiveTab] = useState<'hourly' | 'daily'>('hourly');
   const [showSearchResults, setShowSearchResults] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const searchContainerRef = useRef<HTMLDivElement>(null);
@@ -30,53 +30,53 @@ export default function HomePage() {
   // Function to get theme colors for tab buttons
   const getThemeColors = () => {
     switch (currentTheme) {
-      case "sunny":
+      case 'sunny':
         return {
-          active: "text-amber-900",
-          color: "bg-amber-400",
-          glow: "bg-amber-300",
+          active: 'text-amber-900',
+          color: 'bg-amber-400',
+          glow: 'bg-amber-300',
         };
-      case "night-clear":
+      case 'night-clear':
         return {
-          active: "text-indigo-900",
-          color: "bg-indigo-400",
-          glow: "bg-indigo-300",
+          active: 'text-indigo-900',
+          color: 'bg-indigo-400',
+          glow: 'bg-indigo-300',
         };
-      case "cloudy":
+      case 'cloudy':
         return {
-          active: "text-slate-900",
-          color: "bg-slate-400",
-          glow: "bg-slate-300",
+          active: 'text-slate-900',
+          color: 'bg-slate-400',
+          glow: 'bg-slate-300',
         };
-      case "night-cloudy":
+      case 'night-cloudy':
         return {
-          active: "text-gray-900",
-          color: "bg-gray-400",
-          glow: "bg-gray-300",
+          active: 'text-gray-900',
+          color: 'bg-gray-400',
+          glow: 'bg-gray-300',
         };
-      case "rainy":
+      case 'rainy':
         return {
-          active: "text-blue-900",
-          color: "bg-blue-400",
-          glow: "bg-blue-300",
+          active: 'text-blue-900',
+          color: 'bg-blue-400',
+          glow: 'bg-blue-300',
         };
-      case "stormy":
+      case 'stormy':
         return {
-          active: "text-slate-900",
-          color: "bg-slate-400",
-          glow: "bg-slate-300",
+          active: 'text-slate-900',
+          color: 'bg-slate-400',
+          glow: 'bg-slate-300',
         };
-      case "snowy":
+      case 'snowy':
         return {
-          active: "text-sky-900",
-          color: "bg-sky-200",
-          glow: "bg-sky-100",
+          active: 'text-sky-900',
+          color: 'bg-sky-200',
+          glow: 'bg-sky-100',
         };
       default:
         return {
-          active: "text-blue-900",
-          color: "bg-white",
-          glow: "bg-blue-300",
+          active: 'text-blue-900',
+          color: 'bg-white',
+          glow: 'bg-blue-300',
         };
     }
   };
@@ -94,9 +94,9 @@ export default function HomePage() {
       }
     }
 
-    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener('mousedown', handleClickOutside);
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener('mousedown', handleClickOutside);
     };
   }, [showSearchResults]);
 
@@ -118,14 +118,19 @@ export default function HomePage() {
       </Suspense>
 
       <div className="relative z-10 flex-1 flex flex-col">
-        <main id="main-content" className="flex-1 w-full px-2 md:px-8 lg:px-20 xl:px-40 py-2 md:py-6 flex flex-col">
+        <main
+          id="main-content"
+          className="flex-1 w-full px-2 md:px-8 lg:px-20 xl:px-40 py-2 md:py-6 flex flex-col"
+        >
           {/* Search bar and settings */}
           <nav aria-label="Main navigation" className="w-full">
             <div
               className="flex flex-row items-center justify-between mb-2 gap-2 px-0 sm:px-0 w-full"
               ref={searchContainerRef}
             >
-              <div className="p-2 text-2xl sm:text-3xl font-bold text-white min-w-[48px] text-left flex-shrink-0">AR</div>
+              <div className="p-2 text-2xl sm:text-3xl font-bold text-white min-w-[48px] text-left flex-shrink-0">
+                AR
+              </div>
               <div className="flex-1 flex justify-center">
                 <MiniSearchBar
                   onFocus={() => setShowSearchResults(true)}
@@ -165,7 +170,7 @@ export default function HomePage() {
           {/* Last updated status */}
           {!showSearchResults && weatherData && (
             <div className="text-xs opacity-60 text-center mt-0">
-              Last updated: {lastUpdated ? timeAgo(lastUpdated) : "recently"}
+              Last updated: {lastUpdated ? timeAgo(lastUpdated) : 'recently'}
             </div>
           )}
 
@@ -176,7 +181,7 @@ export default function HomePage() {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2 }}
               className="mt-2 sm:mt-4 w-full"
-              style={{ willChange: "transform" }}
+              style={{ willChange: 'transform' }}
             >
               <CurrentWeather data={weatherData} />
 
@@ -186,11 +191,11 @@ export default function HomePage() {
                   <div className="relative rounded-full">
                     <div className="flex rounded-full p-1">
                       <button
-                        onClick={() => setActiveTab("hourly")}
+                        onClick={() => setActiveTab('hourly')}
                         className={`relative px-3 sm:px-6 py-1.5 sm:py-2.5 rounded-full transition-all duration-300 flex items-center text-base md:text-lg lg:text-xl ${
-                          activeTab === "hourly"
+                          activeTab === 'hourly'
                             ? `${themeColors.color} ${themeColors.active} font-semibold`
-                            : "text-white/80 hover:bg-white/10"
+                            : 'text-white/80 hover:bg-white/10'
                         }`}
                       >
                         <svg
@@ -209,11 +214,11 @@ export default function HomePage() {
                       </button>
 
                       <button
-                        onClick={() => setActiveTab("daily")}
+                        onClick={() => setActiveTab('daily')}
                         className={`relative px-3 sm:px-6 py-1.5 sm:py-2.5 rounded-full transition-all duration-300 flex items-center text-base md:text-lg lg:text-xl ${
-                          activeTab === "daily"
+                          activeTab === 'daily'
                             ? `${themeColors.color} ${themeColors.active} font-semibold shadow-md`
-                            : "text-white/80 hover:bg-white/10"
+                            : 'text-white/80 hover:bg-white/10'
                         }`}
                       >
                         <svg
@@ -242,14 +247,14 @@ export default function HomePage() {
               </div>
 
               <AnimatePresence mode="wait">
-                {activeTab === "hourly" ? (
+                {activeTab === 'hourly' ? (
                   <motion.div
                     key="hourly"
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: 20 }}
                     transition={{ duration: 0.2 }}
-                    style={{ willChange: "transform" }}
+                    style={{ willChange: 'transform' }}
                   >
                     <HourlyForecast hourlyData={weatherData.hourly} />
                   </motion.div>
@@ -260,7 +265,7 @@ export default function HomePage() {
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: 20 }}
                     transition={{ duration: 0.2 }}
-                    style={{ willChange: "transform" }}
+                    style={{ willChange: 'transform' }}
                   >
                     <DailyForecast dailyData={weatherData.daily} />
                   </motion.div>
@@ -284,10 +289,7 @@ export default function HomePage() {
         </main>
 
         {/* Settings Panel */}
-        <SettingsPanel
-          isOpen={showSettings}
-          onClose={() => setShowSettings(false)}
-        />
+        <SettingsPanel isOpen={showSettings} onClose={() => setShowSettings(false)} />
       </div>
     </motion.div>
   );

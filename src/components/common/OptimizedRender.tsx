@@ -1,5 +1,5 @@
-import React, { memo, useRef, useEffect, useState } from "react";
-import { useComponentPerformance } from "../../utils/performanceMonitor";
+import React, { memo, useRef, useEffect, useState } from 'react';
+import { useComponentPerformance } from '../../utils/performanceMonitor';
 
 interface OptimizedRenderProps {
   children: React.ReactNode;
@@ -36,7 +36,7 @@ const OptimizedRender: React.FC<OptimizedRenderProps> = ({
           setIsVisible(entry.isIntersecting);
         });
       },
-      { rootMargin: "200px" } // Load when within 200px of viewport
+      { rootMargin: '200px' } // Load when within 200px of viewport
     );
 
     if (ref.current) {
@@ -47,7 +47,7 @@ const OptimizedRender: React.FC<OptimizedRenderProps> = ({
   }, [skipIfOffscreen]);
 
   return (
-    <div ref={ref} style={{ willChange: "transform", contain: "content" }}>
+    <div ref={ref} style={{ willChange: 'transform', contain: 'content' }}>
       {isVisible && children}
     </div>
   );

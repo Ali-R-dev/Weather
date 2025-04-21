@@ -1,8 +1,8 @@
-import React from "react";
-import { formatDay } from "../../../utils/formatting";
-import HourlyForecastItem from "./HourlyForecastItem";
-import styles from "./HourlyForecast.module.css";
-import { HourlyWeather } from "../../../types/weather.types";
+import React from 'react';
+import { formatDay } from '../../../utils/formatting';
+import HourlyForecastItem from './HourlyForecastItem';
+import styles from './HourlyForecast.module.css';
+import { HourlyWeather } from '../../../types/weather.types';
 
 interface HourlySectionProps {
   day: string;
@@ -19,9 +19,7 @@ const HourlySection: React.FC<HourlySectionProps> = ({
 }) => {
   return (
     <div className="mb-4">
-      <h3 className="text-sm font-medium text-white/70 mb-2">
-        {formatDay(day)}
-      </h3>
+      <h3 className="text-sm font-medium text-white/70 mb-2">{formatDay(day)}</h3>
       <div className={`${styles.container} ${styles.hideScrollbar}`}>
         <div className={styles.hourlyList}>
           {hours.map((time) => {
@@ -34,9 +32,7 @@ const HourlySection: React.FC<HourlySectionProps> = ({
                   time={time}
                   temperature={hourlyData.temperature_2m[index]}
                   weatherCode={hourlyData.weather_code[index]}
-                  precipitationProbability={
-                    hourlyData.precipitation_probability[index]
-                  }
+                  precipitationProbability={hourlyData.precipitation_probability[index]}
                   isCurrentHour={isCurrentHour}
                 />
               </div>

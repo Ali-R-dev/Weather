@@ -1,4 +1,4 @@
-import { reverseGeocode } from "./geocodingService";
+import { reverseGeocode } from './geocodingService';
 
 /**
  * Type for location information used throughout the app
@@ -28,24 +28,24 @@ export interface SavedLocation extends LocationInfo {
  * Useful for tracking how a location was selected and for analytics
  */
 export enum LocationSource {
-  DEFAULT = "default", // User's explicitly chosen default location
-  SAVED = "saved", // From user's saved locations
-  RECENT = "recent", // From recently used locations
-  SEARCH = "search", // From search results
-  GEOLOCATION = "geolocation", // From device GPS
-  IP_LOCATION = "ip-location", // IP-based location detection
-  FALLBACK = "fallback", // Default fallback
+  DEFAULT = 'default', // User's explicitly chosen default location
+  SAVED = 'saved', // From user's saved locations
+  RECENT = 'recent', // From recently used locations
+  SEARCH = 'search', // From search results
+  GEOLOCATION = 'geolocation', // From device GPS
+  IP_LOCATION = 'ip-location', // IP-based location detection
+  FALLBACK = 'fallback', // Default fallback
 }
 
 /**
  * Event types that LocationService can emit
  */
 export enum LocationEventType {
-  LOCATION_CHANGED = "location-changed",
-  DEFAULT_CHANGED = "default-changed",
-  SAVED_LOCATIONS_CHANGED = "saved-locations-changed",
-  RECENT_LOCATIONS_CHANGED = "recent-locations-changed",
-  INITIALIZATION_COMPLETE = "initialization-complete",
+  LOCATION_CHANGED = 'location-changed',
+  DEFAULT_CHANGED = 'default-changed',
+  SAVED_LOCATIONS_CHANGED = 'saved-locations-changed',
+  RECENT_LOCATIONS_CHANGED = 'recent-locations-changed',
+  INITIALIZATION_COMPLETE = 'initialization-complete',
 }
 
 /**
@@ -78,7 +78,7 @@ class LocationService {
   };
 
   constructor() {
-    console.log("LocationService: Initializing");
+    console.log('LocationService: Initializing');
     this.loadSavedData();
     this.initialize();
   }
@@ -89,36 +89,27 @@ class LocationService {
   private loadSavedData(): void {
     try {
       // Load saved locations
-      const savedLocationsStr = localStorage.getItem("savedLocations");
+      const savedLocationsStr = localStorage.getItem('savedLocations');
       if (savedLocationsStr) {
         this.savedLocations = JSON.parse(savedLocationsStr);
-        console.log(
-          "LocationService: Loaded saved locations",
-          this.savedLocations
-        );
+        console.log('LocationService: Loaded saved locations', this.savedLocations);
       }
 
       // Load default location
-      const defaultLocationStr = localStorage.getItem("defaultLocation");
+      const defaultLocationStr = localStorage.getItem('defaultLocation');
       if (defaultLocationStr) {
         this.defaultLocation = JSON.parse(defaultLocationStr);
-        console.log(
-          "LocationService: Loaded default location",
-          this.defaultLocation
-        );
+        console.log('LocationService: Loaded default location', this.defaultLocation);
       }
 
       // Load recent locations
-      const recentLocationsStr = localStorage.getItem("recentLocations");
+      const recentLocationsStr = localStorage.getItem('recentLocations');
       if (recentLocationsStr) {
         this.recentLocations = JSON.parse(recentLocationsStr);
-        console.log(
-          "LocationService: Loaded recent locations",
-          this.recentLocations
-        );
+        console.log('LocationService: Loaded recent locations', this.recentLocations);
       }
     } catch (error) {
-      console.error("LocationService: Error loading saved data", error);
+      console.error('LocationService: Error loading saved data', error);
     }
   }
 
@@ -145,36 +136,34 @@ class LocationService {
     }
 
     this.isInitializing = true;
-    console.log(
-      "LocationService: Starting location initialization with priority chain"
-    );
+    console.log('LocationService: Starting location initialization with priority chain');
 
     try {
       // Priority 1: Default location
       if (this.defaultLocation) {
-        console.log("LocationService: Using default location");
+        console.log('LocationService: Using default location');
         await this.setLocation(this.defaultLocation, LocationSource.DEFAULT);
         this.completeInitialization();
         return this.currentLocation!;
       }
 
       // Priority 2: Last used location
-      const lastLocationStr = localStorage.getItem("lastLocation");
+      const lastLocationStr = localStorage.getItem('lastLocation');
       if (lastLocationStr) {
         try {
           const lastLocation = JSON.parse(lastLocationStr);
-          console.log("LocationService: Using last used location");
+          console.log('LocationService: Using last used location');
           await this.setLocation(lastLocation, LocationSource.RECENT);
           this.completeInitialization();
           return this.currentLocation!;
         } catch (error) {
-          console.warn("LocationService: Error parsing last location", error);
+          console.warn('LocationService: Error parsing last location', error);
         }
       }
 
       // Priority 3: Any saved location
       if (this.savedLocations.length > 0) {
-        console.log("LocationService: Using first saved location");
+        console.log('LocationService: Using first saved location');
         await this.setLocation(this.savedLocations[0], LocationSource.SAVED);
         this.completeInitialization();
         return this.currentLocation!;
@@ -183,34 +172,34 @@ class LocationService {
       // Priority 4: Geolocation
       try {
         const geoLocation = await this.getGeolocation();
-        console.log("LocationService: Using geolocation");
+        console.log('LocationService: Using geolocation');
         await this.setLocation(geoLocation, LocationSource.GEOLOCATION);
         this.completeInitialization();
         return this.currentLocation!;
       } catch (error) {
-        console.warn("LocationService: Geolocation error", error);
+        console.warn('LocationService: Geolocation error', error);
       }
 
       // Priority 5: IP-based location
       try {
         const ipLocation = await this.getIPLocation();
-        console.log("LocationService: Using IP-based location");
+        console.log('LocationService: Using IP-based location');
         await this.setLocation(ipLocation, LocationSource.IP_LOCATION);
         this.completeInitialization();
         return this.currentLocation!;
       } catch (error) {
-        console.warn("LocationService: IP location error", error);
+        console.warn('LocationService: IP location error', error);
       }
 
       // Priority 6: Fallback location (New York)
-      console.log("LocationService: Using fallback location (New York)");
+      console.log('LocationService: Using fallback location (New York)');
       await this.setLocation(
         {
           latitude: 40.7128,
           longitude: -74.006,
-          name: "New York City",
-          country: "United States",
-          admin1: "New York",
+          name: 'New York City',
+          country: 'United States',
+          admin1: 'New York',
         },
         LocationSource.FALLBACK
       );
@@ -218,7 +207,7 @@ class LocationService {
       this.completeInitialization();
       return this.currentLocation!;
     } catch (error) {
-      console.error("LocationService: Initialization error", error);
+      console.error('LocationService: Initialization error', error);
       this.isInitializing = false;
       throw error;
     }
@@ -227,11 +216,8 @@ class LocationService {
   private completeInitialization(): void {
     this.isInitialized = true;
     this.isInitializing = false;
-    this.emitEvent(
-      LocationEventType.INITIALIZATION_COMPLETE,
-      this.currentLocation
-    );
-    console.log("LocationService: Initialization complete");
+    this.emitEvent(LocationEventType.INITIALIZATION_COMPLETE, this.currentLocation);
+    console.log('LocationService: Initialization complete');
   }
 
   /**
@@ -251,17 +237,11 @@ class LocationService {
   /**
    * Set the current location
    */
-  public async setLocation(
-    location: LocationInfo,
-    source: LocationSource
-  ): Promise<void> {
+  public async setLocation(location: LocationInfo, source: LocationSource): Promise<void> {
     // Enhanced location with name if it doesn't have one
     if (!location.name && location.latitude && location.longitude) {
       try {
-        const geoDetails = await reverseGeocode(
-          location.latitude,
-          location.longitude
-        );
+        const geoDetails = await reverseGeocode(location.latitude, location.longitude);
         if (geoDetails) {
           location = {
             ...location,
@@ -272,20 +252,20 @@ class LocationService {
           };
         }
       } catch (error) {
-        console.warn("LocationService: Error fetching location details", error);
+        console.warn('LocationService: Error fetching location details', error);
       }
     }
 
     console.log(
       `LocationService: Setting location to ${
-        location.name || "unnamed location"
+        location.name || 'unnamed location'
       } from source: ${source}`
     );
     this.currentLocation = location;
     this.locationSource = source;
 
     // Save as last used location
-    localStorage.setItem("lastLocation", JSON.stringify(location));
+    localStorage.setItem('lastLocation', JSON.stringify(location));
 
     // If it has a name and id, add to recent locations
     if (location.name && location.id) {
@@ -304,13 +284,10 @@ class LocationService {
     if (!exists) {
       const updatedLocations = [...this.savedLocations, location];
       this.savedLocations = updatedLocations;
-      localStorage.setItem("savedLocations", JSON.stringify(updatedLocations));
+      localStorage.setItem('savedLocations', JSON.stringify(updatedLocations));
 
-      console.log("LocationService: Location saved", location);
-      this.emitEvent(
-        LocationEventType.SAVED_LOCATIONS_CHANGED,
-        this.savedLocations
-      );
+      console.log('LocationService: Location saved', location);
+      this.emitEvent(LocationEventType.SAVED_LOCATIONS_CHANGED, this.savedLocations);
 
       // If this is the first location, make it default
       if (updatedLocations.length === 1 && !this.defaultLocation) {
@@ -328,9 +305,9 @@ class LocationService {
     if (location) {
       const defaultLoc = { ...location, isDefault: true };
       this.defaultLocation = defaultLoc;
-      localStorage.setItem("defaultLocation", JSON.stringify(defaultLoc));
+      localStorage.setItem('defaultLocation', JSON.stringify(defaultLoc));
 
-      console.log("LocationService: Default location set", defaultLoc);
+      console.log('LocationService: Default location set', defaultLoc);
       this.emitEvent(LocationEventType.DEFAULT_CHANGED, defaultLoc);
 
       // Also change current location to this default
@@ -342,16 +319,14 @@ class LocationService {
    * Remove a location from saved locations
    */
   public removeLocation(locationId: number): void {
-    const updatedLocations = this.savedLocations.filter(
-      (loc) => loc.id !== locationId
-    );
+    const updatedLocations = this.savedLocations.filter((loc) => loc.id !== locationId);
     this.savedLocations = updatedLocations;
-    localStorage.setItem("savedLocations", JSON.stringify(updatedLocations));
+    localStorage.setItem('savedLocations', JSON.stringify(updatedLocations));
 
     // If default location was removed, update default
     if (this.defaultLocation && this.defaultLocation.id === locationId) {
       this.defaultLocation = null;
-      localStorage.removeItem("defaultLocation");
+      localStorage.removeItem('defaultLocation');
 
       // If there are other locations, make the first one default
       if (updatedLocations.length > 0) {
@@ -359,48 +334,32 @@ class LocationService {
       }
     }
 
-    console.log("LocationService: Location removed", locationId);
-    this.emitEvent(
-      LocationEventType.SAVED_LOCATIONS_CHANGED,
-      this.savedLocations
-    );
+    console.log('LocationService: Location removed', locationId);
+    this.emitEvent(LocationEventType.SAVED_LOCATIONS_CHANGED, this.savedLocations);
   }
 
   /**
    * Add a location to recently used
    */
   private addToRecentLocations(location: SavedLocation): void {
-    const filteredRecent = this.recentLocations.filter(
-      (loc) => loc.id !== location.id
-    );
-    const updatedRecent = [location, ...filteredRecent].slice(
-      0,
-      this.MAX_RECENT_LOCATIONS
-    );
+    const filteredRecent = this.recentLocations.filter((loc) => loc.id !== location.id);
+    const updatedRecent = [location, ...filteredRecent].slice(0, this.MAX_RECENT_LOCATIONS);
 
     this.recentLocations = updatedRecent;
-    localStorage.setItem("recentLocations", JSON.stringify(updatedRecent));
+    localStorage.setItem('recentLocations', JSON.stringify(updatedRecent));
 
-    this.emitEvent(
-      LocationEventType.RECENT_LOCATIONS_CHANGED,
-      this.recentLocations
-    );
+    this.emitEvent(LocationEventType.RECENT_LOCATIONS_CHANGED, this.recentLocations);
   }
 
   /**
    * Remove from recently used locations
    */
   public removeFromRecentLocations(locationId: number): void {
-    const updatedRecent = this.recentLocations.filter(
-      (loc) => loc.id !== locationId
-    );
+    const updatedRecent = this.recentLocations.filter((loc) => loc.id !== locationId);
     this.recentLocations = updatedRecent;
-    localStorage.setItem("recentLocations", JSON.stringify(updatedRecent));
+    localStorage.setItem('recentLocations', JSON.stringify(updatedRecent));
 
-    this.emitEvent(
-      LocationEventType.RECENT_LOCATIONS_CHANGED,
-      this.recentLocations
-    );
+    this.emitEvent(LocationEventType.RECENT_LOCATIONS_CHANGED, this.recentLocations);
   }
 
   /**
@@ -409,7 +368,7 @@ class LocationService {
   public async getGeolocation(): Promise<LocationInfo> {
     return new Promise((resolve, reject) => {
       if (!navigator.geolocation) {
-        reject(new Error("Geolocation not supported"));
+        reject(new Error('Geolocation not supported'));
         return;
       }
 
@@ -422,10 +381,7 @@ class LocationService {
 
           // Try to get the location name
           try {
-            const geoDetails = await reverseGeocode(
-              location.latitude,
-              location.longitude
-            );
+            const geoDetails = await reverseGeocode(location.latitude, location.longitude);
             if (geoDetails) {
               location.name = geoDetails.name;
               location.country = geoDetails.country;
@@ -434,10 +390,7 @@ class LocationService {
               location.id = geoDetails.id;
             }
           } catch (error) {
-            console.warn(
-              "LocationService: Error fetching location name",
-              error
-            );
+            console.warn('LocationService: Error fetching location name', error);
           }
 
           resolve(location);
@@ -454,9 +407,9 @@ class LocationService {
    * Get location from IP address
    */
   public async getIPLocation(): Promise<LocationInfo> {
-    const response = await fetch("https://ipapi.co/json/");
+    const response = await fetch('https://ipapi.co/json/');
     if (!response.ok) {
-      throw new Error("IP geolocation failed");
+      throw new Error('IP geolocation failed');
     }
 
     const data = await response.json();
@@ -493,17 +446,11 @@ class LocationService {
   /**
    * Event handling methods
    */
-  public addEventListener(
-    event: LocationEventType,
-    callback: LocationEventListener
-  ): void {
+  public addEventListener(event: LocationEventType, callback: LocationEventListener): void {
     this.eventListeners[event].push(callback);
   }
 
-  public removeEventListener(
-    event: LocationEventType,
-    callback: LocationEventListener
-  ): void {
+  public removeEventListener(event: LocationEventType, callback: LocationEventListener): void {
     this.eventListeners[event] = this.eventListeners[event].filter(
       (listener) => listener !== callback
     );
@@ -514,10 +461,7 @@ class LocationService {
       try {
         callback(data);
       } catch (error) {
-        console.error(
-          `LocationService: Error in ${event} event listener`,
-          error
-        );
+        console.error(`LocationService: Error in ${event} event listener`, error);
       }
     });
   }
@@ -556,7 +500,7 @@ export const locationService = new LocationService();
 /**
  * React hook for accessing LocationService
  */
-import { useState, useEffect } from "react";
+import { useState, useEffect } from 'react';
 
 export function useLocationService() {
   const [currentLocation, setCurrentLocation] = useState<LocationInfo | null>(
@@ -580,10 +524,7 @@ export function useLocationService() {
 
   useEffect(() => {
     // Setup event listeners
-    const handleLocationChanged = (data: {
-      location: LocationInfo;
-      source: LocationSource;
-    }) => {
+    const handleLocationChanged = (data: { location: LocationInfo; source: LocationSource }) => {
       setCurrentLocation(data.location);
       setLocationSource(data.source);
     };
@@ -607,14 +548,8 @@ export function useLocationService() {
     };
 
     // Register event listeners
-    locationService.addEventListener(
-      LocationEventType.LOCATION_CHANGED,
-      handleLocationChanged
-    );
-    locationService.addEventListener(
-      LocationEventType.DEFAULT_CHANGED,
-      handleDefaultChanged
-    );
+    locationService.addEventListener(LocationEventType.LOCATION_CHANGED, handleLocationChanged);
+    locationService.addEventListener(LocationEventType.DEFAULT_CHANGED, handleDefaultChanged);
     locationService.addEventListener(
       LocationEventType.SAVED_LOCATIONS_CHANGED,
       handleSavedLocationsChanged
@@ -631,7 +566,7 @@ export function useLocationService() {
     // If not initialized yet, trigger initialization
     if (!locationService.isInitializationComplete()) {
       locationService.initialize().catch((error) => {
-        console.error("Failed to initialize location service:", error);
+        console.error('Failed to initialize location service:', error);
       });
     }
 
@@ -641,10 +576,7 @@ export function useLocationService() {
         LocationEventType.LOCATION_CHANGED,
         handleLocationChanged
       );
-      locationService.removeEventListener(
-        LocationEventType.DEFAULT_CHANGED,
-        handleDefaultChanged
-      );
+      locationService.removeEventListener(LocationEventType.DEFAULT_CHANGED, handleDefaultChanged);
       locationService.removeEventListener(
         LocationEventType.SAVED_LOCATIONS_CHANGED,
         handleSavedLocationsChanged
@@ -670,16 +602,11 @@ export function useLocationService() {
     isInitialized,
 
     // Actions
-    setLocation: async (
-      location: LocationInfo,
-      source: LocationSource = LocationSource.SEARCH
-    ) => await locationService.setLocation(location, source),
-    setDefaultLocation: (locationId: number) =>
-      locationService.setDefaultLocation(locationId),
-    saveLocation: (location: SavedLocation) =>
-      locationService.saveLocation(location),
-    removeLocation: (locationId: number) =>
-      locationService.removeLocation(locationId),
+    setLocation: async (location: LocationInfo, source: LocationSource = LocationSource.SEARCH) =>
+      await locationService.setLocation(location, source),
+    setDefaultLocation: (locationId: number) => locationService.setDefaultLocation(locationId),
+    saveLocation: (location: SavedLocation) => locationService.saveLocation(location),
+    removeLocation: (locationId: number) => locationService.removeLocation(locationId),
     removeFromRecentLocations: (locationId: number) =>
       locationService.removeFromRecentLocations(locationId),
     getGeolocation: async () => await locationService.getGeolocation(),

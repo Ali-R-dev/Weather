@@ -1,11 +1,11 @@
-import React from "react";
-import { motion } from "framer-motion";
-import WeatherIcon from "../shared/WeatherIcon";
-import { getWeatherInfo } from "../../../utils/weatherCodeMap";
-import { formatHour } from "../../../utils/formatting";
-import { useSettings } from "../../../context/SettingsContext";
-import { AppConfig } from "../../../config/appConfig";
-import styles from "../hourly/HourlyForecast.module.css";
+import React from 'react';
+import { motion } from 'framer-motion';
+import WeatherIcon from '../shared/WeatherIcon';
+import { getWeatherInfo } from '../../../utils/weatherCodeMap';
+import { formatHour } from '../../../utils/formatting';
+import { useSettings } from '../../../context/SettingsContext';
+import { AppConfig } from '../../../config/appConfig';
+import styles from '../hourly/HourlyForecast.module.css';
 
 interface HourlyForecastItemProps {
   time: string;
@@ -28,15 +28,19 @@ const HourlyForecastItem: React.FC<HourlyForecastItemProps> = ({
 
   // const tempCelsius = temperature;
   const displayTemp =
-    settings.units.temperature === "celsius"
+    settings.units.temperature === 'celsius'
       ? temperature
-      : AppConfig.utils.convertTemperature(temperature, "fahrenheit");
+      : AppConfig.utils.convertTemperature(temperature, 'fahrenheit');
 
   return (
     <motion.button
-      className={`group flex flex-col items-center w-full px-2 py-3 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-300 border border-transparent hover:border-white/30 bg-white/10 transition-colors shadow-sm ${styles.hourlyItem} ${isCurrentHour ? styles.current : ""}`}
+      className={`group flex flex-col items-center w-full px-2 py-3 rounded-lg focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-300 border border-transparent hover:border-white/30 bg-white/10 transition-colors shadow-sm ${
+        styles.hourlyItem
+      } ${isCurrentHour ? styles.current : ''}`}
       tabIndex={0}
-      aria-label={`Forecast for ${formatHour(time)}: ${displayTemp}°, ${weatherInfo?.description || ""}`}
+      aria-label={`Forecast for ${formatHour(time)}: ${displayTemp}°, ${
+        weatherInfo?.description || ''
+      }`}
       role="button"
       style={{ cursor: 'pointer' }}
     >
@@ -56,12 +60,12 @@ const HourlyForecastItem: React.FC<HourlyForecastItemProps> = ({
         className="relative my-1.5"
         animate={{
           y: [0, 2, 0],
-          rotate: weatherInfo.icon.includes("wind") ? [0, 2, 0, -2, 0] : 0,
+          rotate: weatherInfo.icon.includes('wind') ? [0, 2, 0, -2, 0] : 0,
         }}
         transition={{
           duration: 4,
           repeat: Infinity,
-          repeatType: "reverse",
+          repeatType: 'reverse',
         }}
       >
         <WeatherIcon type={weatherInfo.icon} />
@@ -69,12 +73,12 @@ const HourlyForecastItem: React.FC<HourlyForecastItemProps> = ({
         <div
           className="absolute inset-0 -z-10 blur-md opacity-30 scale-125"
           style={{
-            backgroundColor: weatherInfo.icon.includes("sun")
-              ? "rgba(252, 211, 77, 0.3)"
-              : weatherInfo.icon.includes("rain")
-              ? "rgba(96, 165, 250, 0.2)"
-              : "rgba(255, 255, 255, 0.1)",
-            borderRadius: "50%",
+            backgroundColor: weatherInfo.icon.includes('sun')
+              ? 'rgba(252, 211, 77, 0.3)'
+              : weatherInfo.icon.includes('rain')
+              ? 'rgba(96, 165, 250, 0.2)'
+              : 'rgba(255, 255, 255, 0.1)',
+            borderRadius: '50%',
           }}
         />
       </motion.div>

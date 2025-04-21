@@ -1,18 +1,8 @@
-import {
-  createContext,
-  useContext,
-  useState,
-  ReactNode,
-  useCallback,
-  useEffect,
-} from "react";
-import { WeatherData } from "../types/weather.types";
-import { useLocation } from "./LocationContext"; // Use the location context
-import { LocationInfo } from "../services/LocationService"; // Import LocationInfo
-import {
-  fetchWeatherData,
-  WeatherCacheService,
-} from "../services/weatherService";
+import { createContext, useContext, useState, ReactNode, useCallback, useEffect } from 'react';
+import { WeatherData } from '../types/weather.types';
+import { useLocation } from './LocationContext'; // Use the location context
+import { LocationInfo } from '../services/LocationService'; // Import LocationInfo
+import { fetchWeatherData, WeatherCacheService } from '../services/weatherService';
 
 // Define the shape of our weather context
 interface WeatherContextType {
@@ -68,12 +58,12 @@ export function WeatherProvider({ children }: { children: ReactNode }) {
       }
     };
 
-    window.addEventListener("online", handleOnline);
-    window.addEventListener("offline", handleOffline);
+    window.addEventListener('online', handleOnline);
+    window.addEventListener('offline', handleOffline);
 
     return () => {
-      window.removeEventListener("online", handleOnline);
-      window.removeEventListener("offline", handleOffline);
+      window.removeEventListener('online', handleOnline);
+      window.removeEventListener('offline', handleOffline);
     };
   }, [currentLocation, weatherData]);
 
@@ -91,9 +81,9 @@ export function WeatherProvider({ children }: { children: ReactNode }) {
 
       try {
         console.log(
-          `WeatherContext: Fetching weather for ${
-            location.name || "unnamed"
-          } (${location.latitude}, ${location.longitude})`
+          `WeatherContext: Fetching weather for ${location.name || 'unnamed'} (${
+            location.latitude
+          }, ${location.longitude})`
         );
 
         const data = await fetchWeatherData({
@@ -105,8 +95,8 @@ export function WeatherProvider({ children }: { children: ReactNode }) {
         if (location.name) {
           data.location = {
             name: location.name,
-            region: location.admin1 || "",
-            country: location.country || "",
+            region: location.admin1 || '',
+            country: location.country || '',
           };
         }
 
@@ -117,8 +107,7 @@ export function WeatherProvider({ children }: { children: ReactNode }) {
         setLastUpdated(new Date());
         setRetryCount(0);
       } catch (err) {
-        const errorMsg =
-          err instanceof Error ? err.message : "Failed to fetch weather data";
+        const errorMsg = err instanceof Error ? err.message : 'Failed to fetch weather data';
         setError(errorMsg);
 
         // Retry logic
@@ -143,9 +132,7 @@ export function WeatherProvider({ children }: { children: ReactNode }) {
     const { data, location, timestamp } = WeatherCacheService.getFromCache();
 
     if (data && location && timestamp) {
-      console.log(
-        `WeatherContext: Loaded cached data from ${timestamp.toLocaleString()}`
-      );
+      console.log(`WeatherContext: Loaded cached data from ${timestamp.toLocaleString()}`);
       setWeatherData(data);
       setLastUpdated(timestamp);
 
@@ -156,7 +143,7 @@ export function WeatherProvider({ children }: { children: ReactNode }) {
       return true;
     }
 
-    console.log("WeatherContext: No valid cache found");
+    console.log('WeatherContext: No valid cache found');
     return false;
   }, [isOffline]);
 
@@ -181,7 +168,7 @@ export function useWeather(): WeatherContextType {
   const context = useContext(WeatherContext);
 
   if (context === undefined) {
-    throw new Error("useWeather must be used within a WeatherProvider");
+    throw new Error('useWeather must be used within a WeatherProvider');
   }
 
   return context;

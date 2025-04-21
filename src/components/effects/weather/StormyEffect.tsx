@@ -1,6 +1,6 @@
-import { useEffect, useRef } from "react";
-import RainEffect from "./RainEffect";
-import "./WeatherEffects.css";
+import { useEffect, useRef } from 'react';
+import RainEffect from './RainEffect';
+import './WeatherEffects.css';
 
 interface StormyEffectProps {
   isDay: boolean;
@@ -15,8 +15,8 @@ const StormyEffect = ({ isDay }: StormyEffectProps) => {
       if (!containerRef.current) return;
 
       // Create a lightning flash element
-      const flash = document.createElement("div");
-      flash.className = "lightning-flash";
+      const flash = document.createElement('div');
+      flash.className = 'lightning-flash';
       containerRef.current.appendChild(flash);
 
       // Remove the flash after animation completes
@@ -38,10 +38,7 @@ const StormyEffect = ({ isDay }: StormyEffectProps) => {
   }, []);
 
   return (
-    <div
-      ref={containerRef}
-      className={`stormy-container ${isDay ? "day" : "night"}`}
-    >
+    <div ref={containerRef} className={`stormy-container ${isDay ? 'day' : 'night'}`}>
       <RainEffect intensity="heavy" isDay={isDay} />
     </div>
   );
