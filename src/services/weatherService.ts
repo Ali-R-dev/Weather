@@ -1,7 +1,7 @@
 import { WeatherData } from '../types/weather.types';
 import { LocationInfo } from '../services/LocationService'; // Import LocationInfo
 
-const BASE_URL = 'https://api.open-meteo.com/v1/forecast';
+const BASE_URL = import.meta.env.VITE_API_URL;
 
 export interface WeatherParams {
   latitude: number;

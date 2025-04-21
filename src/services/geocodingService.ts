@@ -1,8 +1,8 @@
 import type { GeocodingResult } from '../types/geocoding.types';
 export type { GeocodingResult };
 
-const API_ENDPOINT = 'https://geocoding-api.open-meteo.com/v1/search';
-const REVERSE_GEOCODING_ENDPOINT = 'https://nominatim.openstreetmap.org/reverse';
+const API_ENDPOINT = import.meta.env.VITE_GEOCODING_API_URL;
+const REVERSE_GEOCODING_ENDPOINT = import.meta.env.VITE_REVERSE_GEOCODING_API_URL;
 
 interface GeocodingParams {
   name?: string;
