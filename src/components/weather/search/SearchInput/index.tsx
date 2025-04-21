@@ -7,7 +7,7 @@ interface SearchInputProps {
   onQueryChange: (query: string) => void;
   onFocus: () => void;
   onClear: () => void;
-  inputRef: React.RefObject<HTMLInputElement | null> | null;
+  inputRef?: React.RefObject<HTMLInputElement>;
 }
 
 const SearchInput: React.FC<SearchInputProps> = ({
