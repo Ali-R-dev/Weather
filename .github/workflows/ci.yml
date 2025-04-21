@@ -44,3 +44,4 @@ jobs:
           publish_branch: gh-pages
           publish_dir: ./dist
           keep_files: true
+          cname: weather.araza.me
