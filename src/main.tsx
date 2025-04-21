@@ -5,6 +5,12 @@ import App from './App.tsx';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools';
 
+// Disable all console output and alerts
+console.log = () => {};
+console.warn = () => {};
+console.error = () => {};
+window.alert = () => {};
+
 // Make sure the root element exists
 const rootElement = document.getElementById('root');
 

@@ -666,12 +666,7 @@ export default function LocationSearch({ onLocationSelect, compact = false }: Lo
                         onLocationSelect();
                       }
                     },
-                    (error) => {
-                      console.error('Geolocation error:', error);
-                      alert(
-                        'Unable to get your location. Please enable location services or search for a location.'
-                      );
-                    }
+                    () => {}
                   );
                 }}
                 className="w-full py-2 rounded-lg flex items-center justify-center 
