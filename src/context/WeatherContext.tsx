@@ -22,20 +22,18 @@ export function WeatherProvider({ children }: { children: ReactNode }) {
   const { currentLocation, isInitialized } = useLocation();
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
-  const query = useQuery<WeatherData, Error>(
-    ['weather', currentLocation?.latitude, currentLocation?.longitude],
-    () =>
+  const query = useQuery<WeatherData, Error>({
+    queryKey: ['weather', currentLocation?.latitude, currentLocation?.longitude],
+    queryFn: () =>
       fetchWeatherData({
         latitude: currentLocation!.latitude,
         longitude: currentLocation!.longitude,
       }),
-    {
-      enabled: Boolean(currentLocation && isInitialized),
-      retry: 2,
-      staleTime: 5 * 60 * 1000,
-      onSuccess: () => setLastUpdated(new Date()),
-    }
-  );
+    enabled: Boolean(currentLocation && isInitialized),
+    retry: 2,
+    staleTime: 5 * 60 * 1000,
+    onSuccess: () => setLastUpdated(new Date()),
+  });
 
   return (
     <WeatherContext.Provider
