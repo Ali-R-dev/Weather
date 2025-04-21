@@ -9,7 +9,7 @@ export interface WeatherParams {
   timezone?: string;
 }
 
-export async function fetchWeatherData({ latitude, longitude, timezone = 'auto' }: WeatherParams) {
+export async function fetchWeatherData({ latitude, longitude, timezone = 'auto' }: WeatherParams): Promise<WeatherData> {
   const url = new URL(BASE_URL);
 
   // Set required parameters

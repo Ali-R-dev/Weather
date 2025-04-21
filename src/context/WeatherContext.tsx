@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { WeatherData } from '../types/weather.types';
 import { useLocation } from './LocationContext'; // Use the location context
@@ -32,8 +32,11 @@ export function WeatherProvider({ children }: { children: ReactNode }) {
     enabled: Boolean(currentLocation && isInitialized),
     retry: 2,
     staleTime: 5 * 60 * 1000,
-    onSuccess: () => setLastUpdated(new Date()),
   });
+
+  useEffect(() => {
+    if (query.data) setLastUpdated(new Date());
+  }, [query.data]);
 
   return (
     <WeatherContext.Provider
