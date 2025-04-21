@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { useSettings } from '../../context/SettingsContext';
+import { useTranslation } from 'react-i18next';
 
 interface SettingsPanelProps {
   isOpen: boolean;
@@ -8,12 +9,14 @@ interface SettingsPanelProps {
 }
 
 const SettingsPanel = ({ isOpen, onClose }: SettingsPanelProps) => {
+  const { t } = useTranslation();
   const { settings, updateSettings } = useSettings();
   const [tempUnit, setTempUnit] = useState(settings.units.temperature);
   const [windUnit, setWindUnit] = useState(settings.units.wind);
   const [timeFormat, setTimeFormat] = useState(settings.timeFormat);
   const [reduceMotion, setReduceMotion] = useState(settings.accessibility.reduceMotion);
   const [highContrast, setHighContrast] = useState(settings.accessibility.highContrast);
+  const [language, setLanguage] = useState(settings.language);
 
   const handleSave = () => {
     updateSettings({
@@ -26,6 +29,7 @@ const SettingsPanel = ({ isOpen, onClose }: SettingsPanelProps) => {
         reduceMotion: reduceMotion,
         highContrast: highContrast,
       },
+      language,
     });
     onClose();
   };
@@ -53,7 +57,7 @@ const SettingsPanel = ({ isOpen, onClose }: SettingsPanelProps) => {
           }}
         >
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-2xl font-bold text-white">Settings</h2>
+            <h2 className="text-2xl font-bold text-white">{t('settings')}</h2>
             <button
               onClick={onClose}
               className="p-1 rounded-full hover:bg-white/10 transition-colors"
@@ -76,9 +80,28 @@ const SettingsPanel = ({ isOpen, onClose }: SettingsPanelProps) => {
           </div>
 
           <div className="space-y-6">
+            {/* Language Selection */}
+            <div>
+              <label className="block text-white text-sm font-medium mb-2">{t('language')}</label>
+              <div className="flex bg-white/10 rounded-lg p-1">
+                <button
+                  className={`flex-1 py-2 rounded-md transition-colors ${language === 'en' ? 'bg-white/20 font-medium' : ''}`}
+                  onClick={() => setLanguage('en')}
+                >
+                  English
+                </button>
+                <button
+                  className={`flex-1 py-2 rounded-md transition-colors ${language === 'es' ? 'bg-white/20 font-medium' : ''}`}
+                  onClick={() => setLanguage('es')}
+                >
+                  Español
+                </button>
+              </div>
+            </div>
+
             {/* Temperature Units */}
             <div>
-              <label className="block text-white text-sm font-medium mb-2">Temperature</label>
+              <label className="block text-white text-sm font-medium mb-2">{t('temperature')}</label>
               <div className="flex bg-white/10 rounded-lg p-1">
                 <button
                   className={`flex-1 py-2 rounded-md transition-colors ${
@@ -86,7 +109,7 @@ const SettingsPanel = ({ isOpen, onClose }: SettingsPanelProps) => {
                   }`}
                   onClick={() => setTempUnit('celsius')}
                 >
-                  Celsius (°C)
+                  {t('celsius')}
                 </button>
                 <button
                   className={`flex-1 py-2 rounded-md transition-colors ${
@@ -94,14 +117,14 @@ const SettingsPanel = ({ isOpen, onClose }: SettingsPanelProps) => {
                   }`}
                   onClick={() => setTempUnit('fahrenheit')}
                 >
-                  Fahrenheit (°F)
+                  {t('fahrenheit')}
                 </button>
               </div>
             </div>
 
             {/* Wind Speed Units */}
             <div>
-              <label className="block text-white text-sm font-medium mb-2">Wind Speed</label>
+              <label className="block text-white text-sm font-medium mb-2">{t('wind_speed')}</label>
               <div className="flex bg-white/10 rounded-lg p-1">
                 <button
                   className={`flex-1 py-2 rounded-md transition-colors ${
@@ -109,7 +132,7 @@ const SettingsPanel = ({ isOpen, onClose }: SettingsPanelProps) => {
                   }`}
                   onClick={() => setWindUnit('kph')}
                 >
-                  km/h
+                  {t('kmh')}
                 </button>
                 <button
                   className={`flex-1 py-2 rounded-md transition-colors ${
@@ -117,14 +140,14 @@ const SettingsPanel = ({ isOpen, onClose }: SettingsPanelProps) => {
                   }`}
                   onClick={() => setWindUnit('mph')}
                 >
-                  mph
+                  {t('mph')}
                 </button>
               </div>
             </div>
 
             {/* Time Format */}
             <div>
-              <label className="block text-white text-sm font-medium mb-2">Time Format</label>
+              <label className="block text-white text-sm font-medium mb-2">{t('time_format')}</label>
               <div className="flex bg-white/10 rounded-lg p-1">
                 <button
                   className={`flex-1 py-2 rounded-md transition-colors ${
@@ -132,7 +155,7 @@ const SettingsPanel = ({ isOpen, onClose }: SettingsPanelProps) => {
                   }`}
                   onClick={() => setTimeFormat('12h')}
                 >
-                  12-hour
+                  {t('twelve_hour')}
                 </button>
                 <button
                   className={`flex-1 py-2 rounded-md transition-colors ${
@@ -140,17 +163,17 @@ const SettingsPanel = ({ isOpen, onClose }: SettingsPanelProps) => {
                   }`}
                   onClick={() => setTimeFormat('24h')}
                 >
-                  24-hour
+                  {t('twentyfour_hour')}
                 </button>
               </div>
             </div>
 
             {/* Accessibility options */}
             <div>
-              <label className="block text-white text-sm font-medium mb-2">Accessibility</label>
+              <label className="block text-white text-sm font-medium mb-2">{t('accessibility')}</label>
 
               <div className="flex items-center justify-between py-2">
-                <span className="text-white/80">Reduce motion</span>
+                <span className="text-white/80">{t('reduce_motion')}</span>
                 <label className="relative inline-flex items-center cursor-pointer">
                   <input
                     type="checkbox"
@@ -163,7 +186,7 @@ const SettingsPanel = ({ isOpen, onClose }: SettingsPanelProps) => {
               </div>
 
               <div className="flex items-center justify-between py-2">
-                <span className="text-white/80">High contrast</span>
+                <span className="text-white/80">{t('high_contrast')}</span>
                 <label className="relative inline-flex items-center cursor-pointer">
                   <input
                     type="checkbox"
@@ -177,17 +200,11 @@ const SettingsPanel = ({ isOpen, onClose }: SettingsPanelProps) => {
             </div>
 
             <div className="flex justify-end space-x-3">
-              <button
-                onClick={onClose}
-                className="px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
-              >
-                Cancel
+              <button onClick={onClose} className="px-4 py-2 rounded-lg bg-white/10 hover:bg-white/20 transition-colors">
+                {t('cancel')}
               </button>
-              <button
-                onClick={handleSave}
-                className="px-4 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 transition-colors"
-              >
-                Save
+              <button onClick={handleSave} className="px-4 py-2 rounded-lg bg-blue-500 hover:bg-blue-600 transition-colors">
+                {t('save')}
               </button>
             </div>
           </div>

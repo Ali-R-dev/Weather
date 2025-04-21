@@ -11,6 +11,7 @@ import DailyForecast from '../components/weather/daily';
 import { MiniSearchBar } from '../components/weather/search';
 import SettingsPanel from '../components/settings/SettingsPanel';
 import SkipToContent from '../components/SkipToContent';
+import { useTranslation } from 'react-i18next';
 
 export default function HomePage() {
   // Get weather data but not location setting
@@ -26,6 +27,7 @@ export default function HomePage() {
   const searchContainerRef = useRef<HTMLDivElement>(null);
 
   const { currentTheme } = useTheme();
+  const { t } = useTranslation();
 
   // Function to get theme colors for tab buttons
   const getThemeColors = () => {
@@ -129,7 +131,7 @@ export default function HomePage() {
               ref={searchContainerRef}
             >
               <div className="p-2 text-2xl sm:text-3xl font-bold text-white min-w-[48px] text-left flex-shrink-0">
-                AR
+                {t('app_name')}
               </div>
               <div className="flex-1 flex justify-center">
                 <MiniSearchBar
@@ -141,7 +143,7 @@ export default function HomePage() {
               <button
                 onClick={() => setShowSettings(true)}
                 className="p-2 rounded-full hover:bg-white/10 transition-colors min-w-[48px] text-right flex-shrink-0 focus:outline-none focus-visible:ring-2 focus-visible:ring-yellow-300"
-                aria-label="Settings"
+                aria-label={t('settings')}
               >
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
@@ -170,7 +172,7 @@ export default function HomePage() {
           {/* Last updated status */}
           {!showSearchResults && weatherData && (
             <div className="text-xs opacity-60 text-center mt-0">
-              Last updated: {lastUpdated ? timeAgo(lastUpdated) : 'recently'}
+              {t('last_updated')} {lastUpdated ? timeAgo(lastUpdated) : t('recently')}
             </div>
           )}
 
@@ -210,7 +212,7 @@ export default function HomePage() {
                             clipRule="evenodd"
                           />
                         </svg>
-                        Hourly
+                        {t('hourly')}
                       </button>
 
                       <button
@@ -234,7 +236,7 @@ export default function HomePage() {
                             clipRule="evenodd"
                           />
                         </svg>
-                        Daily
+                        {t('daily')}
                       </button>
                     </div>
 
@@ -276,7 +278,7 @@ export default function HomePage() {
 
           {loading && !weatherData && (
             <div className="flex-1 flex items-center justify-center min-h-[60vh]">
-              <div className="text-white text-opacity-80">Loading...</div>
+              <div className="text-white text-opacity-80">{t('loading')}</div>
             </div>
           )}
 

@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { reverseGeocode } from './geocodingService';
+import { get, set } from 'idb-keyval';
 
 /**
  * Type for location information used throughout the app
@@ -81,34 +82,51 @@ class LocationService {
 
   constructor() {
     console.log('LocationService: Initializing');
-    this.loadSavedData();
-    this.initialize();
+    this.loadSavedData().then(() => this.initialize());
   }
 
   /**
-   * Load all location-related data from localStorage
+   * Load all location-related data from IndexedDB (fallback to localStorage)
    */
-  private loadSavedData(): void {
+  private async loadSavedData(): Promise<void> {
     try {
-      // Load saved locations
-      const savedLocationsStr = localStorage.getItem('savedLocations');
-      if (savedLocationsStr) {
-        this.savedLocations = JSON.parse(savedLocationsStr);
-        console.log('LocationService: Loaded saved locations', this.savedLocations);
+      // Load saved locations (IndexedDB, fallback to localStorage)
+      const savedData = await get<SavedLocation[]>('savedLocations');
+      if (savedData?.length) {
+        this.savedLocations = savedData;
+      } else {
+        const str = localStorage.getItem('savedLocations');
+        if (str) {
+          const parsed = JSON.parse(str);
+          this.savedLocations = parsed;
+          await set('savedLocations', parsed);
+        }
       }
 
-      // Load default location
-      const defaultLocationStr = localStorage.getItem('defaultLocation');
-      if (defaultLocationStr) {
-        this.defaultLocation = JSON.parse(defaultLocationStr);
-        console.log('LocationService: Loaded default location', this.defaultLocation);
+      // Load default location (IndexedDB, fallback)
+      const defData = await get<SavedLocation>('defaultLocation');
+      if (defData) {
+        this.defaultLocation = defData;
+      } else {
+        const dstr = localStorage.getItem('defaultLocation');
+        if (dstr) {
+          const parsed = JSON.parse(dstr);
+          this.defaultLocation = parsed;
+          await set('defaultLocation', parsed);
+        }
       }
 
-      // Load recent locations
-      const recentLocationsStr = localStorage.getItem('recentLocations');
-      if (recentLocationsStr) {
-        this.recentLocations = JSON.parse(recentLocationsStr);
-        console.log('LocationService: Loaded recent locations', this.recentLocations);
+      // Load recent locations (IndexedDB, fallback)
+      const recData = await get<SavedLocation[]>('recentLocations');
+      if (recData?.length) {
+        this.recentLocations = recData;
+      } else {
+        const rstr = localStorage.getItem('recentLocations');
+        if (rstr) {
+          const parsed = JSON.parse(rstr);
+          this.recentLocations = parsed;
+          await set('recentLocations', parsed);
+        }
       }
     } catch (error) {
       console.error('LocationService: Error loading saved data', error);
@@ -286,8 +304,7 @@ class LocationService {
     if (!exists) {
       const updatedLocations = [...this.savedLocations, location];
       this.savedLocations = updatedLocations;
-      localStorage.setItem('savedLocations', JSON.stringify(updatedLocations));
-
+      set('savedLocations', updatedLocations).catch((e) => console.error('IDB save error', e));
       console.log('LocationService: Location saved', location);
       this.emitEvent(LocationEventType.SAVED_LOCATIONS_CHANGED, this.savedLocations);
 
@@ -307,7 +324,7 @@ class LocationService {
     if (location) {
       const defaultLoc = { ...location, isDefault: true };
       this.defaultLocation = defaultLoc;
-      localStorage.setItem('defaultLocation', JSON.stringify(defaultLoc));
+      set('defaultLocation', defaultLoc).catch((e) => console.error('IDB save error', e));
 
       console.log('LocationService: Default location set', defaultLoc);
       this.emitEvent(LocationEventType.DEFAULT_CHANGED, defaultLoc);
@@ -323,12 +340,12 @@ class LocationService {
   public removeLocation(locationId: number): void {
     const updatedLocations = this.savedLocations.filter((loc) => loc.id !== locationId);
     this.savedLocations = updatedLocations;
-    localStorage.setItem('savedLocations', JSON.stringify(updatedLocations));
+    set('savedLocations', updatedLocations).catch((e) => console.error('IDB save error', e));
 
     // If default location was removed, update default
     if (this.defaultLocation && this.defaultLocation.id === locationId) {
       this.defaultLocation = null;
-      localStorage.removeItem('defaultLocation');
+      set('defaultLocation', null).catch((e) => console.error('IDB save error', e));
 
       // If there are other locations, make the first one default
       if (updatedLocations.length > 0) {
@@ -348,7 +365,7 @@ class LocationService {
     const updatedRecent = [location, ...filteredRecent].slice(0, this.MAX_RECENT_LOCATIONS);
 
     this.recentLocations = updatedRecent;
-    localStorage.setItem('recentLocations', JSON.stringify(updatedRecent));
+    set('recentLocations', updatedRecent).catch((e) => console.error('IDB save error', e));
 
     this.emitEvent(LocationEventType.RECENT_LOCATIONS_CHANGED, this.recentLocations);
   }
@@ -359,7 +376,7 @@ class LocationService {
   public removeFromRecentLocations(locationId: number): void {
     const updatedRecent = this.recentLocations.filter((loc) => loc.id !== locationId);
     this.recentLocations = updatedRecent;
-    localStorage.setItem('recentLocations', JSON.stringify(updatedRecent));
+    set('recentLocations', updatedRecent).catch((e) => console.error('IDB save error', e));
 
     this.emitEvent(LocationEventType.RECENT_LOCATIONS_CHANGED, this.recentLocations);
   }
