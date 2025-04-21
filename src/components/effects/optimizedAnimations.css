@@ -1,0 +1,99 @@
+/* High-performance animations using will-change and hardware-accelerated properties */
+
+.hardware-accelerated {
+  /* Use transform and opacity for better performance */
+  will-change: transform, opacity;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Use CSS variables for animation customization */
+:root {
+  --animation-speed: 1;
+  --animation-intensity: 1;
+}
+
+/* Reduced motion media query */
+@media (prefers-reduced-motion) {
+  :root {
+    --animation-speed: 0.5;
+    --animation-intensity: 0.5;
+  }
+}
+
+/* Dynamic animations with custom properties */
+.dynamic-float {
+  animation: float calc(5s / var(--animation-speed)) ease-in-out infinite;
+  transform: translateY(0);
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(calc(-10px * var(--animation-intensity)));
+  }
+}
+
+.dynamic-pulse {
+  animation: dynamic-pulse calc(3s / var(--animation-speed)) ease-in-out infinite;
+}
+
+@keyframes dynamic-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    opacity: calc(0.8 + (0.2 * (1 - var(--animation-intensity))));
+  }
+  50% {
+    transform: scale(calc(1 + (0.05 * var(--animation-intensity))));
+    opacity: 1;
+  }
+}
+
+/* Optimized rain drop animation */
+.optimized-drop {
+  will-change: transform;
+  transform: translateZ(0);
+  animation: optimized-drop calc(0.5s / var(--animation-speed)) linear infinite;
+}
+
+@keyframes optimized-drop {
+  0% {
+    transform: translate3d(0, 0, 0);
+  }
+  75% {
+    transform: translate3d(0, 90vh, 0);
+  }
+  100% {
+    transform: translate3d(0, 90vh, 0);
+  }
+}
+
+/* Optimized snowfall */
+.optimized-snowfall {
+  will-change: transform;
+  transform: translateZ(0);
+  animation: optimized-snowfall calc(10s / var(--animation-speed)) linear infinite,
+    optimized-sway calc(3s / var(--animation-speed)) ease-in-out infinite alternate;
+}
+
+@keyframes optimized-snowfall {
+  0% {
+    transform: translate3d(0, -10%, 0) rotate(0deg);
+  }
+  100% {
+    transform: translate3d(0, calc(100vh + 10%), 0) rotate(360deg);
+  }
+}
+
+@keyframes optimized-sway {
+  0% {
+    transform: translateX(calc(-20px * var(--animation-intensity)));
+  }
+  100% {
+    transform: translateX(calc(20px * var(--animation-intensity)));
+  }
+}
