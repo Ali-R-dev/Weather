@@ -11,6 +11,8 @@ console.warn = () => {};
 console.error = () => {};
 window.alert = () => {};
 
+// Removed Sentry integration; will use alternate monitoring service later
+
 // Make sure the root element exists
 const rootElement = document.getElementById('root');
 
