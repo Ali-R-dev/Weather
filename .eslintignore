@@ -1,9 +1,0 @@
-dist/
-node_modules/
-.cypress/
-cypress/
-__mocks__/
-*.config.ts
-*.config.js
-*.yml
-.github/
