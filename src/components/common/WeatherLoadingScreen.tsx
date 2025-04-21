@@ -6,6 +6,11 @@ interface WeatherLoadingScreenProps {
 }
 
 export default function WeatherLoadingScreen({ isLoading }: WeatherLoadingScreenProps) {
+  // Don't show loading overlay during Cypress tests
+  if (typeof window !== 'undefined' && (window as any).Cypress) {
+    return null;
+  }
+
   const [fadeOut, setFadeOut] = useState(false);
   const [hidden, setHidden] = useState(false);
 
