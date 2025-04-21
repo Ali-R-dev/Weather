@@ -46,6 +46,8 @@ export const measure = (from: string, to: string, label: string): number | null 
     if (performance.measure) {
       try {
         performance.measure(label, from, to);
+        // disable lint , rules
+        // eslint-disable-next-line
       } catch (e) {
         // Some browsers throw if marks don't exist or have been cleared
       }

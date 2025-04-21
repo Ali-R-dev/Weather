@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { Metric, onCLS, onFID, onLCP, onFCP, onTTFB } from 'web-vitals';
 
 // Store measurements

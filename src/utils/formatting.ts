@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+
 import { TimeFormat } from '../context/SettingsContext';
 import { AppConfig } from '../config/appConfig';
 

@@ -1,19 +1,19 @@
-import { defineConfig } from "vite";
-import react from "@vitejs/plugin-react-swc";
-import tailwindcss from "@tailwindcss/vite";
-import compression from "vite-plugin-compression";
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react-swc';
+import tailwindcss from '@tailwindcss/vite';
+import compression from 'vite-plugin-compression';
 import { visualizer } from 'rollup-plugin-visualizer';
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
     react(),
     tailwindcss(),
-    compression({ algorithm: "brotliCompress" }),
+    compression({ algorithm: 'brotliCompress' }),
     visualizer({ filename: 'bundle-stats.html', open: false, gzipSize: true }),
   ],
-  base: "/",
+  base: '/',
   optimizeDeps: {
-    include: ["recharts/es6"], // Ensures Vite processes only needed components
+    include: ['recharts/es6'], // Ensures Vite processes only needed components
   },
   build: {
     minify: true,
@@ -22,13 +22,13 @@ export default defineConfig({
     rollupOptions: {
       output: {
         manualChunks(id) {
-          if (id.includes("node_modules")) {
-            if (id.includes("react")) return "react-vendor";
-            if (id.includes("framer-motion")) return "framer-motion-vendor";
-            if (id.includes("recharts")) return "recharts-vendor";
-            if (id.includes("axios")) return "axios-vendor";
-            if (id.includes("zustand")) return "zustand-vendor";
-            return "vendor";
+          if (id.includes('node_modules')) {
+            if (id.includes('react')) return 'react-vendor';
+            if (id.includes('framer-motion')) return 'framer-motion-vendor';
+            if (id.includes('recharts')) return 'recharts-vendor';
+            if (id.includes('axios')) return 'axios-vendor';
+            if (id.includes('zustand')) return 'zustand-vendor';
+            return 'vendor';
           }
         },
       },

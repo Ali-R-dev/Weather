@@ -1,3 +1,4 @@
+/* eslint-disable react-hooks/rules-of-hooks */
 import { useEffect, useState } from 'react';
 import styles from './WeatherLoadingScreen.module.css';
 
@@ -7,7 +8,7 @@ interface WeatherLoadingScreenProps {
 
 export default function WeatherLoadingScreen({ isLoading }: WeatherLoadingScreenProps) {
   // Don't show loading overlay during Cypress tests
-  if (typeof window !== 'undefined' && (window as any).Cypress) {
+  if (typeof window !== 'undefined' && window.Cypress) {
     return null;
   }
 

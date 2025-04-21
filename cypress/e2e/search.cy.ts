@@ -1,11 +1,13 @@
 describe('Location search flow', () => {
   beforeEach(() => {
     // Mock geocoding API response
-    cy.intercept('GET', '**/geocoding-api.open-meteo.com/v1/search*', { fixture: 'geocoding_paris.json' }).as('geoSearch');
+    cy.intercept('GET', '**/geocoding-api.open-meteo.com/v1/search*', {
+      fixture: 'geocoding_paris.json',
+    }).as('geoSearch');
     cy.visit('/', {
       onBeforeLoad(win) {
         win.localStorage.setItem('privacyPolicyAccepted', 'true');
-      }
+      },
     });
   });
 
