@@ -5,6 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
+    "cypress:open": "cypress open",
+    "cypress:run": "cypress run",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
@@ -31,6 +33,7 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
+    "cypress": "^12.0.0",
     "ts-node": "^10.9.1",
     "jest-environment-jsdom": "^28.1.1",
     "rollup-plugin-visualizer": "^5.7.0",
