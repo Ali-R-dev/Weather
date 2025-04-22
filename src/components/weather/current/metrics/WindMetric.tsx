@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import MetricItem from './MetricItem';
 import { motion } from 'framer-motion';
 
@@ -15,6 +16,8 @@ const WindMetric: React.FC<WindMetricProps> = ({
   windUnit,
   animationDelay = 0.3,
 }) => {
+  const { t } = useTranslation();
+
   // Get wind direction as text (N, NE, E, etc.)
   const getWindDirection = (degrees: number) => {
     const directions = ['N', 'NE', 'E', 'SE', 'S', 'SW', 'W', 'NW'];
@@ -33,11 +36,11 @@ const WindMetric: React.FC<WindMetricProps> = ({
 
   // Wind speed category label
   const getWindSpeedLabel = () => {
-    if (windSpeed < 5) return 'Light';
-    if (windSpeed < 15) return 'Moderate';
-    if (windSpeed < 25) return 'Strong';
-    if (windSpeed < 35) return 'Very Strong';
-    return 'Severe';
+    if (windSpeed < 5) return t('wind_label_light');
+    if (windSpeed < 15) return t('wind_label_moderate');
+    if (windSpeed < 25) return t('wind_label_strong');
+    if (windSpeed < 35) return t('wind_label_very_strong');
+    return t('wind_label_severe');
   };
 
   // Create an integrated wind icon with direction visualization
@@ -96,7 +99,7 @@ const WindMetric: React.FC<WindMetricProps> = ({
   const compactSubtitle = (
     <div className="flex items-center justify-between">
       <div className="flex items-center text-xs pe-1">
-        <span>From {getWindDirection(windDirection)}</span>
+        <span>{t('wind_from', { dir: getWindDirection(windDirection) })}</span>
 
         {/* Tiny direction arrow */}
         <svg
@@ -123,7 +126,7 @@ const WindMetric: React.FC<WindMetricProps> = ({
   return (
     <MetricItem
       icon={enhancedWindIcon}
-      title="Wind"
+      title={t('wind')}
       value={`${windSpeed.toFixed(1)} ${windUnit}`}
       subtitle={compactSubtitle}
       animationDelay={animationDelay}
