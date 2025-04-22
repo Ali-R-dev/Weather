@@ -5,6 +5,7 @@ import { AppConfig } from '../../../config/appConfig';
 import TemperatureMain from './TemperatureMain';
 import FeelsLike from './FeelsLike';
 import WeatherIconAnimated from './WeatherIconAnimated';
+import { useTranslation } from 'react-i18next';
 
 interface TemperatureDisplayProps {
   temperature: number;
@@ -26,17 +27,21 @@ const TemperatureDisplay: React.FC<TemperatureDisplayProps> = ({
   humidity,
   temperatureUnit,
 }) => {
+  const { t } = useTranslation();
+
   // Get unit symbol (°C or °F)
   const unitSymbol = AppConfig.units.temperature[temperatureUnit].symbol;
 
   // Calculate temperature difference text
   const tempDiff = Math.round(feelsLike - temperature);
-  const tempDiffText =
-    tempDiff === 0
-      ? 'Same as actual temperature'
-      : tempDiff > 0
-      ? `Feels ${tempDiff}° warmer`
-      : `Feels ${Math.abs(tempDiff)}° colder`;
+  let tempDiffText: string;
+  if (tempDiff === 0) {
+    tempDiffText = t('same_as_actual');
+  } else if (tempDiff > 0) {
+    tempDiffText = t('feels_warmer', { diff: tempDiff });
+  } else {
+    tempDiffText = t('feels_colder', { diff: Math.abs(tempDiff) });
+  }
 
   // Get comfort level based on temperature and humidity
   const comfortLevel = AppConfig.getComfortLevel(temperature, humidity, temperatureUnit);
@@ -59,7 +64,7 @@ const TemperatureDisplay: React.FC<TemperatureDisplayProps> = ({
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.7 }}
         >
-          <span className="text-xl sm:text-2xl font-medium mr-3">{weatherInfo.label}</span>
+          <span className="text-xl sm:text-2xl font-medium mr-3">{t(weatherInfo.label)}</span>
           <span
             className={`text-sm px-3 py-0.5 rounded-full ${comfortLevel.color} bg-white/10 backdrop-blur-sm border border-white/10`}
           >

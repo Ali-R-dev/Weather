@@ -26,3 +26,7 @@ dist-ssr
 
 bundle-stats.html
 coverage
+
+# Milestone files
+MILESTONE_PLAN.md
+MILESTONE_v0.1.0_PWA_Offline_Plan.md

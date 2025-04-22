@@ -1,5 +1,6 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 import { SavedLocation } from '../../../../hooks/useSavedLocations';
 import { GeocodingResult } from '../../../../types/geocoding.types';
 import styles from './styles.module.css';
@@ -23,6 +24,7 @@ const LocationItem: React.FC<LocationItemProps> = ({
   onRemove,
   index,
 }) => {
+  const { t } = useTranslation();
   return (
     <motion.div
       key={`location-${location.id}`}
@@ -70,7 +72,7 @@ const LocationItem: React.FC<LocationItemProps> = ({
             }`}
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
-            title={isDefault ? 'Default location' : 'Set as default'}
+            title={isDefault ? t('default_location') : t('set_default')}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
@@ -90,7 +92,7 @@ const LocationItem: React.FC<LocationItemProps> = ({
             className="p-1 rounded-full hover:bg-white/10 text-white/70 hover:text-white/90 transition-colors action-button"
             whileHover={{ scale: 1.1 }}
             whileTap={{ scale: 0.95 }}
-            title="Remove from recent"
+            title={t('remove_recent')}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"

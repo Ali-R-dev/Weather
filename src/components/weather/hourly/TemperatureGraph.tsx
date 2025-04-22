@@ -13,6 +13,7 @@ import {
 } from 'recharts';
 import { useSettings } from '../../../context/SettingsContext';
 import { AppConfig } from '../../../config/appConfig';
+import { useTranslation } from 'react-i18next';
 
 // Create proper types
 interface TemperatureDataPoint {
@@ -42,6 +43,7 @@ const TemperatureGraph: React.FC<TemperatureGraphProps> = ({
   times,
   currentTimeIndex,
 }) => {
+  const { t } = useTranslation();
   const { settings } = useSettings();
 
   // Convert temperatures if needed (they come in Celsius)
@@ -144,10 +146,10 @@ const TemperatureGraph: React.FC<TemperatureGraphProps> = ({
       {/* Temperature range indicators */}
       <div className="absolute top-0 right-2 flex space-x-4 text-xs z-10">
         <div className="flex items-center">
-          <span className="text-green-400 font-medium mr-1">Actual</span>
+          <span className="text-green-400 font-medium mr-1">{t('actual')}</span>
         </div>
         <div className="flex items-center">
-          <span className="text-white font-medium">Forecast</span>
+          <span className="text-white font-medium">{t('forecast')}</span>
         </div>
       </div>
 
@@ -167,7 +169,7 @@ const TemperatureGraph: React.FC<TemperatureGraphProps> = ({
       {showsTempTrend && (
         <div className="absolute top-0 left-1/2 transform -translate-x-1/2 text-xs z-10">
           <div className={`font-medium ${tempChange > 0 ? 'text-yellow-400' : 'text-blue-300'}`}>
-            {tempChange > 0 ? 'Warming' : 'Cooling'} {Math.abs(Math.round(tempChange))}°
+            {tempChange > 0 ? t('warming') : t('cooling')} {Math.abs(Math.round(tempChange))}°
           </div>
         </div>
       )}
@@ -223,7 +225,7 @@ const TemperatureGraph: React.FC<TemperatureGraphProps> = ({
                     <div className="backdrop-blur-md bg-gray-900/80 border border-gray-700 text-white px-3 py-2 rounded-lg shadow-lg">
                       <div className="font-medium text-xs mb-0.5">
                         {data.label}
-                        {data.isCurrent && <span className="text-xs ml-1 font-bold">(Now)</span>}
+                        {data.isCurrent && <span className="text-xs ml-1 font-bold">({t('now')})</span>}
                       </div>
                       <div
                         className={`text-sm font-bold ${
@@ -247,7 +249,7 @@ const TemperatureGraph: React.FC<TemperatureGraphProps> = ({
               strokeWidth={1.2}
             >
               <Label
-                value="NOW"
+                value={t('now')}
                 position="top"
                 fill="white"
                 fontSize={9}

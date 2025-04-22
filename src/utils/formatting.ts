@@ -2,6 +2,7 @@
 
 import { TimeFormat } from '../context/SettingsContext';
 import { AppConfig } from '../config/appConfig';
+import i18next from 'i18next';
 
 // Define the type for time format options that matches DateTimeFormatOptions
 type TimeFormatOptions = {
@@ -56,7 +57,7 @@ export const formatTime = (timeString: string): string => {
   try {
     const date = new Date(timeString);
     if (isNaN(date.getTime())) return '';
-    return date.toLocaleTimeString('en-US', getTimeFormat('12h'));
+    return date.toLocaleTimeString(i18next.language || 'en', getTimeFormat('12h'));
   } catch (error) {
     console.error('Error formatting time:', error);
     return timeString || '';
@@ -71,7 +72,8 @@ export const formatHour = (timeString: string, format: TimeFormat = '12h'): stri
     const date = new Date(timeString);
     if (isNaN(date.getTime())) return '';
 
-    return date.toLocaleTimeString('en-US', {
+    const locale = i18next.language || 'en';
+    return date.toLocaleTimeString(locale, {
       hour: 'numeric',
       hour12: format === '12h',
     });
@@ -91,7 +93,8 @@ export const formatTimeWithFormat = (timeString: string, format: TimeFormat): st
     const date = new Date(timeString);
     if (isNaN(date.getTime())) return '';
 
-    return date.toLocaleTimeString('en-US', getTimeFormat(format));
+    const locale = i18next.language || 'en';
+    return date.toLocaleTimeString(locale, getTimeFormat(format));
   } catch (error) {
     console.error('Error formatting time with format:', error);
     return timeString || '';
@@ -110,12 +113,14 @@ export const formatLocalTime = (timezone?: string, format: TimeFormat = '12h'): 
       timeZone: timezone,
     };
 
-    return new Date().toLocaleTimeString('en-US', options);
+    const locale = i18next.language || 'en';
+    return new Date().toLocaleTimeString(locale, options);
   } catch (error) {
     // Common error: invalid timezone - fallback to local time
     try {
       console.warn(`Invalid timezone: ${timezone}, using local time`);
-      return new Date().toLocaleTimeString('en-US', getTimeFormat(format));
+      const locale = i18next.language || 'en';
+      return new Date().toLocaleTimeString(locale, getTimeFormat(format));
     } catch (innerError) {
       console.error('Error formatting local time:', innerError);
       return '';
@@ -130,7 +135,9 @@ export const formatDay = (dateString: string): string => {
   try {
     const date = new Date(dateString);
     if (isNaN(date.getTime())) return '';
-    return date.toLocaleDateString('en-US', { weekday: 'short' });
+
+    const locale = i18next.language || 'en';
+    return date.toLocaleDateString(locale, { weekday: 'short' });
   } catch (error) {
     console.error('Error formatting day:', error);
     return '';
@@ -147,7 +154,8 @@ export const formatDate = (dateString: string): string => {
     const date = new Date(dateString);
     if (isNaN(date.getTime())) return '';
 
-    return date.toLocaleDateString('en-US', {
+    const locale = i18next.language || 'en';
+    return date.toLocaleDateString(locale, {
       month: 'short',
       day: 'numeric',
     });

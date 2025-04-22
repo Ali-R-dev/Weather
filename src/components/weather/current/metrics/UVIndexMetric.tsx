@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import MetricItem from './MetricItem';
 import { motion } from 'framer-motion';
 
@@ -8,13 +9,15 @@ interface UVIndexMetricProps {
 }
 
 const UVIndexMetric: React.FC<UVIndexMetricProps> = ({ uvIndex, animationDelay = 0.5 }) => {
+  const { t } = useTranslation();
+
   // Get UV index level and recommendations
   const getUVLevel = () => {
-    if (uvIndex <= 2) return 'Low';
-    if (uvIndex <= 5) return 'Moderate';
-    if (uvIndex <= 7) return 'High';
-    if (uvIndex <= 10) return 'Very High';
-    return 'Extreme';
+    if (uvIndex <= 2) return t('uv_level_low');
+    if (uvIndex <= 5) return t('uv_level_moderate');
+    if (uvIndex <= 7) return t('uv_level_high');
+    if (uvIndex <= 10) return t('uv_level_very_high');
+    return t('uv_level_extreme');
   };
 
   // Get color based on UV Index
@@ -74,7 +77,7 @@ const UVIndexMetric: React.FC<UVIndexMetricProps> = ({ uvIndex, animationDelay =
   return (
     <MetricItem
       icon={uvIcon}
-      title="UV Index"
+      title={t('uv_index')}
       value={uvIndex.toFixed(1)}
       subtitle={enhancedSubtitle}
       animationDelay={animationDelay}

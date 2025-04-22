@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import styles from './CurrentWeather.module.css';
+import { useTranslation } from 'react-i18next';
 
 interface WeatherAdditionalInfoProps {
   pressure?: number;
@@ -8,6 +9,8 @@ interface WeatherAdditionalInfoProps {
 
 const WeatherAdditionalInfo: React.FC<WeatherAdditionalInfoProps> = ({ pressure }) => {
   if (!pressure) return null;
+
+  const { t } = useTranslation();
 
   return (
     <motion.div
@@ -35,16 +38,16 @@ const WeatherAdditionalInfo: React.FC<WeatherAdditionalInfoProps> = ({ pressure 
             clipRule="evenodd"
           />
         </svg>
-        Air Pressure
+        {t('air_pressure')}
       </div>
       <div className="flex items-center">
         <span className={styles.detailValue}>{pressure}</span>
-        <span className={styles.detailUnit}>hPa</span>
+        <span className={styles.detailUnit}>{t('hpa')}</span>
       </div>
       <div className="text-xs text-white/60 mt-1">
         {pressure > 1013
-          ? 'High pressure - Generally fair weather'
-          : 'Low pressure - Potential for precipitation'}
+          ? t('pressure_high')
+          : t('pressure_low')}
       </div>
     </motion.div>
   );

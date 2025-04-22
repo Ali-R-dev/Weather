@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import MetricItem from './MetricItem';
 import { motion } from 'framer-motion';
 
@@ -13,14 +14,18 @@ const PrecipitationMetric: React.FC<PrecipitationMetricProps> = ({
   precipitationProbability,
   animationDelay = 0.4,
 }) => {
-  const precipitationText =
-    precipitation > 0
-      ? precipitation < 1
-        ? 'Light'
-        : precipitation < 10
-        ? 'Moderate'
-        : 'Heavy'
-      : 'None';
+  const { t } = useTranslation();
+
+  let precipitationText: string;
+  if (precipitation === 0) {
+    precipitationText = t('precipitation_none');
+  } else if (precipitation < 1) {
+    precipitationText = t('precipitation_light');
+  } else if (precipitation < 10) {
+    precipitationText = t('precipitation_moderate');
+  } else {
+    precipitationText = t('precipitation_heavy');
+  }
 
   // Get color based on precipitation intensity
   const getPrecipColor = () => {
@@ -100,7 +105,7 @@ const PrecipitationMetric: React.FC<PrecipitationMetricProps> = ({
   return (
     <MetricItem
       icon={precipIcon}
-      title="Precipitation"
+      title={t('precipitation')}
       value={`${precipitation.toFixed(1)} mm`}
       subtitle={enhancedSubtitle}
       animationDelay={animationDelay}

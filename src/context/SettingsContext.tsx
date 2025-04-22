@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import i18n from '../i18n';
 import { AppConfig } from '../config/appConfig';
 
 export type TemperatureUnit = 'celsius' | 'fahrenheit';
@@ -15,6 +16,7 @@ interface Settings {
     reduceMotion: boolean;
     highContrast: boolean;
   };
+  language: 'en' | 'es';
 }
 
 interface SettingsContextType {
@@ -33,6 +35,7 @@ const defaultSettings: Settings = {
     reduceMotion: AppConfig.defaults.reduceMotion,
     highContrast: AppConfig.defaults.highContrast,
   },
+  language: 'en',
 };
 
 const SettingsContext = createContext<SettingsContextType>({
@@ -49,6 +52,7 @@ export function SettingsProvider({ children }: { children: ReactNode }) {
 
   // Save settings to localStorage when they change
   useEffect(() => {
+    i18n.changeLanguage(settings.language);
     localStorage.setItem('weatherAppSettings', JSON.stringify(settings));
 
     // Apply high contrast mode to the document if enabled

@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 interface ViewToggleProps {
   expandedView: boolean;
@@ -6,6 +7,7 @@ interface ViewToggleProps {
 }
 
 const ViewToggle: React.FC<ViewToggleProps> = ({ expandedView, toggleView }) => {
+  const { t } = useTranslation();
   return (
     <div className="mt-3 flex justify-center" role="tablist" aria-label="Forecast view toggle">
       <button
@@ -17,7 +19,7 @@ const ViewToggle: React.FC<ViewToggleProps> = ({ expandedView, toggleView }) => 
         aria-selected={expandedView}
         tabIndex={expandedView ? 0 : -1}
       >
-        {expandedView ? 'Show 24 Hours' : 'Show 48 Hours'}
+        {expandedView ? t('show_24_hours') : t('show_48_hours')}
       </button>
     </div>
   );

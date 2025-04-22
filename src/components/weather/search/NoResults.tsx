@@ -1,11 +1,13 @@
 import React from 'react';
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 interface NoResultsProps {
   query: string;
 }
 
 const NoResults: React.FC<NoResultsProps> = ({ query }) => {
+  const { t } = useTranslation();
   return (
     <div className="px-3 py-6 text-center">
       <motion.div
@@ -35,7 +37,7 @@ const NoResults: React.FC<NoResultsProps> = ({ query }) => {
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.2 }}
       >
-        No locations found for "{query}"
+        {t('no_locations_for', { query })}
       </motion.div>
       <motion.div
         className="text-xs text-white/50 mt-1.5"
@@ -43,7 +45,7 @@ const NoResults: React.FC<NoResultsProps> = ({ query }) => {
         animate={{ y: 0, opacity: 1 }}
         transition={{ delay: 0.3 }}
       >
-        Try a different search term
+        {t('try_different')}
       </motion.div>
     </div>
   );
