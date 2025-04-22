@@ -4,6 +4,7 @@ import { useLocation } from '../../../../context/LocationContext';
 import { SavedLocation } from '../../../../hooks/useSavedLocations';
 import { GeocodingResult } from '../../../../types/geocoding.types';
 import { useLocationSearch } from '../../../../hooks/useLocationSearch';
+import { useTranslation } from 'react-i18next';
 import SearchInput from '../SearchInput';
 import LocationItem from '../LocationItem';
 import NoResults from '../NoResults';
@@ -18,6 +19,7 @@ interface MiniSearchBarProps {
 
 export default function MiniSearchBar({ onFocus, onSelect, isActive }: MiniSearchBarProps) {
   const { query, setQuery, results, isSearching, clearSearch } = useLocationSearch(2, 300); // minChars=2, debounceTime=300
+  const { t } = useTranslation();
 
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
@@ -172,7 +174,7 @@ export default function MiniSearchBar({ onFocus, onSelect, isActive }: MiniSearc
                       clipRule="evenodd"
                     />
                   </svg>
-                  Recent Locations
+                  {t('recent_locations')}
                 </div>
                 <div className={styles.resultsContainer}>
                   {recentLocations.map((location, index) => (
@@ -211,7 +213,7 @@ export default function MiniSearchBar({ onFocus, onSelect, isActive }: MiniSearc
                       clipRule="evenodd"
                     />
                   </svg>
-                  Search Results
+                  {t('search_results')}
                 </div>
                 <div className={styles.resultsContainer}>
                   {results.map((location, index) => (

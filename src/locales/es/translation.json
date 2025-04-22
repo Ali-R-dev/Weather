@@ -24,5 +24,13 @@
   "recently": "recientemente",
   "hourly": "Por hora",
   "daily": "Diario",
-  "loading": "Cargando..."
+  "loading": "Cargando...",
+  "clear_search": "Borrar búsqueda",
+  "recent_locations": "Ubicaciones recientes",
+  "search_results": "Resultados de búsqueda",
+  "no_locations_for": "No se encontraron ubicaciones para \"{{query}}\"",
+  "try_different": "Intenta con otro término de búsqueda",
+  "default_location": "Ubicación predeterminada",
+  "set_default": "Establecer como predeterminada",
+  "remove_recent": "Eliminar de recientes"
 }

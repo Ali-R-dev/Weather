@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import styles from './styles.module.css';
+import { useTranslation } from 'react-i18next';
 
 interface SearchInputProps {
   query: string;
@@ -17,6 +18,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
   onClear,
   inputRef,
 }) => {
+  const { t } = useTranslation();
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     onQueryChange(e.target.value);
   };
@@ -39,12 +41,12 @@ const SearchInput: React.FC<SearchInputProps> = ({
       <input
         ref={inputRef}
         type="text"
-        placeholder="Search location..."
+        placeholder={t('search_location')}
         value={query}
         onChange={handleInputChange}
         onFocus={onFocus}
         className={styles.searchInput}
-        aria-label="Search for a location"
+        aria-label={t('search_location')}
       />
 
       <AnimatePresence>
@@ -56,7 +58,7 @@ const SearchInput: React.FC<SearchInputProps> = ({
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
             transition={{ duration: 0.15 }}
-            aria-label="Clear search"
+            aria-label={t('clear_search')}
           >
             <svg
               xmlns="http://www.w3.org/2000/svg"
