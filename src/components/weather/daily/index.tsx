@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import DayItem from './DayItem';
 import { formatDate } from '../../../utils/formatting';
 
@@ -13,11 +14,13 @@ interface DailyForecastProps {
 }
 
 const DailyForecast: React.FC<DailyForecastProps> = ({ dailyData }) => {
+  const { t } = useTranslation();
+
   // Handle loading state
   if (!dailyData) {
     return (
       <div className="flex flex-col items-center justify-center p-4 text-white/70">
-        <p>Loading forecast data...</p>
+        <p>{t('loading_forecast')}</p>
       </div>
     );
   }
@@ -26,7 +29,7 @@ const DailyForecast: React.FC<DailyForecastProps> = ({ dailyData }) => {
   if (!dailyData.time?.length) {
     return (
       <div className="flex flex-col items-center justify-center p-4 text-white/70">
-        <p>No forecast data available</p>
+        <p>{t('no_forecast_data')}</p>
       </div>
     );
   }
@@ -37,11 +40,11 @@ const DailyForecast: React.FC<DailyForecastProps> = ({ dailyData }) => {
     <section
       className="flex flex-col gap-2 w-full max-w-lg mx-auto px-1 sm:px-0 mt-4"
       role="region"
-      aria-label="Daily weather forecast"
+      aria-label={t('daily_weather_forecast')}
       tabIndex={0}
     >
       <h2 className="sr-only" id="daily-forecast-heading">
-        Daily Forecast
+        {t('daily_forecast')}
       </h2>
       <div
         className="flex flex-col gap-2 w-full"
@@ -76,7 +79,7 @@ const DailyForecast: React.FC<DailyForecastProps> = ({ dailyData }) => {
               isToday={formatDate(time) === today}
               tabIndex={0}
               role="listitem"
-              aria-label={`Forecast for ${formatDate(time)}: ${maxTemp}° / ${minTemp}°`}
+              aria-label={t('forecast_for_daily', { date: today === formatDate(time) ? t('today') : formatDate(time), max: Math.round(maxTemp), min: Math.round(minTemp) })}
             />
           );
         })}

@@ -6,6 +6,7 @@ import { formatHour } from '../../../utils/formatting';
 import { useSettings } from '../../../context/SettingsContext';
 import { AppConfig } from '../../../config/appConfig';
 import styles from '../hourly/HourlyForecast.module.css';
+import { useTranslation } from 'react-i18next';
 
 interface HourlyForecastItemProps {
   time: string;
@@ -22,6 +23,7 @@ const HourlyForecastItem: React.FC<HourlyForecastItemProps> = ({
   precipitationProbability,
   isCurrentHour = false,
 }) => {
+  const { t } = useTranslation();
   const { settings } = useSettings();
   const weatherInfo = getWeatherInfo(weatherCode);
   const hasPrecip = precipitationProbability > 0;
@@ -38,9 +40,7 @@ const HourlyForecastItem: React.FC<HourlyForecastItemProps> = ({
         styles.hourlyItem
       } ${isCurrentHour ? styles.current : ''}`}
       tabIndex={0}
-      aria-label={`Forecast for ${formatHour(time)}: ${displayTemp}°, ${
-        weatherInfo?.description || ''
-      }`}
+      aria-label={t('forecast_for_hourly', { time: formatHour(time), temp: Math.round(displayTemp), desc: weatherInfo?.description || '' })}
       role="button"
       style={{ cursor: 'pointer' }}
     >
@@ -48,7 +48,7 @@ const HourlyForecastItem: React.FC<HourlyForecastItemProps> = ({
       <div className={styles.timeText}>
         {isCurrentHour ? (
           <span className="px-2 py-0.5 bg-white/30 rounded-full text-white text-[10px] font-bold tracking-wide">
-            NOW
+            {t('now')}
           </span>
         ) : (
           <span className="font-semibold">{formatHour(time)}</span>

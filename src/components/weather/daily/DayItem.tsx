@@ -1,5 +1,6 @@
 /* DayItem.tsx - Enhanced */
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import WeatherIcon from '../shared/WeatherIcon';
 import { getWeatherInfo } from '../../../utils/weatherCodeMap';
 import { formatDay, formatDate } from '../../../utils/formatting';
@@ -30,6 +31,7 @@ const DayItem: React.FC<DayItemProps> = ({
   const weatherInfo = getWeatherInfo(weatherCode);
   const hasPrecip = precipProbability > 0;
   const { settings } = useSettings();
+  const { t } = useTranslation();
 
   const displayMaxTemp =
     settings.units.temperature === 'celsius'
@@ -85,7 +87,7 @@ const DayItem: React.FC<DayItemProps> = ({
     >
       {/* Day info */}
       <div className="flex flex-col min-w-[60px]">
-        <div className="font-semibold text-sm text-white">{isToday ? 'Today' : formatDay(day)}</div>
+        <div className="font-semibold text-sm text-white">{isToday ? t('today') : formatDay(day)}</div>
         <div className="text-xs text-white/70 mt-0.5">{formatDate(day)}</div>
       </div>
 
@@ -97,7 +99,7 @@ const DayItem: React.FC<DayItemProps> = ({
       {/* Weather info and precipitation */}
       <div className="flex-grow flex flex-col md:flex-row md:items-center md:gap-2">
         {/* Weather description */}
-        <span className="text-sm font-medium text-white/90 md:flex-grow">{weatherInfo.label}</span>
+        <span className="text-sm font-medium text-white/90 md:flex-grow">{t(weatherInfo.label)}</span>
 
         {/* Precipitation indicator - below on mobile, inline on larger screens */}
         {hasPrecip && (

@@ -64,7 +64,7 @@ const TemperatureDisplay: React.FC<TemperatureDisplayProps> = ({
           animate={{ x: 0, opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.7 }}
         >
-          <span className="text-xl sm:text-2xl font-medium mr-3">{weatherInfo.label}</span>
+          <span className="text-xl sm:text-2xl font-medium mr-3">{t(weatherInfo.label)}</span>
           <span
             className={`text-sm px-3 py-0.5 rounded-full ${comfortLevel.color} bg-white/10 backdrop-blur-sm border border-white/10`}
           >
