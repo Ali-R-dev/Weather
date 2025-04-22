@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import MetricItem from './MetricItem';
 import { motion } from 'framer-motion';
 
@@ -8,12 +9,14 @@ interface HumidityMetricProps {
 }
 
 const HumidityMetric: React.FC<HumidityMetricProps> = ({ humidity, animationDelay = 0.2 }) => {
+  const { t } = useTranslation();
+
   // Determine humidity level text
   const getHumidityLevel = () => {
-    if (humidity < 30) return 'Dry';
-    if (humidity < 50) return 'Comfortable';
-    if (humidity < 70) return 'Moderate';
-    return 'Humid';
+    if (humidity < 30) return t('humidity_dry');
+    if (humidity < 50) return t('humidity_comfortable');
+    if (humidity < 70) return t('humidity_moderate');
+    return t('humidity_humid');
   };
 
   // Get color based on humidity level
@@ -84,7 +87,7 @@ const HumidityMetric: React.FC<HumidityMetricProps> = ({ humidity, animationDela
   return (
     <MetricItem
       icon={humidityIcon}
-      title="Humidity"
+      title={t('humidity')}
       value={`${humidity}%`}
       subtitle={enhancedSubtitle}
       animationDelay={animationDelay}

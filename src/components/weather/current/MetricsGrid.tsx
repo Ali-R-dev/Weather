@@ -4,6 +4,7 @@ import WindMetric from './metrics/WindMetric';
 import PrecipitationMetric from './metrics/PrecipitationMetric';
 import UVIndexMetric from './metrics/UVIndexMetric';
 import { WindUnit } from '../../../context/SettingsContext';
+import { useTranslation } from 'react-i18next';
 
 interface MetricsGridProps {
   humidity: number;
@@ -24,11 +25,12 @@ const MetricsGrid: React.FC<MetricsGridProps> = ({
   precipitationProbability,
   windUnit,
 }) => {
+  const { t } = useTranslation();
   return (
     <div
       className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3 md:gap-4 w-full"
       role="list"
-      aria-label="Current weather metrics"
+      aria-label={t('current_weather_metrics')}
     >
       <HumidityMetric humidity={humidity} animationDelay={0.05} />
 
