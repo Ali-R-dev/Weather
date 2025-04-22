@@ -87,7 +87,7 @@ const DayItem: React.FC<DayItemProps> = ({
     >
       {/* Day info */}
       <div className="flex flex-col min-w-[60px]">
-        <div className="font-semibold text-sm text-white">{isToday ? t('today') : formatDay(day)}</div>
+        <div className="font-semibold text-sm text-white">{isToday ? t('today') : t(formatDay(day))}</div>
         <div className="text-xs text-white/70 mt-0.5">{formatDate(day)}</div>
       </div>
 

@@ -225,7 +225,7 @@ const TemperatureGraph: React.FC<TemperatureGraphProps> = ({
                     <div className="backdrop-blur-md bg-gray-900/80 border border-gray-700 text-white px-3 py-2 rounded-lg shadow-lg">
                       <div className="font-medium text-xs mb-0.5">
                         {data.label}
-                        {data.isCurrent && <span className="text-xs ml-1 font-bold">(Now)</span>}
+                        {data.isCurrent && <span className="text-xs ml-1 font-bold">({t('now')})</span>}
                       </div>
                       <div
                         className={`text-sm font-bold ${
@@ -249,7 +249,7 @@ const TemperatureGraph: React.FC<TemperatureGraphProps> = ({
               strokeWidth={1.2}
             >
               <Label
-                value="NOW"
+                value={t('now')}
                 position="top"
                 fill="white"
                 fontSize={9}
