@@ -43,7 +43,7 @@ const DailyForecast: React.FC<DailyForecastProps> = ({ dailyData }) => {
       aria-label={t('daily_weather_forecast')}
       tabIndex={0}
     >
-      <h2 className="sr-only" id="daily-forecast-heading">
+      <h2 className="text-xl font-semibold text-white mb-2" id="daily-forecast-heading">
         {t('daily_forecast')}
       </h2>
       <div
